@@ -10,7 +10,9 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "laravel/framework": "4.2.*"
+        "illuminate/foundation": "4.2.*",
+        "illuminate/support": "4.2.*",
+        "illuminate/validation": "4.2.*"    
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
