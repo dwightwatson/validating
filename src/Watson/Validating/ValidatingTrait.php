@@ -8,7 +8,7 @@ trait ValidatingTrait
     {
         static::saving(function($model)
         {
-            return $model->isValid();
+            return $model->enforceValidation ? $model->isValid() : true;
         });
     }
 
@@ -18,6 +18,14 @@ trait ValidatingTrait
      * @var \Illuminate\Support\MessageBag
      */
     protected $errors;
+
+    /** 
+     * Whether the model should undergo validation when
+     * saving or not.
+     *
+     * @var boolean
+     */
+    private $enforceValidation = true;
 
     /**
      * Get the validation rules being used against the model.
@@ -87,6 +95,23 @@ trait ValidatingTrait
     public function isInvalid()
     {
         return ! $this->validate();
+    }
+
+    /**
+     * Force the model to be saved without undergoing
+     * validation.
+     *
+     * @return boolean
+     */
+    public function forceSave()
+    {
+        $this->enforceValidation = false;
+
+        $result = $this->save();
+
+        $this->enforceValidation = true;
+
+        return $result;
     }
 
     /**
