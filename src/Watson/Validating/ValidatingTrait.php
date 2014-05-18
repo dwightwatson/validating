@@ -138,11 +138,13 @@ trait ValidatingTrait
      */
     public function forceSave()
     {
+        $currentValidationSetting = $this->enforceValidation;
+
         $this->enforceValidation = false;
 
         $result = $this->save();
 
-        $this->enforceValidation = true;
+        $this->enforceValidation = $currentValidationSetting;
 
         return $result;
     }
