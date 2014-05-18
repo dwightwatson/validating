@@ -87,7 +87,7 @@ trait ValidatingTrait
 
     /**
      * Returns wheter the model will add it's unique identifier 
-     * to the rules when validating.\
+     * to the rules when validating.
      *
      * @return boolean
      */
@@ -100,24 +100,12 @@ trait ValidatingTrait
      * Tell the model to add unique identifier to rules when
      * performing validation.
      *
+     * @param  boolean
      * @return self
      */
-    public function addUniqueIdentifierToRules()
+    public function setAddingUniqueIdentifierToRules($value)
     {
-        $this->addUniqueIdentifierToRules = true;
-
-        return $this;
-    }
-
-    /**
-     * Tell the model to remove unique identifier to rules when
-     * performing validation.
-     *
-     * @return self
-     */
-    public function doNotAddUniqueIdentifierToRules()
-    {
-        $this->addUniqueIdentifierToRules = false;
+        $this->addUniqueIdentifierToRules = $value;
 
         return $this;
     }
@@ -178,7 +166,7 @@ trait ValidatingTrait
         {
             $rules = $this->getRules();
         }
-        
+
         $messages = $this->getMessages();
 
         $validation = Validator::make($this->toArray(), $rules, $messages);

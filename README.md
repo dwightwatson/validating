@@ -79,6 +79,8 @@ However, if you're the kind of cowboy who wants to save without performing model
 
 You may have noticed we're using the `unique` rule on the slug, which wouldn't work if we were updating a persisted model. Luckily, Validation will take care of this for you and append the model's primary key to the rule so that the rule will work as expected; ignoring the current model.
 
+You can adjust this functionality using accessors and mutators as described below.
+
 #### Accessors and mutators
 
 You also have access to some really existing getters and setters, which allow you to get and set your validation rules and messages.
@@ -90,3 +92,12 @@ You also have access to some really existing getters and setters, which allow yo
     $post->setMessages(['title.required' => "Please, please set a title."])
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
+
+You can also determine whether unique rules will be added to `unique` rules or not. This is determined by the `$addIdentifierToUniqueRules` property on your model which is true by default, otherwise you can define it in your model on a model by model basis or adjust it on the fly:
+
+    // Are we addeing uniques for this model?
+    $post->getAddingUniqueIdentifierToRules(); // true
+
+    // Skip adding uniques for this save.
+    // Note that you can chain your calls with this method.
+    $post->setAddingUniqueIdentifierToRules(false)->save();

@@ -85,7 +85,7 @@ class ValidatingTraitTest extends Illuminate\Foundation\Testing\TestCase
         $model = Mockery::mock('DatabaseValidatingTraitStub');
         $model->shouldDeferMissing();
 
-        $this->assertEquals($model, $model->addUniqueIdentifierToRules());
+        $this->assertEquals($model, $model->setAddingUniqueIdentifierToRules(true));
         $this->assertTrue($model->getAddingUniqueIdentifierToRules());
     }
 
@@ -94,7 +94,7 @@ class ValidatingTraitTest extends Illuminate\Foundation\Testing\TestCase
         $model = Mockery::mock('DatabaseValidatingTraitStub');
         $model->shouldDeferMissing();
 
-        $this->assertEquals($model, $model->doNotAddUniqueIdentifierToRules());
+        $this->assertEquals($model, $model->setAddingUniqueIdentifierToRules(false));
         $this->assertFalse($model->getAddingUniqueIdentifierToRules());
     }
 
