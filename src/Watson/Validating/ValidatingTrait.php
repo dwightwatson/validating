@@ -8,7 +8,7 @@ trait ValidatingTrait
     {
         static::saving(function($model)
         {
-            return $model->enforceValidation ? $model->isValid() : true;
+            return $model->isValid();
         });
     }
 
@@ -25,7 +25,15 @@ trait ValidatingTrait
      *
      * @var boolean
      */
-    private $enforceValidation = true;
+    protected $enforceValidation = true;
+
+    /**
+     * Whether the model should add identifiers to the unique
+     * validation rules before attempting validation.
+     *
+     * @var boolean
+     */
+    protected $addIdentifierToUniqueRules = true;
 
     /**
      * Get the validation rules being used against the model.
@@ -78,6 +86,43 @@ trait ValidatingTrait
     }
 
     /**
+     * Returns wheter the model will add it's unique identifier 
+     * to the rules when validating.\
+     *
+     * @return boolean
+     */
+    public function getAddingUniqueIdentifierToRules()
+    {
+        return $this->addUniqueIdentifierToRules;
+    }
+
+    /**
+     * Tell the model to add unique identifier to rules when
+     * performing validation.
+     *
+     * @return self
+     */
+    public function addUniqueIdentifierToRules()
+    {
+        $this->addUniqueIdentifierToRules = true;
+
+        return $this;
+    }
+
+    /**
+     * Tell the model to remove unique identifier to rules when
+     * performing validation.
+     *
+     * @return self
+     */
+    public function doNotAddUniqueIdentifierToRules()
+    {
+        $this->addUniqueIdentifierToRules = false;
+
+        return $this;
+    }
+
+    /**
      * Returns whether the model is valid or not.
      *
      * @return boolean
@@ -123,7 +168,17 @@ trait ValidatingTrait
      */
     protected function validate()
     {
-        $rules = $this->exists ? $this->getRulesWithUniqueIdentifiers() : $this->getRules();
+        if ( ! $this->enforceValidation) return true;
+
+        if ($this->exists && $this->addUniqueIdentifierToRules)
+        {
+            $rules = $this->getRulesWithUniqueIdentifiers();
+        }
+        else
+        {
+            $rules = $this->getRules();
+        }
+        
         $messages = $this->getMessages();
 
         $validation = Validator::make($this->toArray(), $rules, $messages);

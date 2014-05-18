@@ -72,6 +72,32 @@ class ValidatingTraitTest extends Illuminate\Foundation\Testing\TestCase
         $this->assertEquals([], $model->getErrors());
     }
 
+    public function testGetsWhetherAddingUniqueIdentifiersToRules()
+    {
+        $model = Mockery::mock('DatabaseValidatingTraitStub');
+        $model->shouldDeferMissing();
+
+        $this->assertTrue($model->getAddingUniqueIdentifierToRules());
+    }
+
+    public function testSetsAddUniqueIdentiferToRulesToTrue()
+    {
+        $model = Mockery::mock('DatabaseValidatingTraitStub');
+        $model->shouldDeferMissing();
+
+        $this->assertEquals($model, $model->addUniqueIdentifierToRules());
+        $this->assertTrue($model->getAddingUniqueIdentifierToRules());
+    }
+
+    public function testSetsAddUniqueIdentiferToRulesToFalse()
+    {
+        $model = Mockery::mock('DatabaseValidatingTraitStub');
+        $model->shouldDeferMissing();
+
+        $this->assertEquals($model, $model->doNotAddUniqueIdentifierToRules());
+        $this->assertFalse($model->getAddingUniqueIdentifierToRules());
+    }
+
     public function testValidateReturnsTrueOnValidModel()
     {
         Validator::shouldReceive('make')
@@ -107,6 +133,8 @@ class DatabaseValidatingTraitStub
     use Watson\Validating\ValidatingTrait;
 
     public $exists = false;
+
+    protected $addUniqueIdentifierToRules = true;
 
     protected $rules = [
         'foo' => 'bar'

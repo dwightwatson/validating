@@ -90,7 +90,3 @@ You also have access to some really existing getters and setters, which allow yo
     $post->setMessages(['title.required' => "Please, please set a title."])
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
-
-### Todos
-
-* Allow saving without the unique identifier helper
