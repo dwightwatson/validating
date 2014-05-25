@@ -72,30 +72,32 @@ class ValidatingTraitTest extends Illuminate\Foundation\Testing\TestCase
         $this->assertEquals([], $model->getErrors());
     }
 
-    public function testGetsWhetherAddingUniqueIdentifiersToRules()
+    public function testGetsInjectIdentifier()
     {
         $model = Mockery::mock('DatabaseValidatingTraitStub');
         $model->shouldDeferMissing();
 
-        $this->assertTrue($model->getAddingUniqueIdentifierToRules());
+        $this->assertTrue($model->getInjectIdentifier());
     }
 
-    public function testSetsAddUniqueIdentiferToRulesToTrue()
+    public function testSetsInjectIdentifierToTrue()
     {
         $model = Mockery::mock('DatabaseValidatingTraitStub');
         $model->shouldDeferMissing();
 
-        $this->assertEquals($model, $model->setAddingUniqueIdentifierToRules(true));
-        $this->assertTrue($model->getAddingUniqueIdentifierToRules());
+        $model->setInjectIdentifier(true);
+
+        $this->assertTrue($model->getInjectIdentifier());
     }
 
-    public function testSetsAddUniqueIdentiferToRulesToFalse()
+    public function testSetsInjectIdentifierToFalse()
     {
         $model = Mockery::mock('DatabaseValidatingTraitStub');
         $model->shouldDeferMissing();
 
-        $this->assertEquals($model, $model->setAddingUniqueIdentifierToRules(false));
-        $this->assertFalse($model->getAddingUniqueIdentifierToRules());
+        $model->setInjectIdentifier(false);
+
+        $this->assertFalse($model->getInjectIdentifier());
     }
 
     public function testValidateReturnsTrueOnValidModel()

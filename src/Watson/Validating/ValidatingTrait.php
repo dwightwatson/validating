@@ -8,7 +8,11 @@ trait ValidatingTrait
     {
         static::saving(function($model)
         {
-            return $model->isValid();
+            // If the model has validating turned on, validate.
+            if ($model->getValidating())
+            {
+                return $model->isValid();
+            }
         });
     }
 
@@ -25,15 +29,15 @@ trait ValidatingTrait
      *
      * @var boolean
      */
-    protected $enforceValidation = true;
+    protected $validating = true;
 
     /**
-     * Whether the model should add identifiers to the unique
+     * Whether the model should inject it's identifier to the unique
      * validation rules before attempting validation.
      *
      * @var boolean
      */
-    protected $addIdentifierToUniqueRules = true;
+    protected $injectIdentifier = true;
 
     /**
      * Get the validation rules being used against the model.
@@ -48,7 +52,8 @@ trait ValidatingTrait
     /**
      * Set rules to be used against the model.
      *
-     * @param array
+     * @param  array
+     * @return void
      */
     public function setRules($rules)
     {
@@ -68,7 +73,8 @@ trait ValidatingTrait
     /**
      * Set the validation messages to be used by the validator.
      *
-     * @param array
+     * @param  array
+     * @return void
      */
     public function setMessages($messages)
     {
@@ -86,14 +92,14 @@ trait ValidatingTrait
     }
 
     /**
-     * Returns wheter the model will add it's unique identifier 
+     * Returns whether the model will add it's unique identifier 
      * to the rules when validating.
      *
      * @return boolean
      */
-    public function getAddingUniqueIdentifierToRules()
+    public function getInjectIdentifier()
     {
-        return $this->addUniqueIdentifierToRules;
+        return $this->injectIdentifier;
     }
 
     /**
@@ -101,13 +107,38 @@ trait ValidatingTrait
      * performing validation.
      *
      * @param  boolean
-     * @return self
+     * @return void
      */
-    public function setAddingUniqueIdentifierToRules($value)
+    public function setInjectIdentifier($value)
     {
-        $this->addUniqueIdentifierToRules = $value;
+        if ( ! is_bool($value)) return;
 
-        return $this;
+        $this->injectIdentifier = $value;
+    }
+
+    /**
+     * Returns whether the model will attempt to validate itself 
+     * when saving or not.
+     *
+     * @return boolean
+     */
+    public function getValidating()
+    {
+        return $this->validating;
+    }
+
+    /**
+     * Tell lthe model whether to attempt validation upon saving or
+     * not.
+     *
+     * @param  boolean
+     * @return void
+     */
+    public function setValidating($value)
+    {
+        if ( ! is_bool($value)) return;
+
+        $this->validating = $value;
     }
 
     /**
@@ -138,13 +169,13 @@ trait ValidatingTrait
      */
     public function forceSave()
     {
-        $currentValidationSetting = $this->enforceValidation;
+        $currentValidatingSetting = $this->getValidating();
 
-        $this->enforceValidation = false;
+        $this->setValidating(false);
 
         $result = $this->save();
 
-        $this->enforceValidation = $currentValidationSetting;
+        $this->setValidating($currentValidatingSetting);
 
         return $result;
     }
@@ -158,9 +189,7 @@ trait ValidatingTrait
      */
     protected function validate()
     {
-        if ( ! $this->enforceValidation) return true;
-
-        if ($this->exists && $this->addUniqueIdentifierToRules)
+        if ($this->exists && $this->injectIdentifier)
         {
             $rules = $this->getRulesWithUniqueIdentifiers();
         }
@@ -204,31 +233,43 @@ trait ValidatingTrait
             {
                 if (strpos($rule, 'unique') === 0)
                 {
-                    $parameters = explode(',', substr($rule, 7));
-
-                    // If the table name isn't set, get it.
-                    if ( ! isset($parameters[0]))
-                    {
-                        $parameters[0] = $this->getTable();
-                    }
-
-                    // If the field name isn't set, infer it.
-                    if ( ! isset($parameters[1]))
-                    {
-                        $parameters[1] = $field;
-                    }
-
-                    // If the identifier isn't set, add it.
-                    if ( ! isset($parameters[2]))
-                    {
-                        $parameters[2] = $this->getKey();
-                    }
-
-                    $rule = 'unique:' . implode(',', $parameters);
+                    $rule = $this->prepareUniqueRule($rule);
                 }
             }
         }
 
         return $rules;
+    }
+
+    /**
+     * Take a unique rule, add the database table, column and model identifier
+     * if required.
+     *
+     * @param  string  $rule
+     * @return string
+     */
+    protected function prepareUniqueRule($rule)
+    {
+        $parameters = explode(',', substr($rule, 7));
+
+        // If the table name isn't set, get it.
+        if ( ! isset($parameters[0]))
+        {
+            $parameters[0] = $this->getTable();
+        }
+
+        // If the field name isn't set, infer it.
+        if ( ! isset($parameters[1]))
+        {
+            $parameters[1] = $field;
+        }
+
+        // If the identifier isn't set, add it.
+        if ( ! isset($parameters[2]))
+        {
+            $parameters[2] = $this->getKey();
+        }
+
+        return 'unique:' . implode(',', $parameters);
     }
 }
