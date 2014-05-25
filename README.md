@@ -93,11 +93,11 @@ You also have access to some really existing getters and setters, which allow yo
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
 
-You can also determine whether unique rules will be added to `unique` rules or not. This is determined by the `$addIdentifierToUniqueRules` property on your model which is true by default, otherwise you can define it in your model on a model by model basis or adjust it on the fly:
+You can also determine whether unique rules will be added to `unique` rules or not. This is determined by the `$injectIdentifier` property on your model which is true by default, otherwise you can define it in your model on a model by model basis or adjust it on the fly:
 
     // Are we addeing uniques for this model?
-    $post->getAddingUniqueIdentifierToRules(); // true
+    $post->getInjectIdentifier(); // true
 
     // Skip adding uniques for this save.
-    // Note that you can chain your calls with this method.
-    $post->setAddingUniqueIdentifierToRules(false)->save();
+    $post->setInjectIdentifier(false);
+    $post->save();
