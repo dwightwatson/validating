@@ -14,7 +14,7 @@ _Validating is still in beta, so please be aware that things aren't perfect yet.
 Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
-"watson/validating": "0.4.*"
+"watson/validating": "dev-master"
 ```
 
 Because we're running on Laravel 4.2 which is currently in beta, you may also need to set your `minimum-stability`:
