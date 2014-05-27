@@ -161,7 +161,7 @@ class DatabaseValidatingTraitStub
         return 1;
     }
 
-    public function toArray()
+    public function getAttributes()
     {
         return ['abc' => '123'];
     }

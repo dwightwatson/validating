@@ -6,14 +6,7 @@ trait ValidatingTrait
 {
     public static function bootValidatingTrait()
     {
-        static::saving(function($model)
-        {
-            // If the model has validating turned on, validate.
-            if ($model->getValidating())
-            {
-                return $model->isValid();
-            }
-        });
+        static::observe(new ValidatingObserver);
     }
 
     /**
@@ -42,22 +35,49 @@ trait ValidatingTrait
     /**
      * Get the validation rules being used against the model.
      *
+     * @param  string
      * @return array
      */
-    public function getRules()
+    public function getRules($ruleset = null)
     {
+        // If a ruleset name is given, return that ruleset.
+        if ($ruleset && isset($this->rules[$ruleset]))
+        {
+            return $this->rules[$ruleset];
+        }
+
+        // Otherwise, we'll return the default rules.
+        if (isset($this->rules['default']))
+        {
+            return $this->rules['default'];
+        }
+
+        // If the default key isn't set, the rules array is the default
+        // ruleset.
         return $this->rules ?: [];
     }
 
     /**
-     * Set rules to be used against the model.
+     * Set either the default rules for the model or add another ruleset
+     * to the model..
      *
      * @param  array
+     * @param  string
      * @return void
      */
-    public function setRules($rules)
+    public function setRules($rules, $ruleset = null)
     {
-        $this->rules = $rules;
+        // If a ruleset name is given, set the rules for that key.
+        if ($ruleset)
+        {
+            $this->rules[$ruleset] = $rules;
+        }
+
+        // Otherwise, we're setting the default rules.
+        else
+        {
+            $this->rules['default'] = $rules;
+        }
     }
 
     /**
@@ -146,9 +166,9 @@ trait ValidatingTrait
      *
      * @return boolean
      */
-    public function isValid()
+    public function isValid($ruleset = null)
     {
-        return $this->validate();
+        return $this->validate($ruleset);
     }
 
     /**
@@ -156,9 +176,9 @@ trait ValidatingTrait
      *
      * @return boolean
      */
-    public function isInvalid()
+    public function isInvalid($ruleet = null)
     {
-        return ! $this->validate();
+        return ! $this->validate($ruleset = null);
     }
 
     /**
@@ -187,20 +207,18 @@ trait ValidatingTrait
      *
      * @return boolean
      */
-    protected function validate()
+    protected function validate($ruleset = null)
     {
+        $rules = $this->getRules($ruleset);
+
         if ($this->exists && $this->injectIdentifier)
         {
-            $rules = $this->getRulesWithUniqueIdentifiers();
-        }
-        else
-        {
-            $rules = $this->getRules();
+            $rules = $this->injectUniqueIdentifier($rules);
         }
 
         $messages = $this->getMessages();
 
-        $validation = Validator::make($this->toArray(), $rules, $messages);
+        $validation = Validator::make($this->getAttributes(), $rules, $messages);
 
         if ($validation->passes()) return true;
 
@@ -220,10 +238,8 @@ trait ValidatingTrait
      *
      * @return void
      */
-    protected function getRulesWithUniqueIdentifiers()
+    protected function injectUniqueIdentifier($rules)
     {
-        $rules = $this->getRules() ?: [];
-
         foreach ($rules as $field => &$ruleset)
         {
             // If the ruleset is a pipe-delimited string, convert it to an array.

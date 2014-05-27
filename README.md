@@ -1,5 +1,5 @@
-Validating
-==========
+Eloquent Validation
+===================
 
 [![Build Status](https://travis-ci.org/dwightwatson/validating.png?branch=master)](https://travis-ci.org/dwightwatson/validating)
 
@@ -23,7 +23,7 @@ Because we're running on Laravel 4.2 which is currently in beta, you may also ne
 "minimum-stability": "beta"
 ```
 
-### Using Validating
+### Overview
 
 First, add the trait to your model and add your validation rules and messages as needed.
 
@@ -75,11 +75,50 @@ However, if you're the kind of cowboy who wants to save without performing model
 
     $post->forceSave();
 
+#### Multiple rulesets
+
+In some instances you may wish to use different rulesets depending on the action that is occurring. For example, you might require different rules if a model is being created to when a model is being updated. Utilising different rules is easy.
+
+    protected $rules = [
+        'creating' => [
+            'title' => 'required'
+        ],
+
+        'updating' => [
+            'title'       => 'required',
+            'description' => 'required'
+        ]
+    ];
+
+The events that you are able to hook into with rules include `creating`, `updating`, `saving`, `deleting` and `restoring`. You simply a certain event by listing rules under that key.
+
+If you want to use a default ruleset (which will only be used for creating and saving) you can do that also.
+
+    protected $rules = [
+        'restoring' => [
+            'title'       => 'required',
+            'description' => 'required'
+            'user_id' => 'required|exists:users,id'
+        ],
+
+        'default' => [
+            'title'       => 'required',
+            'description' => 'required'
+        ]
+    ];
+
 #### Unique rules
 
 You may have noticed we're using the `unique` rule on the slug, which wouldn't work if we were updating a persisted model. Luckily, Validation will take care of this for you and append the model's primary key to the rule so that the rule will work as expected; ignoring the current model.
 
-You can adjust this functionality using accessors and mutators as described below.
+You can adjust this functionality on the fly, using the following methods.
+
+    // Are we addeing uniques for this model?
+    $post->getInjectIdentifier(); // true
+
+    // Skip adding uniques for this save.
+    $post->setInjectIdentifier(false);
+    $post->save();
 
 #### Accessors and mutators
 
@@ -93,11 +132,41 @@ You also have access to some really existing getters and setters, which allow yo
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
 
-You can also determine whether unique rules will be added to `unique` rules or not. This is determined by the `$injectIdentifier` property on your model which is true by default, otherwise you can define it in your model on a model by model basis or adjust it on the fly:
 
-    // Are we addeing uniques for this model?
-    $post->getInjectIdentifier(); // true
+### Controller usage
 
-    // Skip adding uniques for this save.
-    $post->setInjectIdentifier(false);
-    $post->save();
+There are a few ways to go about using the validating model in your controllers, but here's the simple way I like to do it. Really clean, clear as to what is going on and easy to test. Of course you can mix it up as you need, it's just one approach.
+
+    class PostsController extends BaseController
+    {
+        protected $post;
+
+        public function __construct(Post $post)
+        {
+            $this->post = $post;
+        }
+
+        // ...
+
+        public function store()
+        {
+            // We can use all input if we have the $fillable property
+            // set on our model.
+            $input = Input::all();
+
+            $post = $this->post->fill($input);
+
+            if ( ! $post->save())
+            {
+                // The post did not save due to validation errors.
+                return Redirect::route('posts.create')
+                    ->withErrors($post->getErrors())
+                    ->withInput();
+            }
+
+            // Post was saved successfully.
+            return Redirect::route('posts.show', $post->id);
+        }
+    }
+
+It's important to note that `$post->save()` should only return false if validation fails (unless you have other observers watching your model events). If there is an issue with saving in the database your app would raise an exception instead.
