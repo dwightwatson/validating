@@ -38,22 +38,16 @@ trait ValidatingTrait
      * @param  string
      * @return array
      */
-    public function getRules($ruleset = null)
+    public function getRules($ruleset = 'saving')
     {
         // If a ruleset name is given, return that ruleset.
-        if ($ruleset && isset($this->rules[$ruleset]))
+        if (array_key_exists($ruleset, $this->rules))
         {
             return $this->rules[$ruleset];
         }
 
-        // Otherwise, we'll return the default rules.
-        if (isset($this->rules['default']))
-        {
-            return $this->rules['default'];
-        }
-
-        // If the default key isn't set, the rules array is the default
-        // ruleset.
+        // If the specified ruleset does not exist, there may only 
+        // be one default ruleset.
         return $this->rules ?: [];
     }
 
@@ -65,19 +59,9 @@ trait ValidatingTrait
      * @param  string
      * @return void
      */
-    public function setRules($rules, $ruleset = null)
+    public function setRules($rules, $ruleset = 'saving')
     {
-        // If a ruleset name is given, set the rules for that key.
-        if ($ruleset)
-        {
-            $this->rules[$ruleset] = $rules;
-        }
-
-        // Otherwise, we're setting the default rules.
-        else
-        {
-            $this->rules['default'] = $rules;
-        }
+        $this->rules[$ruleset] = $rules;
     }
 
     /**
@@ -108,7 +92,7 @@ trait ValidatingTrait
      */
     public function getErrors()
     {
-        return $this->errors ?: [];
+        return $this->errors;
     }
 
     /**

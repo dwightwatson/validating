@@ -2,47 +2,65 @@
 
 class ValidatingObserver
 {
+    /**
+     * Register the validation event for creating the model.
+     *
+     * @param  Model  $model
+     * @return bool
+     */
     public function creating($model)
     {
         return $this->performValidation($model, 'creating');
     }
 
+    /**
+     * Register the validation event for updating the model.
+     *
+     * @param  Model  $model
+     * @return bool
+     */
     public function updating($model)
     {
         return $this->performValidation($model, 'updating');
     }
 
+    /**
+     * Register the validation event for saving the model. Saving validation
+     * should only occur if creating and updating validation does not.
+     *
+     * @param  Model  $model
+     * @return bool
+     */
     public function saving($model)
     {
-        return $this->performValidation($model, 'saving');
-    }
-
-    public function deleting($model)
-    {
-        if ($model->getRules('deleting'))
+        if ( ! $model->getRules('creating') && ! $model->getRules('updating'))
         {
-            return $this->performValidation($model, 'deleting');
+            return $this->performValidation($model, 'saving');            
         }
     }
 
     /**
-     * If the model has a ruleset for when the model is restoring,
-     * run them.
+     * Register the validation event for deleting the model.
      *
-     * @param  object  $model
+     * @param  Model  $model
      * @return bool
-    public function restoring($model)
+     */
+    public function deleting($model)
     {
-        if ($model->getRules('restoring'))
-        {
-            return $this->performValidation($model, 'restoring');   
-        }
+        return $this->performValidation($model, 'deleting');
     }
 
+    /**
+     * Perform validation with the specified ruleset.
+     *
+     * @param  object  $model
+     * @param  string  $event
+     * @return bool
+     */
     protected function performValidation($model, $event = null)
     {
         // If the model has validating enabled, perform it.
-        if ($model->getValidating())
+        if ($model->getValidating() && $model->getRules($event))
         {
             return $model->isValid($event);
         }

@@ -2,25 +2,14 @@
 
 use Illuminate\Support\Facades\Validator;
 
-class ValidatingTraitTest extends Illuminate\Foundation\Testing\TestCase
+class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * Creates the application.
-     *
-     * @return \Symfony\Component\HttpKernel\HttpKernelInterface
-     */
-    public function createApplication()
-    {
-        $unitTesting = true;
+    public $trait;
 
-        $testEnvironment = 'testing';
-
-        return require __DIR__.'/../../bootstrap/start.php';
-    }
-    
     public function setUp()
     {
-
+        $this->trait = Mockery::mock('DatabaseValidatingTraitStub');
+        $this->trait->shouldDeferMissing();
     }
 
     public function tearDown()
@@ -30,74 +19,50 @@ class ValidatingTraitTest extends Illuminate\Foundation\Testing\TestCase
 
     public function testGetsRulesArray()
     {
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
-
-        $this->assertEquals(['foo' => 'bar'], $model->getRules());
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
     }
 
     public function testSetsRulesArray()
     {
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
+        $this->trait->setRules(['bar' => 'foo']);
 
-        $model->setRules(['bar' => 'foo']);
-
-        $this->assertEquals(['bar' => 'foo'], $model->getRules());
+        $this->assertEquals(['bar' => 'foo'], $this->trait->getRules());
     }
 
     public function testGetsMessagesArray()
     {
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
-
-        $this->assertEquals(['bar' => 'baz'], $model->getMessages());
+        $this->assertEquals(['bar' => 'baz'], $this->trait->getMessages());
     }
 
     public function testSetsMessagesArray()
     {
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
+        $this->trait->setMessages(['bar' => 'foo']);
 
-        $model->setMessages(['bar' => 'foo']);
-
-        $this->assertEquals(['bar' => 'foo'], $model->getMessages());
+        $this->assertEquals(['bar' => 'foo'], $this->trait->getMessages());
     }
 
     public function testGetsErrorsWithoutValidation()
     {
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
-
-        $this->assertEquals([], $model->getErrors());
+        $this->assertNull($this->trait->getErrors());
     }
 
     public function testGetsInjectIdentifier()
     {
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
-
-        $this->assertTrue($model->getInjectIdentifier());
+        $this->assertTrue($this->trait->getInjectIdentifier());
     }
 
     public function testSetsInjectIdentifierToTrue()
     {
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
+        $this->trait->setInjectIdentifier(true);
 
-        $model->setInjectIdentifier(true);
-
-        $this->assertTrue($model->getInjectIdentifier());
+        $this->assertTrue($this->trait->getInjectIdentifier());
     }
 
     public function testSetsInjectIdentifierToFalse()
     {
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
+        $this->trait->setInjectIdentifier(false);
 
-        $model->setInjectIdentifier(false);
-
-        $this->assertFalse($model->getInjectIdentifier());
+        $this->assertFalse($this->trait->getInjectIdentifier());
     }
 
     public function testValidateReturnsTrueOnValidModel()
@@ -106,10 +71,7 @@ class ValidatingTraitTest extends Illuminate\Foundation\Testing\TestCase
             ->once()
             ->andReturn(Mockery::mock(['passes' => true]));
 
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
-
-        $result = $model->validate();
+        $result = $this->trait->validate();
 
         $this->assertTrue($result);
     }
@@ -120,13 +82,10 @@ class ValidatingTraitTest extends Illuminate\Foundation\Testing\TestCase
             ->once()
             ->andReturn(Mockery::mock(['passes' => false, 'messages' => 'foo']));
 
-        $model = Mockery::mock('DatabaseValidatingTraitStub');
-        $model->shouldDeferMissing();
-
-        $result = $model->validate();
+        $result = $this->trait->validate();
 
         $this->assertFalse($result);
-        $this->assertEquals('foo', $model->getErrors());
+        $this->assertEquals('foo', $this->trait->getErrors());
     }
 }
 

@@ -90,35 +90,48 @@ In some instances you may wish to use different rulesets depending on the action
         ]
     ];
 
-The events that you are able to hook into with rules include `creating`, `updating`, `saving`, `deleting` and `restoring`. You simply a certain event by listing rules under that key.
+The events that you are able to hook into with rules include `creating`, `updating`, `saving`, and `deleting`. You simply a certain event by listing rules under that key.
 
-If you want to use a default ruleset (which will only be used for creating and saving) you can do that also.
+If you want to use a default ruleset which will be used for creating and updating, you can define a `saving` ruleset, as the `saving` event is called for both.
 
     protected $rules = [
-        'restoring' => [
+        'deleting' => [
             'title'       => 'required',
             'description' => 'required'
             'user_id' => 'required|exists:users,id'
         ],
 
-        'default' => [
+        'saving' => [
             'title'       => 'required',
             'description' => 'required'
         ]
     ];
 
+You can also define your own custom rulesets. These won't be used by the trait when hooking into model events, but you can use them to validate for yourself.
+
+    protected $rules = [
+        'my_custom_rules' => [
+            'title' => 'required'
+        ]
+    ];
+
+    // 
+
+    $post->isValid('my_custom_rules');
+
 #### Unique rules
 
 You may have noticed we're using the `unique` rule on the slug, which wouldn't work if we were updating a persisted model. Luckily, Validation will take care of this for you and append the model's primary key to the rule so that the rule will work as expected; ignoring the current model.
 
-You can adjust this functionality on the fly, using the following methods.
+You can adjust this functionality by setting the `$injectIdentifier` property on your model.
 
-    // Are we addeing uniques for this model?
-    $post->getInjectIdentifier(); // true
-
-    // Skip adding uniques for this save.
-    $post->setInjectIdentifier(false);
-    $post->save();
+    /**
+     * Whether the model should inject it's identifier to the unique
+     * validation rules before attempting validation.
+     *
+     * @var boolean
+     */
+    protected $injectIdentifier = true;
 
 #### Accessors and mutators
 
