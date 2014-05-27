@@ -200,7 +200,7 @@ trait ValidatingTrait
 
         $messages = $this->getMessages();
 
-        $validation = Validator::make($this->toArray(), $rules, $messages);
+        $validation = Validator::make($this->getAttributes(), $rules, $messages);
 
         if ($validation->passes()) return true;
 
