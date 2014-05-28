@@ -17,17 +17,30 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         Mockery::close();
     }
 
-    public function testGetsRulesArray()
+    public function testGetsDefaultRules()
     {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
     }
 
-    public function testSetsRulesArray()
+    public function testSetsDefaultRules()
     {
         $this->trait->setRules(['bar' => 'foo']);
 
         $this->assertEquals(['bar' => 'foo'], $this->trait->getRules());
     }
+
+    public function testGetsRulesWithName()
+    {
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRules('saving'));        
+    }
+
+    public function testSetsRulesWithName()
+    {
+        $this->trait->setRules(['abc' => 123], 'foo');
+
+        $this->assertEquals(['abc' => 123], $this->trait->getRules('foo'));
+    }
+
 
     public function testGetsMessagesArray()
     {
@@ -41,10 +54,26 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['bar' => 'foo'], $this->trait->getMessages());
     }
 
+
     public function testGetsErrorsWithoutValidation()
     {
         $this->assertNull($this->trait->getErrors());
     }
+
+    public function testGetsErrorsWithValidation()
+    {
+        Validator::shouldReceive('make')
+            ->once()
+            ->andReturn(Mockery::mock([
+                'passes'   => false,
+                'messages' => 'foo'
+            ]));
+
+        $this->trait->validate();
+
+        $this->assertEquals('foo', $this->trait->getErrors());
+    }
+
 
     public function testGetsInjectIdentifier()
     {
@@ -76,7 +105,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
-    public function testValidateReturnsFalseAndSetsErrorsOnInvalidModel()
+    public function testValidateReturnsFalseOnInvalidModel()
     {
         Validator::shouldReceive('make')
             ->once()
@@ -85,7 +114,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $result = $this->trait->validate();
 
         $this->assertFalse($result);
-        $this->assertEquals('foo', $this->trait->getErrors());
     }
 }
 

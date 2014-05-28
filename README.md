@@ -107,6 +107,12 @@ If you want to use a default ruleset which will be used for creating and updatin
         ]
     ];
 
+You can check to see if the model is valid with a given rulset too.
+
+    $post->isValid('updating');
+
+Note that if you do not pass a ruleset to any method that takes one it will default to the saving ruleset or global ruleset.
+
 You can also define your own custom rulesets. These won't be used by the trait when hooking into model events, but you can use them to validate for yourself.
 
     protected $rules = [

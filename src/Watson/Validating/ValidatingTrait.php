@@ -71,7 +71,7 @@ trait ValidatingTrait
      */
     public function getMessages()
     {
-        return $this->messages ?: [];
+        return $this->messages;
     }
 
     /**
