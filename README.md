@@ -1,5 +1,5 @@
-Eloquent Validation
-===================
+Eloquent Validation Trait
+=========================
 
 [![Build Status](https://travis-ci.org/dwightwatson/validating.png?branch=master)](https://travis-ci.org/dwightwatson/validating)
 
