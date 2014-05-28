@@ -43,6 +43,15 @@ class Post extends Eloquent
 	protected $messages = [
 		'slug.unique' => "Another post is using that slug already."
 	];
+
+    /**
+     * Whether the model should inject it's identifier to the unique
+     * validation rules before attempting validation. If not set, it
+     * will default to true.
+     *
+     * @var boolean
+     */
+    protected $injectIdentifier = true;
 }
 ```
 
@@ -150,7 +159,6 @@ You also have access to some really existing getters and setters, which allow yo
     $post->setMessages(['title.required' => "Please, please set a title."])
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
-
 
 ### Controller usage
 

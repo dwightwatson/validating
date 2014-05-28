@@ -25,14 +25,6 @@ trait ValidatingTrait
     protected $validating = true;
 
     /**
-     * Whether the model should inject it's identifier to the unique
-     * validation rules before attempting validation.
-     *
-     * @var boolean
-     */
-    protected $injectIdentifier = true;
-
-    /**
      * Get the validation rules being used against the model.
      *
      * @param  string
@@ -101,9 +93,9 @@ trait ValidatingTrait
      *
      * @return boolean
      */
-    public function getInjectIdentifier()
+    public function getInjectUniqueIdentifier()
     {
-        return $this->injectIdentifier;
+        return isset($this->injectUniqueIdentifier) ? $this->injectUniqueIdentifier : true;
     }
 
     /**
@@ -113,36 +105,11 @@ trait ValidatingTrait
      * @param  boolean
      * @return void
      */
-    public function setInjectIdentifier($value)
+    public function setInjectUniqueIdentifier($value)
     {
         if ( ! is_bool($value)) return;
 
-        $this->injectIdentifier = $value;
-    }
-
-    /**
-     * Returns whether the model will attempt to validate itself 
-     * when saving or not.
-     *
-     * @return boolean
-     */
-    public function getValidating()
-    {
-        return $this->validating;
-    }
-
-    /**
-     * Tell lthe model whether to attempt validation upon saving or
-     * not.
-     *
-     * @param  boolean
-     * @return void
-     */
-    public function setValidating($value)
-    {
-        if ( ! is_bool($value)) return;
-
-        $this->validating = $value;
+        $this->injectUniqueIdentifier = $value;
     }
 
     /**
@@ -195,7 +162,7 @@ trait ValidatingTrait
     {
         $rules = $this->getRules($ruleset);
 
-        if ($this->exists && $this->injectIdentifier)
+        if ($this->exists && $this->injectUniqueIdentifier)
         {
             $rules = $this->injectUniqueIdentifier($rules);
         }
@@ -209,6 +176,31 @@ trait ValidatingTrait
         $this->errors = $validation->messages();
 
         return false;
+    }
+
+    /**
+     * Returns whether the model will attempt to validate itself 
+     * when saving or not.
+     *
+     * @return boolean
+     */
+    protected function getValidating()
+    {
+        return $this->validating;
+    }
+
+    /**
+     * Tell lthe model whether to attempt validation upon saving or
+     * not.
+     *
+     * @param  boolean
+     * @return void
+     */
+    protected function setValidating($value)
+    {
+        if ( ! is_bool($value)) return;
+
+        $this->validating = $value;
     }
 
     /** 

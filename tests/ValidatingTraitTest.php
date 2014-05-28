@@ -75,24 +75,25 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testGetsInjectIdentifier()
+    public function testGetsInjectUniqueIdentifierDefaultsToTrue()
     {
-        $this->assertTrue($this->trait->getInjectIdentifier());
+        $this->assertTrue($this->trait->getInjectUniqueIdentifier());
     }
 
-    public function testSetsInjectIdentifierToTrue()
+    public function testSetsInjectUniqueIdentifierToTrue()
     {
-        $this->trait->setInjectIdentifier(true);
+        $this->trait->setInjectUniqueIdentifier(true);
 
-        $this->assertTrue($this->trait->getInjectIdentifier());
+        $this->assertTrue($this->trait->getInjectUniqueIdentifier());
     }
 
-    public function testSetsInjectIdentifierToFalse()
+    public function testSetsInjectUniqueIdentifierToFalse()
     {
-        $this->trait->setInjectIdentifier(false);
+        $this->trait->setInjectUniqueIdentifier(false);
 
-        $this->assertFalse($this->trait->getInjectIdentifier());
+        $this->assertFalse($this->trait->getInjectUniqueIdentifier());
     }
+    
 
     public function testValidateReturnsTrueOnValidModel()
     {
@@ -114,6 +115,19 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $result = $this->trait->validate();
 
         $this->assertFalse($result);
+    }
+
+    public function testForceSaveSavesOnInvalidModel()
+    {
+        $this->trait->shouldReceive('save')
+            ->once()
+            ->andReturn(true);
+
+        $this->trait->setRules(['title' => 'required']);
+
+        $result = $this->trait->forceSave();
+
+        $this->assertTrue($result);
     }
 }
 
