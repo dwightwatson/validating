@@ -162,12 +162,13 @@ trait ValidatingTrait
     {
         $rules = $this->getRules($ruleset);
 
+
         if ($this->exists && $this->injectUniqueIdentifier)
         {
-            $rules = $this->injectUniqueIdentifier($rules);
+            $rules = $this->injectUniqueIdentifierToRules($rules);
         }
 
-        $messages = $this->getMessages();
+        $messages = $this->getMessages() ?: [];
 
         $validation = Validator::make($this->getAttributes(), $rules, $messages);
 
@@ -184,7 +185,7 @@ trait ValidatingTrait
      *
      * @return boolean
      */
-    protected function getValidating()
+    public function getValidating()
     {
         return $this->validating;
     }
@@ -214,7 +215,7 @@ trait ValidatingTrait
      *
      * @return void
      */
-    protected function injectUniqueIdentifier($rules)
+    protected function injectUniqueIdentifierToRules($rules)
     {
         foreach ($rules as $field => &$ruleset)
         {
