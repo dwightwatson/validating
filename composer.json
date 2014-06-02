@@ -23,5 +23,5 @@
             "Watson\\Validating": "src/"
         }
     },
-    "minimum-stability": "beta"
+    "minimum-stability": "stable"
 }
