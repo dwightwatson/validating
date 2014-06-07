@@ -2,7 +2,7 @@
     "name": "watson/validating",
     "description": "Eloquent model validating trait.",
     "keywords": ["laravel", "eloquent", "validation"],
-    "licence": "MIT",
+    "license": "MIT",
     "authors": [
         {
             "name": "Dwight Watson",
