@@ -7,14 +7,12 @@ Eloquent Validation Trait
 
 Validating is a trait for Laravel 4.2+ Eloquent models which requires that models meet their validation criteria before being saved. If they are not considered valid the model will not be saved and the validation errors will be made available.
 
-_Validating is still in beta, so please be aware that things aren't perfect yet. However, it will adhere to semantic versioning._
-
 ### Installation
 
 Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
-"watson/validating": "dev-master"
+"watson/validating": "0.6.*"
 ```
 
 ### Overview
