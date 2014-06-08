@@ -222,5 +222,5 @@ It's important to note that `$post->save()` should only return false if validati
 
 ### Todo
 
-* Add ability to throw exception if a model fails validation.
+* Add save method which will always throw an exception.
 * Allow for a core set of rules which can be modified/extended by other rulesets
