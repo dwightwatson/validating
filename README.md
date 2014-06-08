@@ -189,3 +189,8 @@ There are a few ways to go about using the validating model in your controllers,
     }
 
 It's important to note that `$post->save()` should only return false if validation fails (unless you have other observers watching your model events). If there is an issue with saving in the database your app would raise an exception instead.
+
+### Todo
+
+* Add ability to throw exception if a model fails validation.
+* Allow for a core set of rules which can be modified/extended by other rulesets
