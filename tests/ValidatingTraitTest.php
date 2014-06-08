@@ -17,28 +17,28 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         Mockery::close();
     }
 
-    public function testGetsDefaultRules()
+    public function testGetsGlobalRules()
     {
-        $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
+        $this->assertEquals(['saving' => ['foo' => 'bar']], $this->trait->getRules());
     }
 
-    public function testSetsDefaultRules()
+    public function testSetsGlobalRules()
     {
         $this->trait->setRules(['bar' => 'foo']);
 
         $this->assertEquals(['bar' => 'foo'], $this->trait->getRules());
     }
 
-    public function testGetsRulesWithName()
+    public function testGetsRulesetWithName()
     {
-        $this->assertEquals(['foo' => 'bar'], $this->trait->getRules('saving'));        
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));        
     }
 
-    public function testSetsRulesWithName()
+    public function testSetsRulesetWithName()
     {
-        $this->trait->setRules(['abc' => 123], 'foo');
+        $this->trait->setRuleset(['abc' => 123], 'foo');
 
-        $this->assertEquals(['abc' => 123], $this->trait->getRules('foo'));
+        $this->assertEquals(['abc' => 123], $this->trait->getRuleset('foo'));
     }
 
 
@@ -229,7 +229,9 @@ class DatabaseValidatingTraitStub
     protected $addUniqueIdentifierToRules = true;
 
     protected $rules = [
-        'foo' => 'bar'
+        'saving' => [
+            'foo' => 'bar'
+        ]
     ];
 
     protected $messages = [

@@ -33,7 +33,7 @@ class ValidatingObserver
      */
     public function saving($model)
     {
-        if ( ! $model->getRules('creating') && ! $model->getRules('updating'))
+        if ( ! $model->getRuleset('creating') && ! $model->getRuleset('updating'))
         {
             return $this->performValidation($model, 'saving');            
         }
@@ -57,10 +57,10 @@ class ValidatingObserver
      * @param  string  $event
      * @return bool
      */
-    protected function performValidation($model, $event = null)
+    protected function performValidation($model, $event)
     {
         // If the model has validating enabled, perform it.
-        if ($model->getValidating() && $model->getRules($event))
+        if ($model->getValidating() && $model->getRuleset($event))
         {
             return $model->isValid($event);
         }

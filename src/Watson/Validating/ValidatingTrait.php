@@ -111,22 +111,38 @@ trait ValidatingTrait
     */
 
     /**
-     * Get the validation rules being used against the model.
+     * Get the global validation rules.
      *
-     * @param  string
      * @return array
      */
-    public function getRules($ruleset = 'saving')
+    public function getRules()
     {
-        // If a ruleset name is given, return that ruleset.
+        return $this->rules ?: [];
+    }
+
+    /**
+     * Set the global validation rules.
+     *
+     * @param  array
+     * @return void
+     */
+    public function setRules($rules)
+    {
+        $this->rules = $rules;
+    }
+
+    /**
+     * Get a single ruleset if it exists.
+     *
+     * @param  string
+     * @return mixed
+     */
+    public function getRuleset($ruleset)
+    {
         if (array_key_exists($ruleset, $this->rules))
         {
             return $this->rules[$ruleset];
         }
-
-        // If the specified ruleset does not exist, there may only 
-        // be one default ruleset.
-        return $this->rules ?: [];
     }
 
     /**
@@ -137,7 +153,7 @@ trait ValidatingTrait
      * @param  string
      * @return void
      */
-    public function setRules($rules, $ruleset = 'saving')
+    public function setRuleset($rules, $ruleset = 'saving')
     {
         $this->rules[$ruleset] = $rules;
     }
@@ -149,7 +165,7 @@ trait ValidatingTrait
      */
     public function getMessages()
     {
-        return $this->messages;
+        return $this->messages ?: [];
     }
 
     /**
@@ -178,7 +194,7 @@ trait ValidatingTrait
      *
      * @return boolean
      */
-    public function isValid($ruleset = null)
+    public function isValid($ruleset = 'saving')
     {
         return $this->validate($ruleset);
     }
@@ -188,9 +204,9 @@ trait ValidatingTrait
      *
      * @return boolean
      */
-    public function isInvalid($ruleset = null)
+    public function isInvalid($ruleset = 'saving')
     {
-        return ! $this->validate($ruleset = null);
+        return ! $this->validate($ruleset);
     }
 
     /**
@@ -257,15 +273,14 @@ trait ValidatingTrait
      */
     protected function validate($ruleset = null)
     {
-        $rules = $this->getRules($ruleset);
-
+        $rules = $this->getRuleset($ruleset) ?: $this->getRules();
 
         if ($this->exists && $this->injectUniqueIdentifier)
         {
             $rules = $this->injectUniqueIdentifierToRules($rules);
         }
 
-        $messages = $this->getMessages() ?: [];
+        $messages = $this->getMessages();
 
         $validation = Validator::make($this->getAttributes(), $rules, $messages);
 

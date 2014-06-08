@@ -183,6 +183,9 @@ You also have access to some really existing getters and setters, which allow yo
 	// YOLO no rules
     $post->setRules([]);
 
+    // Or set a specific ruleset
+    $post->setRuleset([], 'creating');
+
 	// Be a little nicer
     $post->setMessages(['title.required' => "Please, please set a title."])
 
