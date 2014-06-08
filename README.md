@@ -12,7 +12,7 @@ Validating is a trait for Laravel 4.2+ Eloquent models which requires that model
 Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
-"watson/validating": "0.6.*"
+"watson/validating": "0.7.*"
 ```
 
 ### Overview
@@ -75,6 +75,36 @@ Also, the model will be prevented from saving if it doesn't pass validation!
 However, if you're the kind of cowboy who wants to save without performing model validation you can too. This will return the same result as if you called `save()` on a model without the trait.
 
     $post->forceSave();
+
+#### Throwing exceptions
+
+If you'd prefer to have validation exceptions thrown when validation fails instead of simply returning a boolean, simply add this to your model. You'll then want to catch a `Watson\Validating\ValidationException`.
+
+```
+    /**
+     * Whether the model should throw a ValidationException if it
+     * fails validation. If not set, it will default to false.
+     *
+     * @var boolean
+     */
+    protected $throwValidationExceptions = true;
+```
+
+The `ValidationException` gives you access to the validation errors too.
+
+```
+try
+{
+    $post->save();
+}
+catch (Watson\Validating\ValidationException $e)
+{
+    $errors = $e->getErrors();
+
+    return Redirect::route('posts.create')
+        ->withErrors($errors);
+}
+```
 
 #### Multiple rulesets
 

@@ -74,6 +74,44 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->trait->getErrors());
     }
 
+    /**
+     * @expectedException \Watson\Validating\ValidationException
+     * @expectedExceptionMessage Model failed validation
+     */
+    public function testGetsErrorsWithException()
+    {
+        Validator::shouldReceive('make')
+            ->once()
+            ->andReturn(Mockery::mock([
+                'passes'   => false,
+                'messages' => Mockery::mock('Illuminate\Support\MessageBag')
+            ]));
+
+        $this->trait->setThrowValidationExceptions(true);
+
+        $this->trait->validate();
+    }
+
+
+    public function testGetsThrowValidationExceptionsDefaultsToFalse()
+    {
+        $this->assertFalse($this->trait->getThrowValidationExceptions());
+    }
+
+    public function testSetsThrowValidationExceptionsToTrue()
+    {
+        $this->trait->setThrowValidationExceptions(true);
+
+        $this->assertTrue($this->trait->getThrowValidationExceptions());
+    }
+
+    public function testSetsThrowValidationExceptionsToFalse()
+    {
+        $this->trait->setThrowValidationExceptions(false);
+
+        $this->assertFalse($this->trait->getThrowValidationExceptions());
+    }
+
 
     public function testGetsInjectUniqueIdentifierDefaultsToTrue()
     {

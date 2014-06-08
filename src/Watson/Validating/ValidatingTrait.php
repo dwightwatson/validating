@@ -24,6 +24,80 @@ trait ValidatingTrait
      */
     protected $validating = true;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Configuration accessors and mutators
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Returns whether the model will attempt to validate itself 
+     * when saving or not.
+     *
+     * @return boolean
+     */
+    public function getValidating()
+    {
+        return $this->validating;
+    }
+
+    /**
+     * Tell the model whether to attempt validation upon saving or
+     * not.
+     *
+     * @param  boolean
+     * @return void
+     */
+    protected function setValidating($value)
+    {
+        if ( ! is_bool($value)) return;
+
+        $this->validating = $value;
+    }
+
+    public function getThrowValidationExceptions()
+    {
+        return isset($this->throwValidationExceptions) ? $this->throwValidationExceptions : false;
+    }
+
+    public function setThrowValidationExceptions($value)
+    {
+        if ( ! is_bool($value)) return;
+
+        $this->throwValidationExceptions = $value;
+    }
+
+    /**
+     * Returns whether the model will add it's unique identifier 
+     * to the rules when validating.
+     *
+     * @return boolean
+     */
+    public function getInjectUniqueIdentifier()
+    {
+        return isset($this->injectUniqueIdentifier) ? $this->injectUniqueIdentifier : true;
+    }
+
+    /**
+     * Tell the model to add unique identifier to rules when
+     * performing validation.
+     *
+     * @param  boolean
+     * @return void
+     */
+    public function setInjectUniqueIdentifier($value)
+    {
+        if ( ! is_bool($value)) return;
+
+        $this->injectUniqueIdentifier = $value;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Instance accessors and mutators
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * Get the validation rules being used against the model.
      *
@@ -88,31 +162,6 @@ trait ValidatingTrait
     }
 
     /**
-     * Returns whether the model will add it's unique identifier 
-     * to the rules when validating.
-     *
-     * @return boolean
-     */
-    public function getInjectUniqueIdentifier()
-    {
-        return isset($this->injectUniqueIdentifier) ? $this->injectUniqueIdentifier : true;
-    }
-
-    /**
-     * Tell the model to add unique identifier to rules when
-     * performing validation.
-     *
-     * @param  boolean
-     * @return void
-     */
-    public function setInjectUniqueIdentifier($value)
-    {
-        if ( ! is_bool($value)) return;
-
-        $this->injectUniqueIdentifier = $value;
-    }
-
-    /**
      * Returns whether the model is valid or not.
      *
      * @return boolean
@@ -174,34 +223,27 @@ trait ValidatingTrait
 
         if ($validation->passes()) return true;
 
-        $this->errors = $validation->messages();
+        if ($this->getThrowValidationExceptions())
+        {
+            $exception = new ValidationException('Model failed validation');
 
-        return false;
+            $exception->setErrors($validation->messages());
+
+            throw $exception;
+        }
+        else
+        {
+            $this->errors = $validation->messages();
+
+            return false;
+        }
     }
 
-    /**
-     * Returns whether the model will attempt to validate itself 
-     * when saving or not.
-     *
-     * @return boolean
-     */
-    public function getValidating()
+    public function updateUniqueRules($ruleset = null)
     {
-        return $this->validating;
-    }
+        $rules = $this->getRules($ruleset);
 
-    /**
-     * Tell lthe model whether to attempt validation upon saving or
-     * not.
-     *
-     * @param  boolean
-     * @return void
-     */
-    protected function setValidating($value)
-    {
-        if ( ! is_bool($value)) return;
-
-        $this->validating = $value;
+        $this->setRules($ruleset, $this->injectUniqueIdentifierToRules($rules));
     }
 
     /** 
