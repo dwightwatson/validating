@@ -17,6 +17,11 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         Mockery::close();
     }
 
+    public function testGetsModel()
+    {
+        $this->assertEquals($this->trait, $this->trait->getModel());
+    }
+
     public function testGetsGlobalRules()
     {
         $this->assertEquals(['saving' => ['foo' => 'bar']], $this->trait->getRules());

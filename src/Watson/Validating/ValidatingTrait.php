@@ -111,6 +111,16 @@ trait ValidatingTrait
     */
 
     /**
+     * Get the model.
+     *
+     * @return mixed
+     */
+    public function getModel()
+    {
+        return $this;
+    }
+
+    /**
      * Get the global validation rules.
      *
      * @return array
@@ -221,7 +231,7 @@ trait ValidatingTrait
 
         $this->setValidating(false);
 
-        $result = $this->save();
+        $result = $this->getModel()->save();
 
         $this->setValidating($currentValidatingSetting);
 
@@ -240,7 +250,7 @@ trait ValidatingTrait
 
         $this->setThrowValidationExceptions(true);
 
-        $this->save();
+        $this->getModel()->save();
 
         $this->setThrowValidationExceptions($currentThrowValidationExceptionsSetting);
     }
@@ -257,7 +267,7 @@ trait ValidatingTrait
 
         $this->setThrowValidationExceptions(false);
 
-        $result = $this->save();
+        $result = $this->getModel()->save();
 
         $this->setThrowValidationExceptions($currentThrowValidationExceptionsSetting);
 
