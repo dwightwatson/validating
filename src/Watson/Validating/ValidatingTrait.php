@@ -363,7 +363,7 @@ trait ValidatingTrait
         // If the table name isn't set, get it.
         if ( ! isset($parameters[0]))
         {
-            $parameters[0] = $this->getTable();
+            $parameters[0] = $this->getModel()->getTable();
         }
 
         // If the field name isn't set, infer it.
@@ -375,7 +375,7 @@ trait ValidatingTrait
         // If the identifier isn't set, add it.
         if ( ! isset($parameters[2]))
         {
-            $parameters[2] = $this->getKey();
+            $parameters[2] = $this->getModel()->getKey();
         }
 
         return 'unique:' . implode(',', $parameters);
