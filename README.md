@@ -1,5 +1,5 @@
-Validating, a validation trait for Laravel 4.2 Eloquent models
-==============================================================
+Validating, a validation trait for Laravel
+==========================================
 
 [![Build Status](https://travis-ci.org/dwightwatson/validating.png?branch=master)](https://travis-ci.org/dwightwatson/validating)
 
@@ -78,7 +78,7 @@ If you're using the model and you wish to perform a save that bypasses validatio
 
     $post->forceSave();
 
-#### Throwing exceptions
+### Throwing exceptions
 
 If you'd prefer to have validation exceptions thrown when validation fails instead of simply returning a boolean, simply add this to your model. You'll then want to catch a `Watson\Validating\ValidationException`.
 
@@ -110,7 +110,7 @@ catch (Watson\Validating\ValidationException $e)
 
 If you'd like to perform a one-off save using exceptions or return values, you can use the `saveWithException()` and `saveWithoutException()` methods.
 
-#### Multiple rulesets
+### Multiple rulesets
 
 In some instances you may wish to use different rulesets depending on the action that is occurring. For example, you might require different rules if a model is being created to when a model is being updated. Utilising different rules is easy.
 
@@ -160,7 +160,7 @@ You can also define your own custom rulesets. These won't be used by the trait w
 
     $post->isValid('my_custom_rules');
 
-#### Unique rules
+### Unique rules
 
 You may have noticed we're using the `unique` rule on the slug, which wouldn't work if we were updating a persisted model. Luckily, Validation will take care of this for you and append the model's primary key to the rule so that the rule will work as expected; ignoring the current model.
 
@@ -176,7 +176,7 @@ You can adjust this functionality by setting the `$injectIdentifier` property on
 protected $injectIdentifier = true;
 ```
 
-#### Accessors and mutators
+### Accessors and mutators
 
 You also have access to some really existing getters and setters, which allow you to get and set your validation rules and messages.
 
@@ -188,7 +188,7 @@ You also have access to some really existing getters and setters, which allow yo
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
 
-### Controller usage
+## Controller usage
 
 There are a few ways to go about using the validating model in your controllers, but here's the simple way I like to do it. Really clean, clear as to what is going on and easy to test. Of course you can mix it up as you need, it's just one approach.
 
@@ -235,6 +235,6 @@ You might also like to reduce the number of lines in your code by doing the abov
         //
     }
 
-### Todo
+## Todo
 
 * Allow for a core set of rules which can be modified/extended by other rulesets
