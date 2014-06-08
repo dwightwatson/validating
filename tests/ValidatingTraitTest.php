@@ -55,6 +55,57 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function testIsValidReturnsTrueWhenValidationPasses()
+    {
+        Validator::shouldReceive('make')
+            ->once()
+            ->andReturn(Mockery::mock(['passes' => true]));
+
+        $result = $this->trait->isValid();
+
+        $this->assertTrue($result);
+    }
+
+    public function testIsValidReturnFalseWhenValidationFails()
+    {
+        Validator::shouldReceive('make')
+            ->once()
+            ->andReturn(Mockery::mock([
+                'passes'   => false,
+                'messages' => 'foo'
+            ]));
+
+        $result = $this->trait->isValid();
+
+        $this->assertFalse($result);
+    }
+
+    public function testIsInvalidReturnsTrueWithValidationFails()
+    {
+        Validator::shouldReceive('make')
+            ->once()
+            ->andReturn(Mockery::mock([
+                'passes'   => false,
+                'messages' => 'foo'
+            ]));
+
+        $result = $this->trait->isInvalid();
+
+        $this->assertTrue($result);
+    }
+
+    public function testIsInvalidReturnsFalseWhenValidationPasses()
+    {
+        Validator::shouldReceive('make')
+            ->once()
+            ->andReturn(Mockery::mock(['passes' => true]));
+
+        $result = $this->trait->isInvalid();
+
+        $this->assertFalse($result);
+    }
+
+
     public function testGetsErrorsWithoutValidation()
     {
         $this->assertNull($this->trait->getErrors());

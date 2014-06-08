@@ -188,7 +188,7 @@ trait ValidatingTrait
      *
      * @return boolean
      */
-    public function isInvalid($ruleet = null)
+    public function isInvalid($ruleset = null)
     {
         return ! $this->validate($ruleset = null);
     }
