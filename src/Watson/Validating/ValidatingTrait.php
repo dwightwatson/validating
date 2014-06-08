@@ -31,8 +31,8 @@ trait ValidatingTrait
     */
 
     /**
-     * Returns whether the model will attempt to validate itself 
-     * when saving or not.
+     * Returns whether or not the model will attempt to validate itself when
+     * saving.
      *
      * @return boolean
      */
@@ -42,8 +42,7 @@ trait ValidatingTrait
     }
 
     /**
-     * Tell the model whether to attempt validation upon saving or
-     * not.
+     * Set whether the model should attempt validation on saving.
      *
      * @param  boolean
      * @return void
@@ -55,11 +54,24 @@ trait ValidatingTrait
         $this->validating = $value;
     }
 
+    /**
+     * Returns whether the model will raise an exception or return a boolean
+     * when validating.
+     *
+     * @return boolean
+     */
     public function getThrowValidationExceptions()
     {
         return isset($this->throwValidationExceptions) ? $this->throwValidationExceptions : false;
     }
 
+    /**
+     * Set whether the model should raise an exception or return a boolean on
+     * a failed validation.
+     *
+     * @param  boolean
+     * @return void
+     */
     public function setThrowValidationExceptions($value)
     {
         if ( ! is_bool($value)) return;
@@ -68,8 +80,8 @@ trait ValidatingTrait
     }
 
     /**
-     * Returns whether the model will add it's unique identifier 
-     * to the rules when validating.
+     * Returns whether or not the model will add it's unique identifier to the
+     * rules when validating.
      *
      * @return boolean
      */
@@ -79,8 +91,8 @@ trait ValidatingTrait
     }
 
     /**
-     * Tell the model to add unique identifier to rules when
-     * performing validation.
+     * Set the model to add unique identifier to rules when performing 
+     * validation.
      *
      * @param  boolean
      * @return void
@@ -196,6 +208,42 @@ trait ValidatingTrait
         $result = $this->save();
 
         $this->setValidating($currentValidatingSetting);
+
+        return $result;
+    }
+
+    /**
+     * Perform a one-off save that will raise an exception on validation error
+     * instead of returning a boolean (which is the default behaviour).
+     *
+     * @return void
+     */
+    public function saveWithException()
+    {
+        $currentThrowValidationExceptionsSetting = $this->getThrowValidationExceptions();
+
+        $this->setThrowValidationExceptions(true);
+
+        $this->save();
+
+        $this->setThrowValidationExceptions($currentThrowValidationExceptionsSetting);
+    }
+
+    /**
+     * Perform a one-off save that will return a boolean on validation error 
+     * instead of raising an exception.
+     *
+     * @return boolean
+     */
+    public function saveWithoutException()
+    {
+        $currentThrowValidationExceptionsSetting = $this->getThrowValidationExceptions();
+
+        $this->setThrowValidationExceptions(false);
+
+        $result = $this->save();
+
+        $this->setThrowValidationExceptions($currentThrowValidationExceptionsSetting);
 
         return $result;
     }

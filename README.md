@@ -106,6 +106,8 @@ catch (Watson\Validating\ValidationException $e)
 }
 ```
 
+If you'd like to perform a one-off save using exceptions or return values, you can use the `saveWithException()` and `saveWithoutException()` methods.
+
 #### Multiple rulesets
 
 In some instances you may wish to use different rulesets depending on the action that is occurring. For example, you might require different rules if a model is being created to when a model is being updated. Utilising different rules is easy.
