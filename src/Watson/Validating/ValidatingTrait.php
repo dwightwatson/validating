@@ -341,7 +341,7 @@ trait ValidatingTrait
             {
                 if (strpos($rule, 'unique') === 0)
                 {
-                    $rule = $this->prepareUniqueRule($rule);
+                    $rule = $this->prepareUniqueRule($rule, $field);
                 }
             }
         }
@@ -354,9 +354,10 @@ trait ValidatingTrait
      * if required.
      *
      * @param  string  $rule
+     * @param  string  $field
      * @return string
      */
-    protected function prepareUniqueRule($rule)
+    protected function prepareUniqueRule($rule, $field)
     {
         $parameters = explode(',', substr($rule, 7));
 
