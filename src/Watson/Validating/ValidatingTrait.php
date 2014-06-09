@@ -292,7 +292,7 @@ trait ValidatingTrait
 
         $messages = $this->getMessages();
 
-        $validation = Validator::make($this->getAttributes(), $rules, $messages);
+        $validation = Validator::make($this->getModel()->getAttributes(), $rules, $messages);
 
         if ($validation->passes()) return true;
 
