@@ -340,7 +340,7 @@ trait ValidatingTrait
 
             foreach ($ruleset as &$rule)
             {
-                if (strpos($rule, 'unique') === 0)
+                if (starts_with($rule, 'unique'))
                 {
                     $rule = $this->prepareUniqueRule($rule, $field);
                 }
