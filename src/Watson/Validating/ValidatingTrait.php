@@ -292,7 +292,7 @@ trait ValidatingTrait
 
         $messages = $this->getMessages();
 
-        $validation = Validator::make($this->getAttributes(), $rules, $messages);
+        $validation = Validator::make($this->getModel()->getAttributes(), $rules, $messages);
 
         if ($validation->passes()) return true;
 
@@ -340,7 +340,7 @@ trait ValidatingTrait
 
             foreach ($ruleset as &$rule)
             {
-                if (strpos($rule, 'unique') === 0)
+                if (starts_with($rule, 'unique'))
                 {
                     $rule = $this->prepareUniqueRule($rule, $field);
                 }
