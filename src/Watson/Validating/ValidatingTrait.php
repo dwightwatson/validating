@@ -300,6 +300,7 @@ trait ValidatingTrait
         {
             $exception = new ValidationException('Model failed validation');
 
+            $exception->setModel($this->getModel());
             $exception->setErrors($validation->messages());
 
             throw $exception;

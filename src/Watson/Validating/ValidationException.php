@@ -7,6 +7,13 @@ use Illuminate\Support\MessageBag;
 class ValidationException extends RuntimeException implements MessageProviderInterface
 {
     /**
+     * The model.
+     *
+     * @var \Illuminate\Database\Eloquent\Model
+     */
+    protected $model;
+
+    /**
      * The validation errors.
      *
      * @var \Illuminate\Support\MessageBag
@@ -42,5 +49,26 @@ class ValidationException extends RuntimeException implements MessageProviderInt
     public function setErrors(MessageBag $errors)
     {
         $this->errors = $errors;
+    }
+
+    /**
+     * Get the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set the model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model
+     * @return void
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
     }
 }

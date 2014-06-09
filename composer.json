@@ -11,12 +11,12 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4.2.*",
-        "illuminate/validation": "4.2.*"    
+        "illuminate/support": "4.2.x",
+        "illuminate/validation": "4.2.x"    
     },
     "require-dev": {
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "4.1.*"
+        "mockery/mockery": "0.9.x",
+        "phpunit/phpunit": "4.1.x"
     },
     "autoload": {
         "psr-0": {
