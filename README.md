@@ -19,7 +19,7 @@ Simply add the package to your `composer.json` file and run `composer update`.
 
 First, add the trait to your model and add your validation rules and messages as needed.
 
-```
+```php
 use Watson\Validating\ValidatingTrait;
 
 class Post extends Eloquent
@@ -28,7 +28,7 @@ class Post extends Eloquent
 
 	protected $rules = [
 		'title'   => 'required',
-		'slug'    => 'required|unique:posts,slug'
+		'slug'    => 'required|unique:posts,slug',
 		'content' => 'required'
 	];
 
@@ -49,40 +49,46 @@ class Post extends Eloquent
 
 Now, you have access to some plesant functionality.
 
-    // Check whether the model is valid or not.
-    $post->isValid(); // true
+```php
+// Check whether the model is valid or not.
+$post->isValid(); // true
 
-    // Or check if it is invalid or not.
-    $post->isInvalid(); // false
+// Or check if it is invalid or not.
+$post->isInvalid(); // false
 
-    // Once you've determined the validity of the model, 
-    // you can get the errors.
-    $post->getErrors(); // errors MessageBag
+// Once you've determined the validity of the model, 
+// you can get the errors.
+$post->getErrors(); // errors MessageBag
+```
 
 Also, the model will be prevented from saving if it doesn't pass validation!
 
-    if ( ! $post->save())
-    {
-    	// Oops.
-    	return Redirect::route('posts.create')
-    		->withErrors($post->getErrors())
-    		->withInput();
-    }
+```php
+if ( ! $post->save())
+{
+	// Oops.
+	return Redirect::route('posts.create')
+		->withErrors($post->getErrors())
+		->withInput();
+}
 
     return Redirect::route('posts.show', $post->id)
     	->withSuccess("Your post was saved successfully.");
+```
 
 ### Bypass validation
 
 If you're using the model and you wish to perform a save that bypasses validation you can. This will return the same result as if you called `save()` on a model without the trait.
 
-    $post->forceSave();
+```php
+$post->forceSave();
+```
 
 ### Throwing exceptions
 
 If you'd prefer to have validation exceptions thrown when validation fails instead of simply returning a boolean, simply add this to your model. You'll then want to catch a `Watson\Validating\ValidationException`.
 
-```
+```php
 /**
  * Whether the model should throw a ValidationException if it
  * fails validation. If not set, it will default to false.
@@ -94,7 +100,7 @@ protected $throwValidationExceptions = true;
 
 The `ValidationException` gives you access to the validation errors too.
 
-```
+```php
 try
 {
     $post->save();
@@ -116,51 +122,59 @@ If you'd like to perform a one-off save using exceptions or return values, you c
 
 In some instances you may wish to use different rulesets depending on the action that is occurring. For example, you might require different rules if a model is being created to when a model is being updated. Utilising different rules is easy.
 
-    protected $rules = [
-        'creating' => [
-            'title' => 'required'
-        ],
+```php
+protected $rules = [
+    'creating' => [
+        'title' => 'required'
+    ],
 
-        'updating' => [
-            'title'       => 'required',
-            'description' => 'required'
-        ]
-    ];
+    'updating' => [
+        'title'       => 'required',
+        'description' => 'required'
+    ]
+];
+```
 
 The events that you are able to hook into with rules include `creating`, `updating`, `saving`, and `deleting`. You simply a certain event by listing rules under that key.
 
 If you want to use a default ruleset which will be used for creating and updating, you can define a `saving` ruleset, as the `saving` event is called for both.
 
-    protected $rules = [
-        'deleting' => [
-            'title'       => 'required',
-            'description' => 'required'
-            'user_id' => 'required|exists:users,id'
-        ],
+```php
+protected $rules = [
+    'deleting' => [
+        'title'       => 'required',
+        'description' => 'required',
+        'user_id' => 'required|exists:users,id'
+    ],
 
-        'saving' => [
-            'title'       => 'required',
-            'description' => 'required'
-        ]
-    ];
+    'saving' => [
+        'title'       => 'required',
+        'description' => 'required'
+    ]
+];
+```
 
 You can check to see if the model is valid with a given rulset too.
 
-    $post->isValid('updating');
+```php
+$post->isValid('updating');
+```
 
 Note that if you do not pass a ruleset to any method that takes one it will default to the saving ruleset or global ruleset.
 
 You can also define your own custom rulesets. These won't be used by the trait when hooking into model events, but you can use them to validate for yourself.
 
-    protected $rules = [
-        'my_custom_rules' => [
-            'title' => 'required'
-        ]
-    ];
+```php
+protected $rules = [
+    'my_custom_rules' => [
+        'title' => 'required'
+    ]
+];
 
-    // 
+// 
 
-    $post->isValid('my_custom_rules');
+$post->isValid('my_custom_rules');
+```
 
 ### Unique rules
 
@@ -168,7 +182,7 @@ You may have noticed we're using the `unique` rule on the slug, which wouldn't w
 
 You can adjust this functionality by setting the `$injectIdentifier` property on your model.
 
-```
+```php
 /**
  * Whether the model should inject it's identifier to the unique
  * validation rules before attempting validation.
@@ -182,14 +196,16 @@ protected $injectIdentifier = true;
 
 You also have access to some really existing getters and setters, which allow you to get and set your validation rules and messages.
 
-	// YOLO no rules
-    $post->setRules([]);
+```php
+// YOLO no rules
+$post->setRules([]);
 
-    // Or set a specific ruleset
-    $post->setRuleset([], 'creating');
+// Or set a specific ruleset
+$post->setRuleset([], 'creating');
 
-	// Be a little nicer
-    $post->setMessages(['title.required' => "Please, please set a title."])
+// Be a little nicer
+$post->setMessages(['title.required' => "Please, please set a title."])
+```
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
 
@@ -197,7 +213,7 @@ These are handy if you need to adjust the rules or messages in a specific scenar
 
 There are a few ways to go about using the validating model in your controllers, but here's the simple way I like to do it. Really clean, clear as to what is going on and easy to test. Of course you can mix it up as you need, it's just one approach.
 
-```
+```php
 class PostsController extends BaseController
 {
     protected $post;
@@ -235,12 +251,14 @@ It's important to note that `$post->save()` should only return false if validati
 
 You might also like to reduce the number of lines in your code by doing the above test all in one line...
 
-    if ( ! $this->post->create(Input::all()))
-    {
-        //
-    }
+```php
+if ( ! $this->post->create(Input::all()))
+{
+    //
+}
+```
 
 ## Todo
 
-* Allow for a core set of rules which can be modified/extended by other rulesets
-* Fire `validating` and `validated` events
+* [ ] Allow for a core set of rules which can be modified/extended by other rulesets
+* [ ] Fire `validating` and `validated` events
