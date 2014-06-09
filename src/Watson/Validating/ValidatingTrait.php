@@ -202,6 +202,7 @@ trait ValidatingTrait
     /**
      * Returns whether the model is valid or not.
      *
+     * @param string $ruleset
      * @return boolean
      */
     public function isValid($ruleset = 'saving')
@@ -212,6 +213,7 @@ trait ValidatingTrait
     /**
      * Returns whether the model is invalid or not.
      *
+     * @param string $ruleset
      * @return boolean
      */
     public function isInvalid($ruleset = 'saving')
@@ -279,7 +281,9 @@ trait ValidatingTrait
      * or not it passes and setting the error messages on the model
      * if required.
      *
+     * @param string $ruleset
      * @return boolean
+     * @throws ValidationException
      */
     protected function validate($ruleset = null)
     {
@@ -329,7 +333,8 @@ trait ValidatingTrait
      * primary key to the unique rules so that the validation will
      * work as expected.
      *
-     * @return void
+     * @array $rules
+     * @return array
      */
     protected function injectUniqueIdentifierToRules($rules)
     {
