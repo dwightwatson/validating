@@ -243,3 +243,4 @@ You might also like to reduce the number of lines in your code by doing the abov
 ## Todo
 
 * Allow for a core set of rules which can be modified/extended by other rulesets
+* Fire `validating` and `validated` events
