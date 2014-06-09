@@ -1,9 +1,10 @@
 <?php namespace Watson\Validating;
 
 use RuntimeException;
+use Illuminate\Support\Contracts\MessageProviderInterface;
 use Illuminate\Support\MessageBag;
 
-class ValidationException extends RuntimeException
+class ValidationException extends RuntimeException implements MessageProviderInterface
 {
     /**
      * The validation errors.
@@ -20,6 +21,16 @@ class ValidationException extends RuntimeException
     public function getErrors()
     {
         return $this->errors;
+    }
+
+    /**
+     * Get the messages for the instance.
+     *
+     * @return \Illuminate\Support\MessageBag
+     */
+    public function getMessageBag()
+    {
+        return $this->getErrors();
     }
 
     /**

@@ -108,6 +108,8 @@ catch (Watson\Validating\ValidationException $e)
 }
 ```
 
+You can also just pass the exception to the `withErrors()` method, as Laravel will know how to handle it.
+
 If you'd like to perform a one-off save using exceptions or return values, you can use the `saveWithException()` and `saveWithoutException()` methods.
 
 ### Multiple rulesets
