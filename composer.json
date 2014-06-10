@@ -12,7 +12,8 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.2.x",
-        "illuminate/validation": "4.2.x"    
+        "illuminate/database": "4.2.x",
+        "illuminate/validation": "4.2.x"
     },
     "require-dev": {
         "mockery/mockery": "0.9.x",
