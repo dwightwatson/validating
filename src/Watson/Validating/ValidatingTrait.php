@@ -210,6 +210,17 @@ trait ValidatingTrait
     }
 
     /**
+     * Set the error messages.
+     *
+     * @param  \Illuminate\Support\MessageBag
+     * @return void
+     */
+    protected function setErrors(MessageBag $errors)
+    {
+        $this->errors = $errors;
+    }
+
+    /**
      * Returns whether the model is valid or not.
      *
      * @param string $ruleset
@@ -337,7 +348,7 @@ trait ValidatingTrait
         }
         else
         {
-            $this->errors = $validation->messages();
+            $this->setErrors($validation->messages());
 
             return false;
         }

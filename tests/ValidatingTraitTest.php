@@ -138,6 +138,15 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->trait->getErrors());
     }
 
+    public function testSetErrors()
+    {
+        $messageBag = Mockery::mock('Illuminate\Support\MessageBag');
+
+        $this->trait->setErrors($messageBag);
+
+        $this->assertEquals($messageBag, $this->trait->getErrors());
+    }
+
 
     public function testIsValidReturnsTrueWhenValidationPasses()
     {
@@ -152,33 +161,37 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testIsValidReturnFalseWhenValidationFails()
     {
+        $messageBag = Mockery::mock('Illuminate\Support\MessageBag');
+
         Validator::shouldReceive('make')
             ->once()
             ->andReturn(Mockery::mock([
                 'passes'   => false,
-                'messages' => 'foo'
+                'messages' => $messageBag
             ]));
 
         $result = $this->trait->isValid();
 
         $this->assertFalse($result);
-        $this->assertEquals('foo', $this->trait->getErrors());
+        $this->assertEquals($messageBag, $this->trait->getErrors());
     }
 
 
     public function testIsInvalidReturnsTrueWithValidationFails()
     {
+        $messageBag = Mockery::mock('Illuminate\Support\MessageBag');
+
         Validator::shouldReceive('make')
             ->once()
             ->andReturn(Mockery::mock([
                 'passes'   => false,
-                'messages' => 'foo'
+                'messages' => $messageBag
             ]));
 
         $result = $this->trait->isInvalid();
 
         $this->assertTrue($result);
-        $this->assertEquals('foo', $this->trait->getErrors());
+        $this->assertEquals($messageBag, $this->trait->getErrors());
     }
 
     public function testIsInvalidReturnsFalseWhenValidationPasses()
