@@ -1,6 +1,7 @@
 <?php namespace Watson\Validating;
 
 use InvalidArgumentException;
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Validator;
 
 trait ValidatingTrait
