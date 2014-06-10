@@ -1,26 +1,38 @@
 <?php namespace Watson\Validating;
 
+use Illuminate\Support\Facades\Event;
+
 class ValidatingObserver
 {
     /**
      * Register the validation event for creating the model.
      *
-     * @param  Model  $model
+     * @param  \Illuminate\Database\Eloquent\Model $model
      * @return bool
      */
     public function creating($model)
     {
+        if (! $this->fire('creating', $model))
+        {
+            return false;
+        }
+
         return $this->performValidation($model, 'creating');
     }
 
     /**
      * Register the validation event for updating the model.
      *
-     * @param  Model  $model
+     * @param  \Illuminate\Database\Eloquent\Model $model
      * @return bool
      */
     public function updating($model)
     {
+        if (! $this->fire('updating', $model))
+        {
+            return false;
+        }
+
         return $this->performValidation($model, 'updating');
     }
 
@@ -28,11 +40,16 @@ class ValidatingObserver
      * Register the validation event for saving the model. Saving validation
      * should only occur if creating and updating validation does not.
      *
-     * @param  Model  $model
+     * @param  \Illuminate\Database\Eloquent\Model $model
      * @return bool
      */
     public function saving($model)
     {
+        if (! $this->fire('saving', $model))
+        {
+            return false;
+        }
+
         if ( ! $model->getRuleset('creating') && ! $model->getRuleset('updating'))
         {
             return $this->performValidation($model, 'saving');            
@@ -42,18 +59,35 @@ class ValidatingObserver
     /**
      * Register the validation event for deleting the model.
      *
-     * @param  Model  $model
+     * @param  \Illuminate\Database\Eloquent\Model $model
      * @return bool
      */
     public function deleting($model)
     {
+        if (! $this->fire('deleting', $model))
+        {
+            return false;
+        }
+
         return $this->performValidation($model, 'deleting');
+    }
+
+    /**
+     * Call the event dispatcher.
+     * 
+     * @param 
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @return bool
+     */
+    protected function fire($event, $model)
+    {
+        return Event::fire('validate:' . $event, [$model]) === false ? false : true;
     }
 
     /**
      * Perform validation with the specified ruleset.
      *
-     * @param  object  $model
+     * @param  \Illuminate\Database\Eloquent\Model $model
      * @param  string  $event
      * @return bool
      */
