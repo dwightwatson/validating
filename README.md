@@ -12,7 +12,7 @@ Validating allows for multiple rulesets, injecting the model ID into `unique` va
 Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
-"watson/validating": "0.7.*"
+"watson/validating": "0.8.*"
 ```
 
 ## Overview
@@ -35,15 +35,6 @@ class Post extends Eloquent
 	protected $messages = [
 		'slug.unique' => "Another post is using that slug already."
 	];
-
-    /**
-     * Whether the model should inject it's identifier to the unique
-     * validation rules before attempting validation. If not set, it
-     * will default to true.
-     *
-     * @var boolean
-     */
-    protected $injectIdentifier = true;
 }
 ```
 
@@ -61,20 +52,27 @@ $post->isInvalid(); // false
 $post->getErrors(); // errors MessageBag
 ```
 
-Also, the model will be prevented from saving if it doesn't pass validation!
+Now, an exception will be raised when you attempt to save an invalid model.
 
 ```php
-if ( ! $post->save())
+try
 {
-	// Oops.
-	return Redirect::route('posts.create')
-		->withErrors($post->getErrors())
-		->withInput();
+    $post->save();
+
+}
+catch (Watson\Validating\ValidationException $e)
+{
+    $errors = $e->getErrors();
+    return Redirect::route('posts.create')
+        ->withErrors($errors)
+        ->withInput();
 }
 
-    return Redirect::route('posts.show', $post->id)
-    	->withSuccess("Your post was saved successfully.");
+return Redirect::route('posts.show', $post->id)
+    ->withSuccess("Your post was saved successfully.");
 ```
+
+Note that you can just pass the exception to the `withErrors()` method like `withErrors($e)` and Laravel will know how to handle it.
 
 ### Bypass validation
 
@@ -84,37 +82,31 @@ If you're using the model and you wish to perform a save that bypasses validatio
 $post->forceSave();
 ```
 
-### Throwing exceptions
+### Return value over exception
 
-If you'd prefer to have validation exceptions thrown when validation fails instead of simply returning a boolean, simply add this to your model. You'll then want to catch a `Watson\Validating\ValidationException`.
+If you would prefer to have the `save()` method return a boolean indicating the success of the save instead of catching an exception you can. Just set the following property on your model.
 
 ```php
 /**
  * Whether the model should throw a ValidationException if it
- * fails validation. If not set, it will default to false.
+ * fails validation. If not set, it will default to true.
  *
  * @var boolean
  */
-protected $throwValidationExceptions = true;
+protected $throwValidationExceptions = false;
 ```
 
-The `ValidationException` gives you access to the validation errors too.
+Now, you can perform model validation like so.
 
 ```php
-try
+if ( ! $post->save())
 {
-    $post->save();
-}
-catch (Watson\Validating\ValidationException $e)
-{
-    $errors = $e->getErrors();
-
+    // Oops.
     return Redirect::route('posts.create')
-        ->withErrors($errors);
-}
+        ->withErrors($post->getErrors())
+        ->withInput();
+}   
 ```
-
-You can also just pass the exception to the `withErrors()` method, as Laravel will know how to handle it.
 
 If you'd like to perform a one-off save using exceptions or return values, you can use the `saveWithException()` and `saveWithoutException()` methods.
 
@@ -214,6 +206,9 @@ These are handy if you need to adjust the rules or messages in a specific scenar
 There are a few ways to go about using the validating model in your controllers, but here's the simple way I like to do it. Really clean, clear as to what is going on and easy to test. Of course you can mix it up as you need, it's just one approach.
 
 ```php
+
+use Watson\Validating\ValidationException;
+
 class PostsController extends BaseController
 {
     protected $post;
@@ -231,13 +226,15 @@ class PostsController extends BaseController
         // set on our model.
         $input = Input::all();
 
-        $post = $this->post->fill($input);
-
-        if ( ! $post->save())
+        try
+        {
+            $post = $this->post->create($input);
+        }
+        catch (ValidationException $e)
         {
             // The post did not save due to validation errors.
             return Redirect::route('posts.create')
-                ->withErrors($post->getErrors())
+                ->withErrors($e)
                 ->withInput();
         }
 

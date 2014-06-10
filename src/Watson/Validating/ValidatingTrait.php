@@ -1,5 +1,6 @@
 <?php namespace Watson\Validating;
 
+use InvalidArgumentException;
 use Illuminate\Support\Facades\Validator;
 
 trait ValidatingTrait
@@ -49,7 +50,10 @@ trait ValidatingTrait
      */
     protected function setValidating($value)
     {
-        if ( ! is_bool($value)) return;
+        if ( ! is_bool($value)) 
+        {
+            throw new InvalidArgumentException('Validating value must be a boolean.');
+        }
 
         $this->validating = $value;
     }
@@ -62,7 +66,7 @@ trait ValidatingTrait
      */
     public function getThrowValidationExceptions()
     {
-        return isset($this->throwValidationExceptions) ? $this->throwValidationExceptions : false;
+        return isset($this->throwValidationExceptions) ? $this->throwValidationExceptions : true;
     }
 
     /**
@@ -74,7 +78,10 @@ trait ValidatingTrait
      */
     public function setThrowValidationExceptions($value)
     {
-        if ( ! is_bool($value)) return;
+        if ( ! is_bool($value))
+        {
+            throw new InvalidArgumentException('Throw validation exceptions value must be a boolean.');
+        }
 
         $this->throwValidationExceptions = $value;
     }
@@ -99,7 +106,10 @@ trait ValidatingTrait
      */
     public function setInjectUniqueIdentifier($value)
     {
-        if ( ! is_bool($value)) return;
+        if ( ! is_bool($value))
+        {
+            throw new InvalidArgumentException('Inject unique identifier value must be a boolean.');
+        }
 
         $this->injectUniqueIdentifier = $value;
     }
@@ -207,7 +217,7 @@ trait ValidatingTrait
      */
     public function isValid($ruleset = 'saving')
     {
-        return $this->validate($ruleset);
+        return $this->performValidation($ruleset, false);
     }
 
     /**
@@ -218,7 +228,7 @@ trait ValidatingTrait
      */
     public function isInvalid($ruleset = 'saving')
     {
-        return ! $this->validate($ruleset);
+        return ! $this->performValidation($ruleset, false);
     }
 
     /**
@@ -277,30 +287,46 @@ trait ValidatingTrait
     }
 
     /**
-     * Validate the model against it's rules, returning whether
-     * or not it passes and setting the error messages on the model
-     * if required.
+     * Get a Validator instance for a given ruleset.
      *
-     * @param string $ruleset
-     * @return boolean
-     * @throws ValidationException
+     * @param  string  $ruleset
+     * @return \Illuminate\Validation\Factory
      */
-    protected function validate($ruleset = null)
+    protected function getValidator($ruleset)
     {
+        // Get the model attributes.
+        $attributes = $this->getModel()->getAttributes();
+
+        // Get the validation rules.
         $rules = $this->getRuleset($ruleset) ?: $this->getRules();
 
-        if ($this->exists && $this->injectUniqueIdentifier)
+        if ($this->exists && $this->injectUniqueIdentifier) 
         {
             $rules = $this->injectUniqueIdentifierToRules($rules);
         }
 
+        // Get the custom validation messages.
         $messages = $this->getMessages();
 
-        $validation = Validator::make($this->getModel()->getAttributes(), $rules, $messages);
+        return Validator::make($attributes, $rules, $messages);
+    }
+
+    /**
+     * Validate the model against it's rules, returning whether
+     * or not it passes and setting the error messages on the model
+     * if required.
+     *
+     * @param  string  $ruleset
+     * @return boolean
+     * @throws ValidationException
+     */
+    protected function performValidation($ruleset = null, $throwException = true)
+    {
+        $validation = $this->getValidator($ruleset);
 
         if ($validation->passes()) return true;
 
-        if ($this->getThrowValidationExceptions())
+        if ($throwException && $this->getThrowValidationExceptions())
         {
             $exception = new ValidationException('Model failed validation');
 
@@ -317,11 +343,31 @@ trait ValidatingTrait
         }
     }
 
-    public function updateUniqueRules($ruleset = null)
+    /**
+     * Update the unique rules of the global rules to include the model
+     * identifier.
+     *
+     * @return void
+     */
+    public function updateRulesUniques()
     {
-        $rules = $this->getRules($ruleset);
+        $rules = $this->getRules();
 
-        $this->setRules($ruleset, $this->injectUniqueIdentifierToRules($rules));
+        $this->setRules($this->injectUniqueIdentifierToRules($rules));
+    }
+
+    /**
+     * Update the unique rules of the given ruleset to include the model
+     * identifier.
+     *
+     * @param  array  $ruleset
+     * @return void
+     */
+    public function updateRulesetUniques($ruleset = null)
+    {
+        $rules = $this->getRuleset($ruleset);
+
+        $this->setRuleset($ruleset, $this->injectUniqueIdentifierToRules($rules));
     }
 
     /** 
@@ -333,7 +379,7 @@ trait ValidatingTrait
      * primary key to the unique rules so that the validation will
      * work as expected.
      *
-     * @array $rules
+     * @param  array  $rules
      * @return array
      */
     protected function injectUniqueIdentifierToRules($rules)
