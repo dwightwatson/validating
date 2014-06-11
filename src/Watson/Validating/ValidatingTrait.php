@@ -207,7 +207,7 @@ trait ValidatingTrait
      */
     public function isValid($ruleset = 'saving')
     {
-        return $this->validate($ruleset);
+        return $this->validateModel($ruleset);
     }
 
     /**
@@ -218,7 +218,7 @@ trait ValidatingTrait
      */
     public function isInvalid($ruleset = 'saving')
     {
-        return ! $this->validate($ruleset);
+        return ! $this->validateModel($ruleset);
     }
 
     /**
@@ -285,7 +285,7 @@ trait ValidatingTrait
      * @return boolean
      * @throws ValidationException
      */
-    protected function validate($ruleset = null)
+    protected function validateModel($ruleset = null)
     {
         $rules = $this->getRuleset($ruleset) ?: $this->getRules();
 
