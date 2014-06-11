@@ -125,7 +125,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
                 'messages' => 'foo'
             ]));
 
-        $this->trait->validate();
+        $this->trait->validateModel();
 
         $this->assertEquals('foo', $this->trait->getErrors());
     }
@@ -145,7 +145,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
         $this->trait->setThrowValidationExceptions(true);
 
-        $this->trait->validate();
+        $this->trait->validateModel();
     }
 
 
@@ -195,7 +195,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(Mockery::mock(['passes' => true]));
 
-        $result = $this->trait->validate();
+        $result = $this->trait->validateModel();
 
         $this->assertTrue($result);
     }
@@ -206,7 +206,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(Mockery::mock(['passes' => false, 'messages' => 'foo']));
 
-        $result = $this->trait->validate();
+        $result = $this->trait->validateModel();
 
         $this->assertFalse($result);
     }
