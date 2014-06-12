@@ -177,7 +177,8 @@ You can adjust this functionality by setting the `$injectIdentifier` property on
 ```php
 /**
  * Whether the model should inject it's identifier to the unique
- * validation rules before attempting validation.
+ * validation rules before attempting validation. If this property
+ * is not set in the model it will default to true.
  *
  * @var boolean
  */
