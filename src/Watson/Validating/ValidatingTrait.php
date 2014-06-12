@@ -153,15 +153,23 @@ trait ValidatingTrait
     }
 
     /**
-     * Get a single ruleset if it exists.
+     * Get a single ruleset and merge it with the default ruleset if specified.
      *
      * @param  string
+     * @param  boolean  $mergeWithDefault
      * @return mixed
      */
-    public function getRuleset($ruleset)
+    public function getRuleset($ruleset, $mergeWithDefault = true)
     {
         if (array_key_exists($ruleset, $this->rules))
         {
+            if ($mergeWithDefault)
+            {
+                $defaultRuleset = $this->getRuleset('default', false) ?: [];
+
+                return array_merge($defaultRuleset, $this->rules[$ruleset]);
+            }
+
             return $this->rules[$ruleset];
         }
     }
@@ -227,8 +235,9 @@ trait ValidatingTrait
      * @param string $ruleset
      * @return boolean
      */
-    public function isValid($ruleset = 'saving')
+    public function isValid($ruleset = null)
     {
+        // Perform validation and return result.
         return $this->performValidation($ruleset, false);
     }
 
@@ -238,8 +247,9 @@ trait ValidatingTrait
      * @param string $ruleset
      * @return boolean
      */
-    public function isInvalid($ruleset = 'saving')
+    public function isInvalid($ruleset = null)
     {
+        // Perform validation and return result.
         return ! $this->performValidation($ruleset, false);
     }
 
@@ -304,7 +314,7 @@ trait ValidatingTrait
      * @param  string  $ruleset
      * @return \Illuminate\Validation\Factory
      */
-    protected function getValidator($ruleset)
+    protected function getValidator($ruleset = null)
     {
         // Get the model attributes.
         $attributes = $this->getModel()->getAttributes();
@@ -328,7 +338,8 @@ trait ValidatingTrait
      * or not it passes and setting the error messages on the model
      * if required.
      *
-     * @param  string  $ruleset
+     * @param  string   $ruleset
+     * @param  boolean  $throwException
      * @return boolean
      * @throws ValidationException
      */

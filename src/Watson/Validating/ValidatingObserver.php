@@ -59,10 +59,18 @@ class ValidatingObserver
      */
     protected function performValidation($model, $event)
     {
-        // If the model has validating enabled, perform it.
-        if ($model->getValidating() && $model->getRuleset($event))
+        // We will only perform validation if enabled.
+        if ($model->getValidating())
         {
-            return $model->isValid($event);
+            // See if the ruleset exists.
+            if ($model->getRuleset($event))
+            {
+                return $model->isValid($event);
+            }
+            else if ($event === 'saving')
+            {
+                return $model->isValid();
+            }
         }
     }
 }
