@@ -289,7 +289,7 @@ trait ValidatingTrait
     {
         $rules = $this->getRuleset($ruleset) ?: $this->getRules();
 
-        if ($this->exists && $this->injectUniqueIdentifier)
+        if ($this->exists && $this->getInjectUniqueIdentifier())
         {
             $rules = $this->injectUniqueIdentifierToRules($rules);
         }
