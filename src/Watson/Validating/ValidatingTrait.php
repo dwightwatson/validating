@@ -156,21 +156,15 @@ trait ValidatingTrait
      * Get a single ruleset and merge it with the default ruleset if specified.
      *
      * @param  string
-     * @param  boolean  $mergeWithDefault
      * @return mixed
      */
-    public function getRuleset($ruleset, $mergeWithDefault = true)
+    public function getRuleset($ruleset)
     {
-        if (array_key_exists($ruleset, $this->rules))
+        $rules = $this->getRules();
+
+        if (array_key_exists($ruleset, $rules))
         {
-            if ($mergeWithDefault)
-            {
-                $defaultRuleset = $this->getRuleset('default', false) ?: [];
-
-                return array_merge($defaultRuleset, $this->rules[$ruleset]);
-            }
-
-            return $this->rules[$ruleset];
+            return $rules[$ruleset];
         }
     }
 
