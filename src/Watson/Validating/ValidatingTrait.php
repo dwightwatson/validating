@@ -149,9 +149,11 @@ trait ValidatingTrait
      */
     public function getRuleset($ruleset)
     {
-        if (array_key_exists($ruleset, $this->rules))
+        $rules = $this->getRules();
+
+        if (array_key_exists($ruleset, $rules))
         {
-            return $this->rules[$ruleset];
+            return $rules[$ruleset];
         }
     }
 
