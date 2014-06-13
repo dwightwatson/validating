@@ -62,7 +62,10 @@ class ValidatingObserver
         // If the model has validating enabled, perform it.
         if ($model->getValidating() && $model->getRuleset($event))
         {
-            return $model->isValid($event);
+            if( $model->isValid($event) === false )
+            {
+                return false;
+            }
         }
     }
 }
