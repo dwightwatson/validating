@@ -1,5 +1,7 @@
 <?php namespace Watson\Validating;
 
+use Illuminate\Database\Eloquent\Model;
+
 class ValidatingObserver
 {
     /**
@@ -8,7 +10,7 @@ class ValidatingObserver
      * @param  Model  $model
      * @return bool
      */
-    public function creating($model)
+    public function creating(Model $model)
     {
         return $this->performValidation($model, 'creating');
     }
@@ -19,7 +21,7 @@ class ValidatingObserver
      * @param  Model  $model
      * @return bool
      */
-    public function updating($model)
+    public function updating(Model $model)
     {
         return $this->performValidation($model, 'updating');
     }
@@ -31,7 +33,7 @@ class ValidatingObserver
      * @param  Model  $model
      * @return bool
      */
-    public function saving($model)
+    public function saving(Model $model)
     {
         if ( ! $model->getRuleset('creating') && ! $model->getRuleset('updating'))
         {
@@ -45,7 +47,7 @@ class ValidatingObserver
      * @param  Model  $model
      * @return bool
      */
-    public function deleting($model)
+    public function deleting(Model $model)
     {
         return $this->performValidation($model, 'deleting');
     }
@@ -53,11 +55,11 @@ class ValidatingObserver
     /**
      * Perform validation with the specified ruleset.
      *
-     * @param  object  $model
+     * @param  Model   $model
      * @param  string  $event
      * @return bool
      */
-    protected function performValidation($model, $event)
+    protected function performValidation(Model $model, $event)
     {
         // If the model has validating enabled, perform it.
         if ($model->getValidating() && $model->getRuleset($event) && $model->isValid($event) === false)
