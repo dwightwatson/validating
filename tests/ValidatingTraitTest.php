@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Validator;
+use \Mockery;
+use \Illuminate\Support\Facades\Validator;
 
 class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -273,7 +274,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
 class DatabaseValidatingTraitStub
 {
-    use Watson\Validating\ValidatingTrait;
+    use \Watson\Validating\ValidatingTrait;
 
     public $exists = false;
 

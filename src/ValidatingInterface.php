@@ -1,5 +1,7 @@
 <?php namespace Watson\Validating;
 
+use \Illuminate\Support\MessageBag;
+
 interface ValidatingInterface {
 
     /**
@@ -65,7 +67,7 @@ interface ValidatingInterface {
     /**
      * Get the model.
      *
-     * @return Model
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function getModel();
 

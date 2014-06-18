@@ -1,8 +1,8 @@
 <?php namespace Watson\Validating;
 
-use InvalidArgumentException;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Validator;
+use \InvalidArgumentException;
+use \Illuminate\Support\MessageBag;
+use \Illuminate\Support\Facades\Validator;
 
 trait ValidatingTrait {
 
@@ -120,7 +120,7 @@ trait ValidatingTrait {
     /**
      * Get the model.
      *
-     * @return Model
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function getModel()
     {
