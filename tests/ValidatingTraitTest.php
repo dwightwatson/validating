@@ -17,7 +17,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         Mockery::close();
     }
 
-
     public function testGetValidatingDefaultsToTrue()
     {
         $this->assertTrue($this->trait->getValidating());
@@ -102,7 +101,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRulesetWithName()
     {
-        $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));        
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));
     }
 
     public function testSetRulesetWithName()

@@ -37,7 +37,7 @@ class ValidatingObserver
     {
         if ( ! $model->getRuleset('creating') && ! $model->getRuleset('updating'))
         {
-            return $this->performValidation($model, 'saving');            
+            return $this->performValidation($model, 'saving');
         }
     }
 

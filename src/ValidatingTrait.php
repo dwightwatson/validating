@@ -18,7 +18,7 @@ trait ValidatingTrait
      */
     protected $errors;
 
-    /** 
+    /**
      * Whether the model should undergo validation when
      * saving or not.
      *
@@ -51,7 +51,7 @@ trait ValidatingTrait
      */
     protected function setValidating($value)
     {
-        if ( ! is_bool($value)) 
+        if ( ! is_bool($value))
         {
             throw new InvalidArgumentException('Validating value must be a boolean.');
         }
@@ -99,7 +99,7 @@ trait ValidatingTrait
     }
 
     /**
-     * Set the model to add unique identifier to rules when performing 
+     * Set the model to add unique identifier to rules when performing
      * validation.
      *
      * @param  boolean
@@ -294,7 +294,7 @@ trait ValidatingTrait
     }
 
     /**
-     * Perform a one-off save that will return a boolean on validation error 
+     * Perform a one-off save that will return a boolean on validation error
      * instead of raising an exception.
      *
      * @return boolean
@@ -397,9 +397,9 @@ trait ValidatingTrait
         $this->setRuleset($ruleset, $this->injectUniqueIdentifierToRules($rules));
     }
 
-    /** 
+    /**
      * If the model already exists and it has unique validations
-     * it is going to fail validation unless we also pass it's 
+     * it is going to fail validation unless we also pass it's
      * primary key to the rule so that it may be ignored.
      *
      * This will go through all the rules and append the model's
