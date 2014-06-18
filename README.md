@@ -115,7 +115,7 @@ If you'd like to perform a one-off save using exceptions or return values, you c
 In some instances you may wish to use different rulesets depending on the action that is occurring. For example, you might require different rules if a model is being created to when a model is being updated. Utilising different rules is easy.
 
 ```php
-protected $rules = [
+protected $rulesets = [
     'creating' => [
         'title' => 'required'
     ],
@@ -127,12 +127,12 @@ protected $rules = [
 ];
 ```
 
-The events that you are able to hook into with rules include `creating`, `updating`, `saving`, and `deleting`. You simply a certain event by listing rules under that key.
+The events that you are able to hook into with rules include `creating`, `updating`, `saving`, and `deleting`. You simply hook into a certain event by listing rules under that key.
 
 If you want to use a default ruleset which will be used for creating and updating, you can define a `saving` ruleset, as the `saving` event is called for both.
 
 ```php
-protected $rules = [
+protected $rulesets = [
     'deleting' => [
         'title'       => 'required',
         'description' => 'required',
@@ -146,7 +146,7 @@ protected $rules = [
 ];
 ```
 
-You can check to see if the model is valid with a given rulset too.
+You can check to see if the model is valid with a given ruleset too.
 
 ```php
 $post->isValid('updating');
@@ -157,7 +157,7 @@ Note that if you do not pass a ruleset to any method that takes one it will defa
 You can also define your own custom rulesets. These won't be used by the trait when hooking into model events, but you can use them to validate for yourself.
 
 ```php
-protected $rules = [
+protected $rulesets = [
     'my_custom_rules' => [
         'title' => 'required'
     ]
@@ -255,8 +255,3 @@ if ( ! $this->post->create(Input::all()))
     //
 }
 ```
-
-## Todo
-
-* [ ] Allow for a core set of rules which can be modified/extended by other rulesets
-* [ ] Fire `validating` and `validated` events

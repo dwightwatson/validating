@@ -89,16 +89,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRules()
     {
-        $rules = [
-            'default' => [
-                'foo' => 'bar'
-            ],
-            'saving' => [
-                'baz' => 'bat'
-            ]
-        ];
-
-        $this->assertEquals($rules, $this->trait->getRules());
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
     }
 
     public function testSetRulesSetsValue()
@@ -111,26 +102,14 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRulesetWithName()
     {
-        $this->assertEquals(['foo' => 'bar', 'baz' => 'bat'], $this->trait->getRuleset('saving'));        
-    }
-
-    public function testGetRulesetWithNameWithoutMerge()
-    {
-        $this->assertEquals(['baz' => 'bat'], $this->trait->getRuleset('saving', false));
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));        
     }
 
     public function testSetRulesetWithName()
     {
         $this->trait->setRuleset(['abc' => 123], 'foo');
 
-        $this->assertEquals(['foo' => 'bar', 'abc' => 123], $this->trait->getRuleset('foo'));
-    }
-
-    public function testSetRulesetWithoutNameDefaultsToSaving()
-    {
-        $this->trait->setRuleset(['abc' => 123]);
-
-        $this->assertEquals(['foo' => 'bar', 'abc' => 123], $this->trait->getRuleset('saving'));
+        $this->assertEquals(['abc' => 123], $this->trait->getRuleset('foo'));
     }
 
 
@@ -302,11 +281,16 @@ class DatabaseValidatingTraitStub
     protected $addUniqueIdentifierToRules = true;
 
     protected $rules = [
-        'default' => [
-            'foo' => 'bar'
+        'foo' => 'bar'
+    ];
+
+    protected $rulesets = [
+        'creating' => [
+            'baz' => 'bat',
+            'foo' => 'baz'
         ],
         'saving' => [
-            'baz' => 'bat'
+            'foo' => 'bar'
         ]
     ];
 

@@ -12,10 +12,6 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase
         // Validating should be enabled.
         $this->model->shouldReceive('getValidating')
             ->andReturn(true);
-
-        // Model should return ruleset.
-        $this->model->shouldReceive('getRuleset')
-            ->andReturn([]);
     }
 
     public function tearDown()
@@ -25,25 +21,51 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase
 
     public function testCreatingPerformsValidation()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->once()
+            ->andReturn(['foo' => 'bar']);
+
+        $this->model->shouldReceive('isValid')
+            ->andReturn(true);
+
         $this->observer->creating($this->model);
     }
 
     public function testUpdatingPerfomsValidation()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->once()
+            ->with('updating')
+            ->andReturn(['foo' => 'bar']);
+
+        $this->model->shouldReceive('isValid')
+            ->andReturn(true);
+
         $this->observer->updating($this->model);
     }
 
     public function testSavingPerformsValidation()
     {
-        $this->model->shouldReceive('isValid')
+        $this->model->shouldReceive('getRuleset')
             ->once()
-            ->andReturn(true);
+            ->andReturn(['foo' => 'bar']);
+
+        $this->model->shouldReceive('isValid')
+            ->never();
 
         $this->observer->saving($this->model);
     }
 
     public function testDeletingPerformsValidation()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->once()
+            ->with('deleting')
+            ->andReturn(['foo' => 'bar']);
+
+        $this->model->shouldReceive('isValid')
+            ->andReturn(true);
+
         $this->observer->deleting($this->model);
     }
 }

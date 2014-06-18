@@ -153,6 +153,16 @@ trait ValidatingTrait
     }
 
     /**
+     * Get all the rulesets.
+     *
+     * @return array
+     */
+    public function getRulesets()
+    {
+        return $this->rulesets ?: [];
+    }
+
+    /**
      * Get a single ruleset and merge it with the default ruleset if specified.
      *
      * @param  string
@@ -160,11 +170,11 @@ trait ValidatingTrait
      */
     public function getRuleset($ruleset)
     {
-        $rules = $this->getRules();
+        $rulesets = $this->getRulesets();
 
-        if (array_key_exists($ruleset, $rules))
+        if (array_key_exists($ruleset, $rulesets))
         {
-            return $rules[$ruleset];
+            return $rulesets[$ruleset];
         }
     }
 
@@ -176,9 +186,9 @@ trait ValidatingTrait
      * @param  string
      * @return void
      */
-    public function setRuleset($rules, $ruleset = 'saving')
+    public function setRuleset($rules, $ruleset)
     {
-        $this->rules[$ruleset] = $rules;
+        $this->rulesets[$ruleset] = $rules;
     }
 
     /**
