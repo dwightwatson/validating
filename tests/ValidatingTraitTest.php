@@ -30,14 +30,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->trait->getValidating());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetValidatingRaisesException()
-    {
-        $this->trait->setValidating('foo');
-    }
-
 
     public function testGetThrowValidationExceptionsDefaultsToTrue()
     {
@@ -51,14 +43,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->trait->getThrowValidationExceptions());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetThrowValidationExceptionsRaisesException()
-    {
-        $this->trait->setThrowValidationExceptions('foo');
-    }
-
 
     public function testGetInjectUniqueIdentifierDefaultsToTrue()
     {
@@ -70,14 +54,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->trait->setInjectUniqueIdentifier(false);
 
         $this->assertFalse($this->trait->getInjectUniqueIdentifier());
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetInjectUniqueIdentifierRaiseException()
-    {
-        $this->trait->setInjectUniqueIdentifier('foo');
     }
 
 

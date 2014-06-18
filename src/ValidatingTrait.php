@@ -1,6 +1,5 @@
 <?php namespace Watson\Validating;
 
-use \InvalidArgumentException;
 use \Illuminate\Support\MessageBag;
 use \Illuminate\Support\Facades\Validator;
 
@@ -46,17 +45,11 @@ trait ValidatingTrait {
      * Set whether the model should attempt validation on saving.
      *
      * @param  boolean $value
-     * @return void
-     * @throws InvalidArgumentException
+     * @return voidn
      */
     public function setValidating($value)
     {
-        if ( ! is_bool($value))
-        {
-            throw new InvalidArgumentException('Validating value must be a boolean.');
-        }
-
-        $this->validating = $value;
+        $this->validating = (boolean) $value;
     }
 
     /**
@@ -80,12 +73,7 @@ trait ValidatingTrait {
      */
     public function setThrowValidationExceptions($value)
     {
-        if ( ! is_bool($value))
-        {
-            throw new InvalidArgumentException('Throw validation exceptions value must be a boolean.');
-        }
-
-        $this->throwValidationExceptions = $value;
+        $this->throwValidationExceptions = (boolean) $value;
     }
 
     /**
@@ -109,12 +97,7 @@ trait ValidatingTrait {
      */
     public function setInjectUniqueIdentifier($value)
     {
-        if ( ! is_bool($value))
-        {
-            throw new InvalidArgumentException('Inject unique identifier value must be a boolean.');
-        }
-
-        $this->injectUniqueIdentifier = $value;
+        $this->injectUniqueIdentifier = (boolean) $value;
     }
 
     /**

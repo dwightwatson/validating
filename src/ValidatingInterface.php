@@ -24,7 +24,6 @@ interface ValidatingInterface {
      *
      * @param  boolean $value
      * @return void
-     * @throws InvalidArgumentException
      */
     public function setValidating($value);
 
@@ -42,7 +41,6 @@ interface ValidatingInterface {
      *
      * @param  boolean $value
      * @return void
-     * @throws InvalidArgumentException
      */
     public function setThrowValidationExceptions($value);
 
@@ -60,7 +58,6 @@ interface ValidatingInterface {
      *
      * @param  boolean $value
      * @return void
-     * @throws InvalidArgumentException
      */
     public function setInjectUniqueIdentifier($value);
 
