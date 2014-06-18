@@ -4,8 +4,8 @@ use RuntimeException;
 use Illuminate\Support\Contracts\MessageProviderInterface;
 use Illuminate\Support\MessageBag;
 
-class ValidationException extends RuntimeException implements MessageProviderInterface
-{
+class ValidationException extends RuntimeException implements MessageProviderInterface {
+
     /**
      * The model.
      *
@@ -71,4 +71,5 @@ class ValidationException extends RuntimeException implements MessageProviderInt
     {
         $this->model = $model;
     }
+
 }

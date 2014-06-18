@@ -215,7 +215,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
     // saveWithoutException
 
-    // getValidator
+    // makeValidator
 
     /**
      * @expectedException \Watson\Validating\ValidationException
