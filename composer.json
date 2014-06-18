@@ -21,8 +21,8 @@
         "phpunit/phpunit": "4.1.x"
     },
     "autoload": {
-        "psr-0": {
-            "Watson\\Validating": "src/"
+        "psr-4": {
+            "Watson\\Validating\\": "src/"
         }
     },
     "minimum-stability": "stable"
