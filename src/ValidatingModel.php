@@ -11,4 +11,18 @@ abstract class ValidatingModel extends Eloquent implements ValidatingInterface {
      */
     use ValidatingTrait;
 
+    /**
+     * The default rules that the model will validate against.
+     *
+     * @var array
+     */
+    protected $rules = [];
+
+    /**
+     * The rulesets that the model will validate against.
+     *
+     * @var array
+     */
+    protected $rulesets = [];
+
 }

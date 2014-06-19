@@ -3,8 +3,7 @@
 use \Mockery;
 use \Illuminate\Support\Facades\Validator;
 
-class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
-{
+class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     public $trait;
 
     public function setUp()
@@ -248,8 +247,8 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
 }
 
-class DatabaseValidatingTraitStub
-{
+class DatabaseValidatingTraitStub {
+
     use \Watson\Validating\ValidatingTrait;
 
     public $exists = false;
@@ -293,4 +292,5 @@ class DatabaseValidatingTraitStub
     {
         return ['abc' => '123'];
     }
+
 }

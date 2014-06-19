@@ -3,14 +3,14 @@
 use \Mockery;
 use \Watson\Validating\ValidatingObserver;
 
-class ValidatingObserverTest extends \PHPUnit_Framework_TestCase
-{
+class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
+
     public function setUp()
     {
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
         $this->observer = new ValidatingObserver;
 
-        // Validating should be enabled.
+        // Enable validation on mock
         $this->model->shouldReceive('getValidating')
             ->andReturn(true);
     }
@@ -20,26 +20,41 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase
         Mockery::close();
     }
 
+    public function testPerformValidation()
+    {
+        $this->model->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+
+        $response = $this->observer->creating($this->model);
+        $this->assertNotFalse($response);
+    }
+
+    public function testPerformValidationReturnsFalse()
+    {
+        $this->model->shouldReceive('isValid')
+            ->once()
+            ->andReturn(false);
+
+        $response = $this->observer->creating($this->model);
+        $this->assertFalse($response);
+    }
+
     public function testCreatingPerformsValidation()
     {
-        $this->model->shouldReceive('getRuleset')
-            ->once()
-            ->andReturn(['foo' => 'bar']);
-
         $this->model->shouldReceive('isValid')
+            ->once()
+            ->with('creating')
             ->andReturn(true);
 
         $this->observer->creating($this->model);
     }
 
-    public function testUpdatingPerfomsValidation()
+    public function testUpdatingPerformsValidation()
     {
-        $this->model->shouldReceive('getRuleset')
+        $this->model->shouldReceive('isValid')
             ->once()
             ->with('updating')
-            ->andReturn(['foo' => 'bar']);
-
-        $this->model->shouldReceive('isValid')
             ->andReturn(true);
 
         $this->observer->updating($this->model);
@@ -48,25 +63,77 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase
     public function testSavingPerformsValidation()
     {
         $this->model->shouldReceive('getRuleset')
-            ->once()
-            ->andReturn(['foo' => 'bar']);
+            ->with('creating')
+            ->andReturn(null);
+
+        $this->model->shouldReceive('getRuleset')
+            ->with('updating')
+            ->andReturn(null);
 
         $this->model->shouldReceive('isValid')
-            ->never();
+            ->with('saving')
+            ->andReturn(true);
+
+        $this->observer->saving($this->model);
+    }
+
+    public function testSavingWithCreatingRulesDoesNotPerformValidation()
+    {
+        $this->model->shouldReceive('getRuleset')
+            ->with('creating')
+            ->andReturn(['foo' => 'bar']);
+
+        $this->model->shouldReceive('getRuleset')
+            ->with('updating')
+            ->andReturn(['foo' => 'bar']);
+
+        $this->observer->saving($this->model);
+    }
+
+    public function testSavingWithUpdatingRulesDoesNotPerformValidation()
+    {
+        $this->model->shouldReceive('getRuleset')
+            ->with('creating')
+            ->andReturn(null);
+
+        $this->model->shouldReceive('getRuleset')
+            ->with('updating')
+            ->andReturn(['foo' => 'bar']);
+
+        $this->observer->saving($this->model);
+    }
+
+    public function testSavingWithRulesDoesNotPerformValidation()
+    {
+        $this->model->shouldReceive('getRuleset')
+            ->with('creating')
+            ->andReturn(['foo' => 'bar']);
+
+        $this->model->shouldReceive('getRuleset')
+            ->with('updating')
+            ->andReturn(['foo' => 'bar']);
 
         $this->observer->saving($this->model);
     }
 
     public function testDeletingPerformsValidation()
     {
-        $this->model->shouldReceive('getRuleset')
+        $this->model->shouldReceive('isValid')
             ->once()
             ->with('deleting')
-            ->andReturn(['foo' => 'bar']);
-
-        $this->model->shouldReceive('isValid')
             ->andReturn(true);
 
         $this->observer->deleting($this->model);
     }
+
+    public function testRestoringPerformsValidation()
+    {
+        $this->model->shouldReceive('isValid')
+            ->once()
+            ->with('restoring')
+            ->andReturn(true);
+
+        $this->observer->restoring($this->model);
+    }
+
 }

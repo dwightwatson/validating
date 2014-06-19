@@ -3,8 +3,7 @@
 use \Mockery;
 use \Watson\Validating\ValidationException;
 
-class ValidationExceptionTest extends \PHPUnit_Framework_TestCase
-{
+class ValidationExceptionTest extends \PHPUnit_Framework_TestCase {
     public $exception;
 
     public function setUp()
@@ -49,4 +48,5 @@ class ValidationExceptionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($modelMock, $this->exception->getModel());
     }
+
 }
