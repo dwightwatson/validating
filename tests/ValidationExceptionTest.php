@@ -1,6 +1,7 @@
 <?php
 
-use Watson\Validating\ValidationException;
+use \Mockery;
+use \Watson\Validating\ValidationException;
 
 class ValidationExceptionTest extends \PHPUnit_Framework_TestCase
 {

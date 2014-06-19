@@ -1,14 +1,14 @@
 <?php namespace Watson\Validating;
 
-use Illuminate\Database\Eloquent\Model;
+use \Illuminate\Database\Eloquent\Model;
 
-class ValidatingObserver
-{
+class ValidatingObserver {
+
     /**
      * Register the validation event for creating the model.
      *
-     * @param  Model  $model
-     * @return bool
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return boolean
      */
     public function creating(Model $model)
     {
@@ -18,8 +18,8 @@ class ValidatingObserver
     /**
      * Register the validation event for updating the model.
      *
-     * @param  Model  $model
-     * @return bool
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return boolean
      */
     public function updating(Model $model)
     {
@@ -30,22 +30,22 @@ class ValidatingObserver
      * Register the validation event for saving the model. Saving validation
      * should only occur if creating and updating validation does not.
      *
-     * @param  Model  $model
-     * @return bool
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return boolean
      */
     public function saving(Model $model)
     {
         if ( ! $model->getRuleset('creating') && ! $model->getRuleset('updating'))
         {
-            return $this->performValidation($model, 'saving');            
+            return $this->performValidation($model, 'saving');
         }
     }
 
     /**
      * Register the validation event for deleting the model.
      *
-     * @param  Model  $model
-     * @return bool
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return boolean
      */
     public function deleting(Model $model)
     {
@@ -53,11 +53,22 @@ class ValidatingObserver
     }
 
     /**
+     * Register the validation event for restoring the model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return boolean
+     */
+    public function restoring(Model $model)
+    {
+        return $this->performValidation($model, 'restoring');
+    }
+
+    /**
      * Perform validation with the specified ruleset.
      *
-     * @param  Model   $model
-     * @param  string  $event
-     * @return bool
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $event
+     * @return boolean
      */
     protected function performValidation(Model $model, $event)
     {
@@ -70,4 +81,5 @@ class ValidatingObserver
             }
         }
     }
+
 }

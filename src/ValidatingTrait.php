@@ -1,15 +1,9 @@
 <?php namespace Watson\Validating;
 
-use InvalidArgumentException;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Validator;
+use \Illuminate\Support\MessageBag;
+use \Illuminate\Support\Facades\Validator;
 
-trait ValidatingTrait
-{
-    public static function bootValidatingTrait()
-    {
-        static::observe(new ValidatingObserver);
-    }
+trait ValidatingTrait {
 
     /**
      * Error messages as provided by the validator.
@@ -18,23 +12,27 @@ trait ValidatingTrait
      */
     protected $errors;
 
-    /** 
-     * Whether the model should undergo validation when
-     * saving or not.
+    /**
+     * Whether the model should undergo validation
+     * when saving or not.
      *
      * @var boolean
      */
     protected $validating = true;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Configuration accessors and mutators
-    |--------------------------------------------------------------------------
-    */
+    /**
+     * Boot the trait. Adds an observer class for validating.
+     *
+     * @return void
+     */
+    public static function bootValidatingTrait()
+    {
+        static::observe(new ValidatingObserver);
+    }
 
     /**
-     * Returns whether or not the model will attempt to validate itself when
-     * saving.
+     * Returns whether or not the model will attempt to validate
+     * itself when saving.
      *
      * @return boolean
      */
@@ -43,25 +41,20 @@ trait ValidatingTrait
         return $this->validating;
     }
 
-    /**
+     /**
      * Set whether the model should attempt validation on saving.
      *
-     * @param  boolean
-     * @return void
+     * @param  boolean $value
+     * @return voidn
      */
-    protected function setValidating($value)
+    public function setValidating($value)
     {
-        if ( ! is_bool($value)) 
-        {
-            throw new InvalidArgumentException('Validating value must be a boolean.');
-        }
-
-        $this->validating = $value;
+        $this->validating = (boolean) $value;
     }
 
     /**
-     * Returns whether the model will raise an exception or return a boolean
-     * when validating.
+     * Returns whether the model will raise an exception or
+     * return a boolean when validating.
      *
      * @return boolean
      */
@@ -71,25 +64,21 @@ trait ValidatingTrait
     }
 
     /**
-     * Set whether the model should raise an exception or return a boolean on
-     * a failed validation.
+     * Set whether the model should raise an exception or
+     * return a boolean on a failed validation.
      *
-     * @param  boolean
+     * @param  boolean $value
      * @return void
+     * @throws InvalidArgumentException
      */
     public function setThrowValidationExceptions($value)
     {
-        if ( ! is_bool($value))
-        {
-            throw new InvalidArgumentException('Throw validation exceptions value must be a boolean.');
-        }
-
-        $this->throwValidationExceptions = $value;
+        $this->throwValidationExceptions = (boolean) $value;
     }
 
     /**
-     * Returns whether or not the model will add it's unique identifier to the
-     * rules when validating.
+     * Returns whether or not the model will add it's unique
+     * identifier to the rules when validating.
      *
      * @return boolean
      */
@@ -99,32 +88,22 @@ trait ValidatingTrait
     }
 
     /**
-     * Set the model to add unique identifier to rules when performing 
+     * Set the model to add unique identifier to rules when performing
      * validation.
      *
-     * @param  boolean
+     * @param  boolean $value
      * @return void
+     * @throws InvalidArgumentException
      */
     public function setInjectUniqueIdentifier($value)
     {
-        if ( ! is_bool($value))
-        {
-            throw new InvalidArgumentException('Inject unique identifier value must be a boolean.');
-        }
-
-        $this->injectUniqueIdentifier = $value;
+        $this->injectUniqueIdentifier = (boolean) $value;
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Instance accessors and mutators
-    |--------------------------------------------------------------------------
-    */
 
     /**
      * Get the model.
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function getModel()
     {
@@ -144,10 +123,10 @@ trait ValidatingTrait
     /**
      * Set the global validation rules.
      *
-     * @param  array
+     * @param  array $rules
      * @return void
      */
-    public function setRules($rules)
+    public function setRules(array $rules)
     {
         $this->rules = $rules;
     }
@@ -163,10 +142,10 @@ trait ValidatingTrait
     }
 
     /**
-     * Get a single ruleset and merge it with the default ruleset if specified.
+     * Get a ruleset.
      *
-     * @param  string
-     * @return mixed
+     * @param  string $ruleset
+     * @return array
      */
     public function getRuleset($ruleset)
     {
@@ -179,14 +158,13 @@ trait ValidatingTrait
     }
 
     /**
-     * Set either the default rules for the model or add another ruleset
-     * to the model..
+     * Set the rules used for a particular ruleset.
      *
-     * @param  array
-     * @param  string
+     * @param  array $rules
+     * @param  string $ruleset
      * @return void
      */
-    public function setRuleset($rules, $ruleset)
+    public function setRuleset(array $rules, $ruleset)
     {
         $this->rulesets[$ruleset] = $rules;
     }
@@ -204,10 +182,10 @@ trait ValidatingTrait
     /**
      * Set the validation messages to be used by the validator.
      *
-     * @param  array
+     * @param  array $messages
      * @return void
      */
-    public function setMessages($messages)
+    public function setMessages(array $messages)
     {
         $this->messages = $messages;
     }
@@ -215,7 +193,7 @@ trait ValidatingTrait
     /**
      * Get the validation error messages from the model.
      *
-     * @return array
+     * @return \Illuminate\Support\MessageBag
      */
     public function getErrors()
     {
@@ -225,10 +203,10 @@ trait ValidatingTrait
     /**
      * Set the error messages.
      *
-     * @param  \Illuminate\Support\MessageBag
+     * @param  \Illuminate\Support\MessageBag $errors
      * @return void
      */
-    protected function setErrors(MessageBag $errors)
+    public function setErrors(MessageBag $errors)
     {
         $this->errors = $errors;
     }
@@ -241,7 +219,6 @@ trait ValidatingTrait
      */
     public function isValid($ruleset = null)
     {
-        // Perform validation and return result.
         return $this->performValidation($ruleset, false);
     }
 
@@ -253,13 +230,11 @@ trait ValidatingTrait
      */
     public function isInvalid($ruleset = null)
     {
-        // Perform validation and return result.
-        return ! $this->performValidation($ruleset, false);
+        return ! $this->isValid($ruleset);
     }
 
     /**
-     * Force the model to be saved without undergoing
-     * validation.
+     * Force the model to be saved without undergoing validation.
      *
      * @return boolean
      */
@@ -281,6 +256,7 @@ trait ValidatingTrait
      * instead of returning a boolean (which is the default behaviour).
      *
      * @return void
+     * @throws ValidatingException
      */
     public function saveWithException()
     {
@@ -294,8 +270,8 @@ trait ValidatingTrait
     }
 
     /**
-     * Perform a one-off save that will return a boolean on validation error 
-     * instead of raising an exception.
+     * Perform a one-off save that will return a boolean on
+     * validation error instead of raising an exception.
      *
      * @return boolean
      */
@@ -313,12 +289,12 @@ trait ValidatingTrait
     }
 
     /**
-     * Get a Validator instance for a given ruleset.
+     * Make a Validator instance for a given ruleset.
      *
      * @param  string  $ruleset
      * @return \Illuminate\Validation\Factory
      */
-    protected function getValidator($ruleset = null)
+    protected function makeValidator($ruleset = null)
     {
         // Get the model attributes.
         $attributes = $this->getModel()->getAttributes();
@@ -339,8 +315,8 @@ trait ValidatingTrait
 
     /**
      * Validate the model against it's rules, returning whether
-     * or not it passes and setting the error messages on the model
-     * if required.
+     * or not it passes and setting the error messages on the
+     * model if required.
      *
      * @param  string   $ruleset
      * @param  boolean  $throwException
@@ -349,13 +325,13 @@ trait ValidatingTrait
      */
     protected function performValidation($ruleset = null, $throwException = true)
     {
-        $validation = $this->getValidator($ruleset);
+        $validation = $this->makeValidator($ruleset);
 
         if ($validation->passes()) return true;
 
         if ($throwException && $this->getThrowValidationExceptions())
         {
-            $exception = new ValidationException('Model failed validation');
+            $exception = new ValidationException('Model failed validation.');
 
             $exception->setModel($this->getModel());
             $exception->setErrors($validation->messages());
@@ -371,8 +347,8 @@ trait ValidatingTrait
     }
 
     /**
-     * Update the unique rules of the global rules to include the model
-     * identifier.
+     * Update the unique rules of the global rules to
+     * include the model identifier.
      *
      * @return void
      */
@@ -383,11 +359,11 @@ trait ValidatingTrait
         $this->setRules($this->injectUniqueIdentifierToRules($rules));
     }
 
-    /**
-     * Update the unique rules of the given ruleset to include the model
-     * identifier.
+   /**
+     * Update the unique rules of the given ruleset to
+     * include the model identifier.
      *
-     * @param  array  $ruleset
+     * @param  string  $ruleset
      * @return void
      */
     public function updateRulesetUniques($ruleset = null)
@@ -397,19 +373,19 @@ trait ValidatingTrait
         $this->setRuleset($ruleset, $this->injectUniqueIdentifierToRules($rules));
     }
 
-    /** 
+    /**
      * If the model already exists and it has unique validations
-     * it is going to fail validation unless we also pass it's 
+     * it is going to fail validation unless we also pass it's
      * primary key to the rule so that it may be ignored.
      *
      * This will go through all the rules and append the model's
-     * primary key to the unique rules so that the validation will
-     * work as expected.
+     * primary key to the unique rules so that the validation
+     * will work as expected.
      *
      * @param  array  $rules
      * @return array
      */
-    protected function injectUniqueIdentifierToRules($rules)
+    protected function injectUniqueIdentifierToRules(array $rules)
     {
         foreach ($rules as $field => &$ruleset)
         {
@@ -429,8 +405,8 @@ trait ValidatingTrait
     }
 
     /**
-     * Take a unique rule, add the database table, column and model identifier
-     * if required.
+     * Take a unique rule, add the database table, column and
+     * model identifier if required.
      *
      * @param  string  $rule
      * @param  string  $field
@@ -460,4 +436,5 @@ trait ValidatingTrait
 
         return 'unique:' . implode(',', $parameters);
     }
+
 }

@@ -1,6 +1,7 @@
 <?php
 
-use Watson\Validating\ValidatingObserver;
+use \Mockery;
+use \Watson\Validating\ValidatingObserver;
 
 class ValidatingObserverTest extends \PHPUnit_Framework_TestCase
 {

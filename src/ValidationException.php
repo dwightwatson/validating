@@ -1,11 +1,12 @@
 <?php namespace Watson\Validating;
 
-use RuntimeException;
-use Illuminate\Support\Contracts\MessageProviderInterface;
-use Illuminate\Support\MessageBag;
+use \RuntimeException;
+use \Illuminate\Support\Contracts\MessageProviderInterface;
+use \Illuminate\Support\MessageBag;
+use \Illuminate\Database\Eloquent\Model;
 
-class ValidationException extends RuntimeException implements MessageProviderInterface
-{
+class ValidationException extends RuntimeException implements MessageProviderInterface {
+
     /**
      * The model.
      *
@@ -43,7 +44,7 @@ class ValidationException extends RuntimeException implements MessageProviderInt
     /**
      * Set the validation errors.
      *
-     * @param  \Illuminate\Support\MessageBag
+     * @param  \Illuminate\Support\MessageBag $errors
      * @return void
      */
     public function setErrors(MessageBag $errors)
@@ -64,11 +65,12 @@ class ValidationException extends RuntimeException implements MessageProviderInt
     /**
      * Set the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model
+     * @param  \Illuminate\Database\Eloquent\Model $model
      * @return void
      */
     public function setModel($model)
     {
         $this->model = $model;
     }
+
 }

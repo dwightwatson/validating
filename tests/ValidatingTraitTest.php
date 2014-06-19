@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Validator;
+use \Mockery;
+use \Illuminate\Support\Facades\Validator;
 
 class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -17,7 +18,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         Mockery::close();
     }
 
-
     public function testGetValidatingDefaultsToTrue()
     {
         $this->assertTrue($this->trait->getValidating());
@@ -28,14 +28,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->trait->setValidating(false);
 
         $this->assertFalse($this->trait->getValidating());
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetValidatingRaisesException()
-    {
-        $this->trait->setValidating('foo');
     }
 
 
@@ -51,14 +43,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->trait->getThrowValidationExceptions());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetThrowValidationExceptionsRaisesException()
-    {
-        $this->trait->setThrowValidationExceptions('foo');
-    }
-
 
     public function testGetInjectUniqueIdentifierDefaultsToTrue()
     {
@@ -70,14 +54,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
         $this->trait->setInjectUniqueIdentifier(false);
 
         $this->assertFalse($this->trait->getInjectUniqueIdentifier());
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testSetInjectUniqueIdentifierRaiseException()
-    {
-        $this->trait->setInjectUniqueIdentifier('foo');
     }
 
 
@@ -102,7 +78,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
     public function testGetRulesetWithName()
     {
-        $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));        
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));
     }
 
     public function testSetRulesetWithName()
@@ -216,7 +192,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
     // saveWithoutException
 
-    // getValidator
+    // makeValidator
 
     /**
      * @expectedException \Watson\Validating\ValidationException
@@ -274,7 +250,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase
 
 class DatabaseValidatingTraitStub
 {
-    use Watson\Validating\ValidatingTrait;
+    use \Watson\Validating\ValidatingTrait;
 
     public $exists = false;
 
