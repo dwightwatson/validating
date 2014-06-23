@@ -37,7 +37,7 @@ class Post extends Eloquent
 	];
 
     /**
-     * Whether the model should inject it's identifier to the unique
+     * Whether the model should inject its identifier to the unique
      * validation rules before attempting validation. If not set, it
      * will default to true.
      *
