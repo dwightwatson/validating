@@ -219,7 +219,7 @@ trait ValidatingTrait {
      */
     public function isValid($ruleset = null)
     {
-        return $this->performValidation($ruleset, false);
+        return $this->performValidation($ruleset);
     }
 
     /**
@@ -323,27 +323,15 @@ trait ValidatingTrait {
      * @return boolean
      * @throws ValidationException
      */
-    protected function performValidation($ruleset = null, $throwException = true)
+    protected function performValidation($ruleset = null)
     {
         $validation = $this->makeValidator($ruleset);
 
         if ($validation->passes()) return true;
 
-        if ($throwException && $this->getThrowValidationExceptions())
-        {
-            $exception = new ValidationException('Model failed validation.');
+        $this->setErrors($validation->messages());
 
-            $exception->setModel($this->getModel());
-            $exception->setErrors($validation->messages());
-
-            throw $exception;
-        }
-        else
-        {
-            $this->setErrors($validation->messages());
-
-            return false;
-        }
+        return false;
     }
 
     /**

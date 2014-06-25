@@ -36,6 +36,10 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
             ->once()
             ->andReturn(false);
 
+        $this->model->shouldReceive('getThrowValidationExceptions')
+            ->once()
+            ->andReturn(false);
+
         $response = $this->observer->creating($this->model);
         $this->assertFalse($response);
     }

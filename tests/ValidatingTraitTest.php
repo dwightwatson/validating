@@ -193,22 +193,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
     // makeValidator
 
-    /**
-     * @expectedException \Watson\Validating\ValidationException
-     */
-    public function testPerformValidationThrowsExceptions()
-    {
-        Validator::shouldReceive('make')
-            ->once()
-            ->andReturn(Mockery::mock([
-                'passes'   => false,
-                'messages' => Mockery::mock('Illuminate\Support\MessageBag')
-            ]));
-
-        $this->trait->performValidation();
-    }
-
-    public function testPerformValidationCanReturnBoolean()
+    public function testPerformValidationReturnsFalseOnInvalidModel()
     {
         Validator::shouldReceive('make')
             ->once()
@@ -224,7 +209,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($result);
     }
 
-    public function testPerformValidationReturnsBooleans()
+    public function testPerformValidationReturnsTrueOnValidModel()
     {
         Validator::shouldReceive('make')
             ->once()

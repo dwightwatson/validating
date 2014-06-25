@@ -1,6 +1,7 @@
 <?php namespace Watson\Validating;
 
 use \Illuminate\Database\Eloquent\Model;
+use \Watson\Validating\ValidationException;
 
 class ValidatingObserver {
 
@@ -75,6 +76,16 @@ class ValidatingObserver {
         // If the model has validating enabled, perform it.
         if ($model->getValidating() && $model->isValid($event) === false)
         {
+            if ($model->getThrowValidationExceptions())
+            {
+                $exception = new ValidationException(get_class($model) . ' model could not be persisted as it failed validation.');
+
+                $exception->setModel($model);
+                $exception->setErrors($model->getErrors());
+
+                throw $exception;
+            }
+
             return false;
         }
     }
