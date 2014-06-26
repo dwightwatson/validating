@@ -319,7 +319,6 @@ trait ValidatingTrait {
      * model if required.
      *
      * @param  string   $ruleset
-     * @param  boolean  $throwException
      * @return boolean
      * @throws ValidationException
      */
