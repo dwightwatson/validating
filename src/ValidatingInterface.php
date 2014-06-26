@@ -191,11 +191,10 @@ interface ValidatingInterface {
      * model if required.
      *
      * @param  string   $ruleset
-     * @param  boolean  $throwException
      * @return boolean
      * @throws ValidationException
      */
-    function performValidation($ruleset = null, $throwException = true);
+    function performValidation($ruleset = null);
 
     /**
      * Update the unique rules of the global rules to
