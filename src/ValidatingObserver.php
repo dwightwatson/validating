@@ -101,6 +101,10 @@ class ValidatingObserver {
             // Fire the validating.passed event.
             $this->fireValidatedEvent('passed', $model);
         }
+        else
+        {
+            $this->fireValidatedEvent('skipped');
+        }
     }
 
     /**
