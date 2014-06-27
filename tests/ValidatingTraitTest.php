@@ -247,7 +247,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
 }
 
-class DatabaseValidatingTraitStub {
+class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterface{
 
     use \Watson\Validating\ValidatingTrait;
 
