@@ -255,6 +255,7 @@ trait ValidatingTrait {
      * Perform a one-off save that will raise an exception on validation error
      * instead of returning a boolean (which is the default behaviour).
      *
+     * @deprecated use saveOrFail() instead
      * @return void
      * @throws \Watson\Validating\ValidatingException
      */

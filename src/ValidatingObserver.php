@@ -103,7 +103,7 @@ class ValidatingObserver {
         }
         else
         {
-            $this->fireValidatedEvent('skipped');
+            $this->fireValidatedEvent('skipped', $model);
         }
     }
 
