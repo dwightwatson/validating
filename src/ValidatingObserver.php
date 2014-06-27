@@ -1,6 +1,7 @@
 <?php namespace Watson\Validating;
 
 use \Illuminate\Database\Eloquent\Model;
+use \Illuminate\Support\Facades\Event;
 use \Watson\Validating\ValidationException;
 
 class ValidatingObserver {
@@ -74,20 +75,42 @@ class ValidatingObserver {
     protected function performValidation(Model $model, $event)
     {
         // If the model has validating enabled, perform it.
-        if ($model->getValidating() && $model->isValid($event) === false)
+        if ($model->getValidating())
         {
-            if ($model->getThrowValidationExceptions())
+            // Fire the namespaced validating event and prevent validation
+            // if it returns a value.
+            if ($this->fireValidatingEvent($event, $model) !== null) return;
+
+            if ($model->isValid($event) === false)
             {
-                $exception = new ValidationException(get_class($model) . ' model could not be persisted as it failed validation.');
+                // Fire the validating.failed event.
+                $this->fireValidatedEvent('failed', $model);
 
-                $exception->setModel($model);
-                $exception->setErrors($model->getErrors());
+                if ($model->getThrowValidationExceptions())
+                {
+                    $exception = new ValidationException(get_class($model) . ' model could not be persisted as it failed validation.');
 
-                throw $exception;
+                    $exception->setModel($model);
+                    $exception->setErrors($model->getErrors());
+
+                    throw $exception;
+                }
+
+                return false;
             }
-
-            return false;
+            // Fire the validating.passed event.
+            $this->fireValidatedEvent('passed', $model);
         }
+    }
+
+    protected function fireValidatingEvent($event, Model $model)
+    {
+        return Event::until('validating.'.$event, [$model]);
+    }
+
+    protected function fireValidatedEvent($event, Model $model)
+    {
+        return Event::fire('validating.'.$event, [$model]);
     }
 
 }

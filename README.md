@@ -32,11 +32,13 @@ class Post extends Eloquent
 		'content' => 'required'
 	];
 
-	protected $messages = [
+	protected $validationMessages = [
 		'slug.unique' => "Another post is using that slug already."
 	];
 }
 ```
+
+If you'd prefer a slightly easier route, just have your models extend from `Watson\Validating\ValidatingModel` instead of Eloquent.
 
 Now, you have access to some plesant functionality.
 
@@ -201,6 +203,26 @@ $post->setMessages(['title.required' => "Please, please set a title."])
 ```
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
+
+### Events
+
+Various events are fired by the trait during the validation process which you can hook into to impact the validation process.
+
+When validation is about to occur, the `validating.$event` event will be fired, where `$event` will be `saving`, `creating`, `updating`, `deleting` or `restoring`. If you listen for any of these events and return a value you can prevent validation from occurring completely.
+
+```php
+Event::listen('validating.*', function($model)
+{
+    // Psuedo-Russian roulette validation.
+    if (rand(1, 6) === 1)
+    {
+        return false;
+    }
+}
+});
+```
+
+After validation occurs, either `validating.passed` or `validating.failed` will be fired depending on the state of the validation.
 
 ## Controller usage
 
