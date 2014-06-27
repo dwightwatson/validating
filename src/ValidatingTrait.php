@@ -256,7 +256,7 @@ trait ValidatingTrait {
      * instead of returning a boolean (which is the default behaviour).
      *
      * @return void
-     * @throws ValidatingException
+     * @throws \Watson\Validating\ValidatingException
      */
     public function saveWithException()
     {
@@ -267,6 +267,18 @@ trait ValidatingTrait {
         $this->getModel()->save();
 
         $this->setThrowValidationExceptions($currentThrowValidationExceptionsSetting);
+    }
+
+    /**
+     * A friendly wrapper that will replace saveWithException() when it is
+     * deprecated in the next version of the trait.
+     *
+     * @return void
+     * @throws \Watson\Validating\ValidatingException
+     */
+    public function saveOrFail()
+    {
+        $this->saveWithException();
     }
 
     /**
