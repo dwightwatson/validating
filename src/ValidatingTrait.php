@@ -170,6 +170,27 @@ trait ValidatingTrait {
     }
 
     /**
+     * Helper method to merge rulesets, with later rules overwriting
+     * earlier ones
+     *
+     * @param  array $keys
+     * @return array
+     */
+    public function mergeRulesets($keys)
+    {
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        $rulesets = [];
+
+        foreach ($keys as $key)
+        {
+            $rulesets[] = $this->getRuleset($key);
+        }
+
+        return call_user_func_array('array_merge', $rulesets);
+    }
+
+    /**
      * Get the custom validation messages being used by the model.
      *
      * @return array

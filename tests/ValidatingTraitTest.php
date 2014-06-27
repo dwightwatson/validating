@@ -88,6 +88,14 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     }
 
 
+    public function testMergeRulesets()
+    {
+        $result = $this->trait->mergeRulesets('saving', 'creating');
+
+        $this->assertEquals(['baz' => 'bat', 'foo' => 'baz'], $result);
+    }
+
+
     public function testGetMessages()
     {
         $this->assertEquals(['bar' => 'baz'], $this->trait->getMessages());
