@@ -254,7 +254,7 @@ class DatabaseValidatingTraitStub {
         ]
     ];
 
-    protected $messages = [
+    protected $validationMessages = [
         'bar' => 'baz'
     ];
 

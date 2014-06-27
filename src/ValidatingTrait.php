@@ -10,7 +10,7 @@ trait ValidatingTrait {
      *
      * @var \Illuminate\Support\MessageBag
      */
-    protected $errors;
+    protected $validationErrors;
 
     /**
      * Whether the model should undergo validation
@@ -176,7 +176,7 @@ trait ValidatingTrait {
      */
     public function getMessages()
     {
-        return $this->messages ?: [];
+        return $this->validationMessages ?: [];
     }
 
     /**
@@ -187,7 +187,7 @@ trait ValidatingTrait {
      */
     public function setMessages(array $messages)
     {
-        $this->messages = $messages;
+        $this->validationMessages = $messages;
     }
 
     /**
@@ -197,18 +197,18 @@ trait ValidatingTrait {
      */
     public function getErrors()
     {
-        return $this->errors;
+        return $this->validationErrors;
     }
 
     /**
      * Set the error messages.
      *
-     * @param  \Illuminate\Support\MessageBag $errors
+     * @param  \Illuminate\Support\MessageBag $validationErrors
      * @return void
      */
-    public function setErrors(MessageBag $errors)
+    public function setErrors(MessageBag $validationErrors)
     {
-        $this->errors = $errors;
+        $this->validationErrors = $validationErrors;
     }
 
     /**
