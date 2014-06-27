@@ -2,6 +2,7 @@
 
 use \Illuminate\Support\MessageBag;
 use \Illuminate\Support\Facades\Validator;
+use \Illuminate\Validation\Factory;
 
 trait ValidatingTrait {
 
@@ -19,6 +20,13 @@ trait ValidatingTrait {
      * @var boolean
      */
     protected $validating = true;
+
+    /**
+     * The Validator factory class used for validation.
+     *
+     * @return \Illuminate\Validation\Factory
+     */
+    protected $validator;
 
     /**
      * Boot the trait. Adds an observer class for validating.
@@ -289,6 +297,26 @@ trait ValidatingTrait {
     }
 
     /**
+     * Get the Validator instance
+     *
+     * @return \Illuminate\Validation\Factory
+     */
+    public function getValidator()
+    {
+        return $this->validator ?: Validator::getFacadeRoot();
+    }
+
+    /**
+     * Set the Validator instance
+     *
+     * @param \Illuminate\Validation\Factory $validator
+     */
+    public function setValidator(Factory $validator)
+    {
+        $this->validator = $validator;
+    }
+
+    /**
      * Make a Validator instance for a given ruleset.
      *
      * @param  string  $ruleset
@@ -310,7 +338,7 @@ trait ValidatingTrait {
         // Get the custom validation messages.
         $messages = $this->getMessages();
 
-        return Validator::make($attributes, $rules, $messages);
+        return $this->getValidator()->make($attributes, $rules, $messages);
     }
 
     /**

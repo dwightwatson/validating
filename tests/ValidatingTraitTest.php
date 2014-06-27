@@ -2,6 +2,7 @@
 
 use \Mockery;
 use \Illuminate\Support\Facades\Validator;
+use \Illuminate\Validation\Factory;
 
 class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     public $trait;
@@ -218,6 +219,22 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($result);
     }
 
+    public function testGetEncrypterReturnsFactory()
+    {
+        Validator::shouldReceive('getFacadeRoot')
+            ->once()
+            ->andReturn(Mockery::mock('\Illuminate\Validation\Factory'));
+
+        $validator = $this->trait->getValidator();
+    }
+
+    public function testSetEncrypter()
+    {
+        $this->trait->setValidator(Mockery::mock('ValidatorStub'));
+
+        $validator = $this->trait->getValidator();
+        $this->assertInstanceOf('ValidatorStub', $validator, get_class($validator));
+    }
 
     // updateRulesUniques
 
@@ -275,5 +292,9 @@ class DatabaseValidatingTraitStub {
     {
         return ['abc' => '123'];
     }
+
+}
+
+class ValidatorStub extends \Illuminate\Validation\Factory {
 
 }

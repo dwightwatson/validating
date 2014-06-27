@@ -165,9 +165,9 @@ interface ValidatingInterface {
      * instead of returning a boolean (which is the default behaviour).
      *
      * @return void
-     * @throws ValidatingException
+     * @throws \Watson\Validating\ValidatingException
      */
-    public function saveWithException();
+    public function saveOrFail();
 
     /**
      * Perform a one-off save that will return a boolean on
@@ -175,7 +175,7 @@ interface ValidatingInterface {
      *
      * @return boolean
      */
-    public function saveWithoutException();
+    public function saveOrReturn();
 
     /**
      * Make a Validator instance for a given ruleset.
