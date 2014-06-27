@@ -60,7 +60,7 @@ trait ValidatingTrait {
      */
     public function getThrowValidationExceptions()
     {
-        return isset($this->throwValidationExceptions) ? $this->throwValidationExceptions : true;
+        return isset($this->throwValidationExceptions) ? $this->throwValidationExceptions : false;
     }
 
     /**
@@ -258,7 +258,7 @@ trait ValidatingTrait {
      * @return void
      * @throws \Watson\Validating\ValidatingException
      */
-    public function saveWithException()
+    public function saveOrFail()
     {
         $currentThrowValidationExceptionsSetting = $this->getThrowValidationExceptions();
 
@@ -270,24 +270,12 @@ trait ValidatingTrait {
     }
 
     /**
-     * A friendly wrapper that will replace saveWithException() when it is
-     * deprecated in the next version of the trait.
-     *
-     * @return void
-     * @throws \Watson\Validating\ValidatingException
-     */
-    public function saveOrFail()
-    {
-        $this->saveWithException();
-    }
-
-    /**
      * Perform a one-off save that will return a boolean on
      * validation error instead of raising an exception.
      *
      * @return boolean
      */
-    public function saveWithoutException()
+    public function saveOrReturn()
     {
         $currentThrowValidationExceptionsSetting = $this->getThrowValidationExceptions();
 

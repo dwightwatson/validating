@@ -30,9 +30,9 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     }
 
 
-    public function testGetThrowValidationExceptionsDefaultsToTrue()
+    public function testGetThrowValidationExceptionsDefaultsToFalse()
     {
-        $this->assertTrue($this->trait->getThrowValidationExceptions());
+        $this->assertFalse($this->trait->getThrowValidationExceptions());
     }
 
     public function testSetThrowValidationExceptionsSetsValue()
@@ -187,11 +187,9 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($result);
     }
 
-    // saveWithException
+    // saveOrFail
 
-    // saveWithoutException
-
-    // makeValidator
+    // saveOrReturn
 
     public function testPerformValidationReturnsFalseOnInvalidModel()
     {
