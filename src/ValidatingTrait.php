@@ -240,7 +240,9 @@ trait ValidatingTrait {
      */
     public function isValid($ruleset = null)
     {
-        return $this->performValidation($ruleset);
+        $rules = $this->getRuleset($ruleset) ?: $this->getRules();
+
+        return $this->performValidation($rules);
     }
 
     /**
@@ -313,16 +315,13 @@ trait ValidatingTrait {
     /**
      * Make a Validator instance for a given ruleset.
      *
-     * @param  string  $ruleset
+     * @param  array $rules
      * @return \Illuminate\Validation\Factory
      */
-    protected function makeValidator($ruleset = null)
+    protected function makeValidator($rules)
     {
         // Get the model attributes.
         $attributes = $this->getModel()->getAttributes();
-
-        // Get the validation rules.
-        $rules = $this->getRuleset($ruleset) ?: $this->getRules();
 
         if ($this->exists && $this->getInjectUniqueIdentifier())
         {
@@ -340,13 +339,13 @@ trait ValidatingTrait {
      * or not it passes and setting the error messages on the
      * model if required.
      *
-     * @param  string   $ruleset
+     * @param  array $rules
      * @return boolean
      * @throws ValidationException
      */
-    protected function performValidation($ruleset = null)
+    protected function performValidation($rules = [])
     {
-        $validation = $this->makeValidator($ruleset);
+        $validation = $this->makeValidator($rules);
 
         if ($validation->passes()) return true;
 
