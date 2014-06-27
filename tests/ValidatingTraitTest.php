@@ -219,7 +219,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertTrue($result);
     }
 
-    public function testGetEncrypterReturnsFactory()
+    public function testGetValidatorReturnsFactory()
     {
         Validator::shouldReceive('getFacadeRoot')
             ->once()
@@ -228,7 +228,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $validator = $this->trait->getValidator();
     }
 
-    public function testSetEncrypter()
+    public function testSetValidator()
     {
         $this->trait->setValidator(Mockery::mock('ValidatorStub'));
 
