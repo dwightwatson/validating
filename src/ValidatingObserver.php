@@ -103,14 +103,28 @@ class ValidatingObserver {
         }
     }
 
+    /**
+     * Fire the namespaced validating event.
+     *
+     * @param  string $event
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return mixed
+     */
     protected function fireValidatingEvent($event, Model $model)
     {
         return Event::until('validating.'.$event, [$model]);
     }
 
+    /**
+     * Fire the namespaced post-validation event.
+     *
+     * @param  string $event
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return void
+     */
     protected function fireValidatedEvent($event, Model $model)
     {
-        return Event::fire('validating.'.$event, [$model]);
+        Event::fire('validating.'.$event, [$model]);
     }
 
 }

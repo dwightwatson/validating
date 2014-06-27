@@ -1,5 +1,6 @@
 <?php
 
+use \Illuminate\Support\Facades\Event;
 use \Mockery;
 use \Watson\Validating\ValidatingObserver;
 
@@ -13,6 +14,12 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
         // Enable validation on mock
         $this->model->shouldReceive('getValidating')
             ->andReturn(true);
+
+        Event::shouldReceive('until')
+            ->once();
+
+        Event::shouldReceive('fire')
+            ->once();
     }
 
     public function tearDown()
