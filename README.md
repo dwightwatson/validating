@@ -110,7 +110,7 @@ if ( ! $post->save())
 }   
 ```
 
-If you'd like to perform a one-off save using exceptions or return values, you can use the `saveWithException()` and `saveWithoutException()` methods.
+If you'd like to perform a one-off save using exceptions or return values, you can use the `saveOrFail()` and `saveWithoutException()` methods.
 
 ### Multiple rulesets
 
