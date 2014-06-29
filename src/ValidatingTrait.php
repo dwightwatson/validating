@@ -21,6 +21,14 @@ trait ValidatingTrait {
     protected $validating = true;
 
     /**
+     * Whether the model should throw a ValidationException if it
+     * fails validation. If not set, it will default to true.
+     *
+     * @var boolean
+     */
+    protected $throwValidationExceptions = false;
+
+    /**
      * Boot the trait. Adds an observer class for validating.
      *
      * @return void
@@ -60,7 +68,7 @@ trait ValidatingTrait {
      */
     public function getThrowValidationExceptions()
     {
-        return isset($this->throwValidationExceptions) ? $this->throwValidationExceptions : true;
+        return $this->throwValidationExceptions;
     }
 
     /**
