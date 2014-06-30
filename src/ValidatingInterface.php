@@ -183,7 +183,7 @@ interface ValidatingInterface {
      * @param  string  $ruleset
      * @return \Illuminate\Validation\Factory
      */
-    function makeValidator($ruleset = null);
+    function makeValidator($rules = []);
 
     /**
      * Validate the model against it's rules, returning whether

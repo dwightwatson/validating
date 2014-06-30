@@ -346,7 +346,7 @@ trait ValidatingTrait {
      * @param  array $rules
      * @return \Illuminate\Validation\Factory
      */
-    protected function makeValidator($rules)
+    protected function makeValidator($rules = [])
     {
         // Get the model attributes.
         $attributes = $this->getModel()->getAttributes();
