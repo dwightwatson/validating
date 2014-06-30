@@ -150,17 +150,23 @@ trait ValidatingTrait {
     }
 
     /**
-     * Get a ruleset.
+     * Get a ruleset, and merge it with saving if required.
      *
      * @param  string $ruleset
+     * @param  bool $mergeWithSaving
      * @return array
      */
-    public function getRuleset($ruleset)
+    public function getRuleset($ruleset, $mergeWithSaving = false)
     {
         $rulesets = $this->getRulesets();
 
         if (array_key_exists($ruleset, $rulesets))
         {
+            if ($mergeWithSaving)
+            {
+                return $this->mergeRulesets(['saving', $ruleset]);
+            }
+
             return $rulesets[$ruleset];
         }
     }
@@ -243,12 +249,13 @@ trait ValidatingTrait {
     /**
      * Returns whether the model is valid or not.
      *
-     * @param string $ruleset
+     * @param  mixed $ruleset
+     * @param  bool $mergeWithSaving
      * @return boolean
      */
-    public function isValid($ruleset = null)
+    public function isValid($ruleset = null, $mergeWithSaving = true)
     {
-        $rules = $this->getRuleset($ruleset) ?: $this->getRules();
+        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getRules();            
 
         return $this->performValidation($rules);
     }
@@ -256,12 +263,13 @@ trait ValidatingTrait {
     /**
      * Returns whether the model is invalid or not.
      *
-     * @param string $ruleset
+     * @param  string $ruleset
+     * @param  bool $mergeWithSaving
      * @return boolean
      */
-    public function isInvalid($ruleset = null)
+    public function isInvalid($ruleset = null, $mergeWithSaving = true)
     {
-        return ! $this->isValid($ruleset);
+        return ! $this->isValid($ruleset, $mergeWithSaving);
     }
 
     /**

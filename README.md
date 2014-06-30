@@ -129,16 +129,22 @@ protected $rulesets = [
 ];
 ```
 
-The events that you are able to hook into with rules include `creating`, `updating`, `saving`, and `deleting`. You simply hook into a certain event by listing rules under that key.
+The events that you are able to hook into with rules include `creating`, `updating`, `saving`, `deleting` and `restoring`. You simply hook into a certain event by listing rules under that key.
 
-If you want to use a default ruleset which will be used for creating and updating, you can define a `saving` ruleset, as the `saving` event is called for both.
+If you want to define some default rules that will be used for all events, use the `saving` ruleset. All other rulesets will extend from `saving`.
 
 ```php
 protected $rulesets = [
+    'creating' => [
+        'description' => null
+    ],
+
+    'updating' => [
+        'description' => 'required|min:50'
+    ],
+
     'deleting' => [
-        'title'       => 'required',
-        'description' => 'required',
-        'user_id' => 'required|exists:users,id'
+        'user_id'     => 'required|exists:users,id'
     ],
 
     'saving' => [
@@ -148,10 +154,16 @@ protected $rulesets = [
 ];
 ```
 
+In the above example you can see how the `saving` ruleset is the default and the others extend it. When `creating` this model the description will not be required, when `updating` it the description must exist and be at least 50 characters and when it is being deleted it must have a valid `user_id` set. For any event, the title will be required.
+
 You can check to see if the model is valid with a given ruleset too.
 
 ```php
+// Is valid with 'updating' rules merged with 'saving'.
 $post->isValid('updating');
+
+// Don't merge with the 'saving' rules
+$post->isValid('updating', false);
 ```
 
 Note that if you do not pass a ruleset to any method that takes one it will default to the saving ruleset or global ruleset.
@@ -165,9 +177,11 @@ protected $rulesets = [
     ]
 ];
 
-// 
-
+// Note, your custom rules are merged with 'saving' too.
 $post->isValid('my_custom_rules');
+
+// Test if your custom rules are valid standalone.
+$post->isValid('my_custom_rules', false);
 ```
 
 ### Unique rules
