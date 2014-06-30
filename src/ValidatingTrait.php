@@ -201,7 +201,7 @@ trait ValidatingTrait {
             $rulesets[] = $this->getRuleset($key);
         }
 
-        return call_user_func_array('array_merge', $rulesets);
+        return array_filter(call_user_func_array('array_merge', $rulesets));
     }
 
     /**
