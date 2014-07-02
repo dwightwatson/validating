@@ -112,7 +112,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
     public function testGetErrors()
     {
-        $this->assertNull($this->trait->getErrors());
+        $this->assertEquals(0, $this->trait->getErrors()->count());
     }
 
     public function testSetErrors()

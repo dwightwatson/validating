@@ -232,7 +232,7 @@ trait ValidatingTrait {
      */
     public function getErrors()
     {
-        return $this->validationErrors;
+        return $this->validationErrors ?: new MessageBag;
     }
 
     /**
@@ -255,7 +255,7 @@ trait ValidatingTrait {
      */
     public function isValid($ruleset = null, $mergeWithSaving = true)
     {
-        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getRules();            
+        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getRules();
 
         return $this->performValidation($rules);
     }
@@ -399,7 +399,7 @@ trait ValidatingTrait {
      *
      * @param  array $rules
      * @return bool
-     * @throws ValidationException
+     * @throws \Watson\Validating\ValidationException
      */
     protected function performValidation($rules = [])
     {
@@ -415,14 +415,14 @@ trait ValidatingTrait {
     /**
      * Throw a validation exception.
      *
-     * @throws ValidationException
+     * @throws \Watson\Validating\ValidationException
      */
     protected function throwValidationException()
     {
-        $exception = new ValidationException(get_class($model) . ' model could not be persisted as it failed validation.');
+        $exception = new ValidationException(get_class($this) . ' model could not be persisted as it failed validation.');
 
-        $exception->setModel($model);
-        $exception->setErrors($model->getErrors());
+        $exception->setModel($this);
+        $exception->setErrors($this->getErrors());
 
         throw $exception;
     }
