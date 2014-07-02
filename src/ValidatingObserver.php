@@ -88,12 +88,7 @@ class ValidatingObserver {
 
                 if ($model->getThrowValidationExceptions())
                 {
-                    $exception = new ValidationException(get_class($model) . ' model could not be persisted as it failed validation.');
-
-                    $exception->setModel($model);
-                    $exception->setErrors($model->getErrors());
-
-                    throw $exception;
+                    $model->throwValidationException();
                 }
 
                 return false;

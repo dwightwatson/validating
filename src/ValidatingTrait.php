@@ -17,7 +17,7 @@ trait ValidatingTrait {
      * Whether the model should undergo validation
      * when saving or not.
      *
-     * @var boolean
+     * @var bool
      */
     protected $validating = true;
 
@@ -42,7 +42,7 @@ trait ValidatingTrait {
      * Returns whether or not the model will attempt to validate
      * itself when saving.
      *
-     * @return boolean
+     * @return bool
      */
     public function getValidating()
     {
@@ -52,8 +52,8 @@ trait ValidatingTrait {
      /**
      * Set whether the model should attempt validation on saving.
      *
-     * @param  boolean $value
-     * @return voidn
+     * @param  bool $value
+     * @return void
      */
     public function setValidating($value)
     {
@@ -64,7 +64,7 @@ trait ValidatingTrait {
      * Returns whether the model will raise an exception or
      * return a boolean when validating.
      *
-     * @return boolean
+     * @return bool
      */
     public function getThrowValidationExceptions()
     {
@@ -75,7 +75,7 @@ trait ValidatingTrait {
      * Set whether the model should raise an exception or
      * return a boolean on a failed validation.
      *
-     * @param  boolean $value
+     * @param  bool $value
      * @return void
      * @throws InvalidArgumentException
      */
@@ -88,7 +88,7 @@ trait ValidatingTrait {
      * Returns whether or not the model will add it's unique
      * identifier to the rules when validating.
      *
-     * @return boolean
+     * @return bool
      */
     public function getInjectUniqueIdentifier()
     {
@@ -99,7 +99,7 @@ trait ValidatingTrait {
      * Set the model to add unique identifier to rules when performing
      * validation.
      *
-     * @param  boolean $value
+     * @param  bool $value
      * @return void
      * @throws InvalidArgumentException
      */
@@ -153,7 +153,7 @@ trait ValidatingTrait {
      * Get a ruleset, and merge it with saving if required.
      *
      * @param  string $ruleset
-     * @param  bool $mergeWithSaving
+     * @param  bool   $mergeWithSaving
      * @return array
      */
     public function getRuleset($ruleset, $mergeWithSaving = false)
@@ -174,7 +174,7 @@ trait ValidatingTrait {
     /**
      * Set the rules used for a particular ruleset.
      *
-     * @param  array $rules
+     * @param  array  $rules
      * @param  string $ruleset
      * @return void
      */
@@ -250,8 +250,8 @@ trait ValidatingTrait {
      * Returns whether the model is valid or not.
      *
      * @param  mixed $ruleset
-     * @param  bool $mergeWithSaving
-     * @return boolean
+     * @param  bool  $mergeWithSaving
+     * @return bool
      */
     public function isValid($ruleset = null, $mergeWithSaving = true)
     {
@@ -261,11 +261,28 @@ trait ValidatingTrait {
     }
 
     /**
+     * Returns if the model is valid, otherwise throws an exception.
+     *
+     * @param  string $ruleset
+     * @return bool
+     * @throws \Watson\Validating\ValidationException
+     */
+    public function isValidOrFail($ruleset = null)
+    {
+        if ( ! $this->isValid($ruleset))
+        {
+            $this->throwValidationException();
+        }
+
+        return true;
+    }
+
+    /**
      * Returns whether the model is invalid or not.
      *
      * @param  string $ruleset
-     * @param  bool $mergeWithSaving
-     * @return boolean
+     * @param  bool   $mergeWithSaving
+     * @return bool
      */
     public function isInvalid($ruleset = null, $mergeWithSaving = true)
     {
@@ -273,9 +290,26 @@ trait ValidatingTrait {
     }
 
     /**
+     * Returns if the model is invalid, otherwise throws an exception.
+     *
+     * @param  string $ruleset
+     * @return bool
+     * @throws \Watson\Validating\ValidationException
+     */
+    public function isInvalidOrFail($ruleset = null)
+    {
+        if ( ! $this->isInvalid($ruleset))
+        {
+            $this->throwValidationException();
+        }
+
+        return true;
+    }
+
+    /**
      * Force the model to be saved without undergoing validation.
      *
-     * @return boolean
+     * @return bool
      */
     public function forceSave()
     {
@@ -294,38 +328,26 @@ trait ValidatingTrait {
      * Perform a one-off save that will raise an exception on validation error
      * instead of returning a boolean (which is the default behaviour).
      *
-     * @deprecated use saveOrFail() instead
      * @return void
      * @throws \Watson\Validating\ValidatingException
      */
     public function saveOrFail()
     {
-        $currentThrowValidationExceptionsSetting = $this->getThrowValidationExceptions();
-
-        $this->setThrowValidationExceptions(true);
-
-        $this->getModel()->save();
-
-        $this->setThrowValidationExceptions($currentThrowValidationExceptionsSetting);
+        if ( ! $this->getModel()->save())
+        {
+            $this->throwValidationException();
+        }
     }
 
     /**
      * Perform a one-off save that will return a boolean on
      * validation error instead of raising an exception.
      *
-     * @return boolean
+     * @return bool
      */
     public function saveOrReturn()
     {
-        $currentThrowValidationExceptionsSetting = $this->getThrowValidationExceptions();
-
-        $this->setThrowValidationExceptions(false);
-
-        $result = $this->getModel()->save();
-
-        $this->setThrowValidationExceptions($currentThrowValidationExceptionsSetting);
-
-        return $result;
+        return $this->getModel()->save();
     }
 
     /**
@@ -376,7 +398,7 @@ trait ValidatingTrait {
      * model if required.
      *
      * @param  array $rules
-     * @return boolean
+     * @return bool
      * @throws ValidationException
      */
     protected function performValidation($rules = [])
@@ -388,6 +410,21 @@ trait ValidatingTrait {
         $this->setErrors($validation->messages());
 
         return false;
+    }
+
+    /**
+     * Throw a validation exception.
+     *
+     * @throws ValidationException
+     */
+    protected function throwValidationException()
+    {
+        $exception = new ValidationException(get_class($model) . ' model could not be persisted as it failed validation.');
+
+        $exception->setModel($model);
+        $exception->setErrors($model->getErrors());
+
+        throw $exception;
     }
 
     /**
@@ -407,7 +444,7 @@ trait ValidatingTrait {
      * Update the unique rules of the given ruleset to
      * include the model identifier.
      *
-     * @param  string  $ruleset
+     * @param  string $ruleset
      * @return void
      */
     public function updateRulesetUniques($ruleset = null)
@@ -426,7 +463,7 @@ trait ValidatingTrait {
      * primary key to the unique rules so that the validation
      * will work as expected.
      *
-     * @param  array  $rules
+     * @param  array $rules
      * @return array
      */
     protected function injectUniqueIdentifierToRules(array $rules)
@@ -452,8 +489,8 @@ trait ValidatingTrait {
      * Take a unique rule, add the database table, column and
      * model identifier if required.
      *
-     * @param  string  $rule
-     * @param  string  $field
+     * @param  string $rule
+     * @param  string $field
      * @return string
      */
     protected function prepareUniqueRule($rule, $field)
