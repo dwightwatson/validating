@@ -169,6 +169,12 @@ trait ValidatingTrait {
 
             return $rulesets[$ruleset];
         }
+        elseif ($mergeWithSaving && isset($rulesets['saving']))
+        {
+            return $rulesets['saving'];
+        }
+       
+        return [];
     }
 
     /**
