@@ -68,15 +68,52 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
     }
 
-    public function testSetRulesSetsValue()
+    public function testGetDefaultRules()
+    {
+        // Should get 'saving' ruleset by default.
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getDefaultRules());
+
+        $this->trait->setRulesets(null);
+
+        // Otherwise get the global rules.
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getDefaultRules());
+
+        $this->trait->setRules(null);
+
+        // Finally return an empty array.
+        $this->assertEquals([], $this->trait->getDefaultRules());
+    }
+
+    public function testSetRules()
     {
         $this->trait->setRules(['bar' => 'foo']);
 
         $this->assertEquals(['bar' => 'foo'], $this->trait->getRules());
     }
 
+    public function testGetRulesets()
+    {
+        $rulesets = [
+            'creating' => [
+                'baz' => 'bat',
+                'foo' => 'baz'
+            ],
+            'saving' => [
+                'foo' => 'bar'
+            ]
+        ];
 
-    public function testGetRulesetWithName()
+        $this->assertEquals($rulesets, $this->trait->getRulesets());
+    }
+
+    public function testSetRulesets()
+    {
+        $this->trait->setRulesets(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRulesets());
+    }
+
+    public function testGetRuleset()
     {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));
     }

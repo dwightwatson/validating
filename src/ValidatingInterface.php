@@ -76,12 +76,22 @@ interface ValidatingInterface {
     public function getRules();
 
     /**
+     * Get the default ruleset for any event. Will first search to see if a
+     * 'saving' ruleset exists, fallback to '$rules' and otherwise return
+     * an empty array
+     *
+     * @param  string $ruleset
+     * @return array
+     */
+    public function getDefaultRules($ruleset = null);
+
+    /**
      * Set the global validation rules.
      *
      * @param  array $rules
      * @return void
      */
-    public function setRules(array $rules);
+    public function setRules(array $rules = null);
 
     /**
      * Get all the rulesets.
@@ -89,6 +99,14 @@ interface ValidatingInterface {
      * @return array
      */
     public function getRulesets();
+
+    /**
+     * Set all the rulesets.
+     *
+     * @param  array $rulesets
+     * @return void
+     */
+    public function setRulesets(array $rulesets = null);
 
     /**
      * Get a ruleset.

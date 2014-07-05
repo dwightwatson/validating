@@ -129,12 +129,27 @@ trait ValidatingTrait {
     }
 
     /**
+     * Get the default ruleset for any event. Will first search to see if a
+     * 'saving' ruleset exists, fallback to '$rules' and otherwise return
+     * an empty array
+     *
+     * @param  string $ruleset
+     * @return array
+     */
+    public function getDefaultRules($ruleset = null)
+    {
+        $rules = $this->getRuleset('saving') ?: $this->getRules();
+
+        return $rules ?: [];
+    }
+
+    /**
      * Set the global validation rules.
      *
      * @param  array $rules
      * @return void
      */
-    public function setRules(array $rules)
+    public function setRules(array $rules = null)
     {
         $this->rules = $rules;
     }
@@ -147,6 +162,17 @@ trait ValidatingTrait {
     public function getRulesets()
     {
         return $this->rulesets ?: [];
+    }
+
+    /**
+     * Set all the rulesets.
+     *
+     * @param  array $rulesets
+     * @return void
+     */
+    public function setRulesets(array $rulesets = null)
+    {
+        $this->rulesets = $rulesets;
     }
 
     /**
@@ -255,7 +281,7 @@ trait ValidatingTrait {
      */
     public function isValid($ruleset = null, $mergeWithSaving = true)
     {
-        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getRules();
+        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getDefaultRules();
 
         return $this->performValidation($rules);
     }
