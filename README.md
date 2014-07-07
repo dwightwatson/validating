@@ -12,7 +12,7 @@ Validating allows for multiple rulesets, injecting the model ID into `unique` va
 Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
-"watson/validating": "0.9.*"
+"watson/validating": "0.10.*"
 ```
 
 ## Overview
@@ -191,6 +191,10 @@ There's a small helper method for merging rulesets. Pass the names of rulesets w
 ```php
 $mergedRules = $post->mergeRulesets('saving', 'creating');
 ```
+
+### Confirmation rules
+
+If you are using confirmation rules, any `*_confirmation` input will be passed to the validator as well. You won't need to pass it to your model, the trait will simply look at the request input and pass through the required attributes.
 
 ### Unique rules
 
