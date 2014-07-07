@@ -1,6 +1,7 @@
 <?php
 
 use \Mockery;
+use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Validator;
 use \Illuminate\Validation\Factory;
 
@@ -172,6 +173,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
             ->once()
             ->andReturn(Mockery::mock(['passes' => true]));
 
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
+
         $result = $this->trait->isValid();
 
         $this->assertTrue($result);
@@ -187,6 +192,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'passes'   => false,
                 'messages' => $messageBag
             ]));
+
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
 
         $result = $this->trait->isValid();
 
@@ -206,6 +215,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'messages' => $messageBag
             ]));
 
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
+
         $result = $this->trait->isInvalid();
 
         $this->assertTrue($result);
@@ -217,6 +230,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         Validator::shouldReceive('make')
             ->once()
             ->andReturn(Mockery::mock(['passes' => true]));
+
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
 
         $result = $this->trait->isInvalid();
 
@@ -250,6 +267,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'messages' => Mockery::mock('Illuminate\Support\MessageBag')
             ]));
 
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
+
         $this->trait->setThrowValidationExceptions(false);
 
         $result = $this->trait->performValidation();
@@ -262,6 +283,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         Validator::shouldReceive('make')
             ->once()
             ->andReturn(Mockery::mock(['passes' => true]));
+
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
 
         $result = $this->trait->performValidation();
 
@@ -283,6 +308,17 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
         $validator = $this->trait->getValidator();
         $this->assertInstanceOf('ValidatorStub', $validator, get_class($validator));
+    }
+
+    public function testGetConfirmationAttributes()
+    {
+        Input::shouldReceive('all')
+            ->once()
+            ->andReturn(['password' => 'foo', 'password_confirmation' => 'bar']);
+
+        $result = $this->trait->getConfirmationAttributes();
+
+        $this->assertEquals(['password_confirmation' => 'bar'], $result);
     }
 
     // updateRulesUniques

@@ -1,6 +1,8 @@
 <?php namespace Watson\Validating;
 
 use \Illuminate\Support\MessageBag;
+use \Illuminate\Support\Str;
+use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Validator;
 use \Illuminate\Validation\Factory;
 
@@ -415,7 +417,10 @@ trait ValidatingTrait {
     protected function makeValidator($rules = [])
     {
         // Get the model attributes.
-        $attributes = $this->getModel()->getAttributes();
+        $attributes = array_merge(
+            $this->getConfirmationAttributes(),
+            $this->getModel()->getAttributes()
+        );
 
         if ($this->exists && $this->getInjectUniqueIdentifier())
         {
@@ -426,6 +431,21 @@ trait ValidatingTrait {
         $messages = $this->getMessages();
 
         return $this->getValidator()->make($attributes, $rules, $messages);
+    }
+
+    /**
+     * Get all the confirmation attributes from the input.
+     *
+     * @return array
+     */
+    public function getConfirmationAttributes()
+    {
+        $input = Input::all();
+
+        return array_flip(array_filter(array_flip($input), function($key)
+        {
+            return Str::endsWith($key, '_confirmation');
+        }));
     }
 
     /**
