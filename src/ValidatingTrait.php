@@ -188,12 +188,22 @@ trait ValidatingTrait {
 
         if (array_key_exists($ruleset, $rulesets))
         {
+            // If the ruleset exists and merge with saving is true, return
+            // the rulesets merged.
             if ($mergeWithSaving)
             {
                 return $this->mergeRulesets(['saving', $ruleset]);
             }
 
+            // If merge with saving is not true then simply retrun the ruleset.
             return $rulesets[$ruleset];
+        }
+
+        // If the ruleset requested does not exist but merge with saving is true
+        // attempt to return 
+        else if ($mergeWithSaving && $this->getDefaultRules())
+        {
+            return $this->getDefaultRules();
         }
     }
 

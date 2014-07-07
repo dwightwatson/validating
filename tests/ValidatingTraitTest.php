@@ -68,19 +68,23 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
     }
 
-    public function testGetDefaultRules()
+    public function testGetDefaultRulesWithRuleset()
     {
-        // Should get 'saving' ruleset by default.
         $this->assertEquals(['foo' => 'bar'], $this->trait->getDefaultRules());
+    }
 
+    public function testGetDefaultRulsetWithRules()
+    {
         $this->trait->setRulesets(null);
 
-        // Otherwise get the global rules.
         $this->assertEquals(['foo' => 'bar'], $this->trait->getDefaultRules());
+    }
 
+    public function testGetDefaultRulesetWithoutRules()
+    {
+        $this->trait->setRulesets(null);
         $this->trait->setRules(null);
 
-        // Finally return an empty array.
         $this->assertEquals([], $this->trait->getDefaultRules());
     }
 
