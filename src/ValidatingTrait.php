@@ -136,7 +136,7 @@ trait ValidatingTrait {
      * an empty array
      *
      * @param  string $ruleset
-     * @return array
+     * @return array|void
      */
     public function getDefaultRules($ruleset = null)
     {
