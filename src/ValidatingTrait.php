@@ -202,7 +202,7 @@ trait ValidatingTrait {
 
         // If the ruleset requested does not exist but merge with saving is true
         // attempt to return 
-        else if ($mergeWithSaving && $this->getDefaultRules())
+        else if ($mergeWithSaving)
         {
             return $this->getDefaultRules();
         }
