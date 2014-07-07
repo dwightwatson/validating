@@ -136,7 +136,7 @@ trait ValidatingTrait {
      * an empty array
      *
      * @param  string $ruleset
-     * @return array
+     * @return array|void
      */
     public function getDefaultRules($ruleset = null)
     {
@@ -203,7 +203,7 @@ trait ValidatingTrait {
 
         // If the ruleset requested does not exist but merge with saving is true
         // attempt to return 
-        else if ($mergeWithSaving && $this->getDefaultRules())
+        else if ($mergeWithSaving)
         {
             return $this->getDefaultRules();
         }
