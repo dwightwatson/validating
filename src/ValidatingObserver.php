@@ -111,7 +111,7 @@ class ValidatingObserver {
      */
     protected function fireValidatingEvent($event, Model $model)
     {
-        return Event::until('validating.'.$event, [$model]);
+        return Event::until("eloquent.validating.$event: \Watson\Validating\ValidatingTrait", $model);
     }
 
     /**
@@ -123,7 +123,7 @@ class ValidatingObserver {
      */
     protected function fireValidatedEvent($event, Model $model)
     {
-        Event::fire('validating.'.$event, [$model]);
+        Event::fire("eloquent.validated.$event: \Watson\Validating\ValidatingTrait", $model);
     }
 
 }
