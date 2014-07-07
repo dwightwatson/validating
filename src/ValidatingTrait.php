@@ -135,10 +135,9 @@ trait ValidatingTrait {
      * 'saving' ruleset exists, fallback to '$rules' and otherwise return
      * an empty array
      *
-     * @param  string $ruleset
      * @return array
      */
-    public function getDefaultRules($ruleset = null)
+    public function getDefaultRules()
     {
         $rules = $this->getRuleset('saving') ?: $this->getRules();
 
