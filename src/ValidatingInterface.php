@@ -80,10 +80,9 @@ interface ValidatingInterface {
      * 'saving' ruleset exists, fallback to '$rules' and otherwise return
      * an empty array
      *
-     * @param  string $ruleset
      * @return array
      */
-    public function getDefaultRules($ruleset = null);
+    public function getDefaultRules();
 
     /**
      * Set the global validation rules.
