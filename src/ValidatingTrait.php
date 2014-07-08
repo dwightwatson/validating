@@ -439,12 +439,17 @@ trait ValidatingTrait {
      */
     public function getConfirmationAttributes()
     {
-        $input = Input::all();
-
-        return array_flip(array_filter(array_flip($input), function($key)
+        $attributes = array();
+        
+        foreach (Input::all() as $key => $value)
         {
-            return Str::endsWith($key, '_confirmation');
-        }));
+            if (ends_with($key, '_confirmation'))
+            {
+                $attributes[$key] = $value;
+            }
+        }
+        
+        return $attributes;
     }
 
     /**
