@@ -1,7 +1,6 @@
 <?php namespace Watson\Validating;
 
 use \Illuminate\Support\MessageBag;
-use \Illuminate\Support\Str;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Validator;
 use \Illuminate\Validation\Factory;
