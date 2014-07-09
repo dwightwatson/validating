@@ -417,7 +417,7 @@ trait ValidatingTrait {
      *
      * @throws \Watson\Validating\ValidationException
      */
-    protected function throwValidationException()
+    public function throwValidationException()
     {
         $exception = new ValidationException(get_class($this) . ' model could not be persisted as it failed validation.');
 
