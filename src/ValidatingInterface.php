@@ -180,15 +180,6 @@ interface ValidatingInterface {
     public function isInvalid($ruleset = null);
 
     /**
-     * Returns if the model is invalid, otherwise throws an exception.
-     *
-     * @param  string $ruleset
-     * @return bool
-     * @throws \Watson\Validating\ValidationException
-     */
-    public function isInvalidOrFail($ruleset = null);
-
-    /**
      * Force the model to be saved without undergoing validation.
      *
      * @return bool

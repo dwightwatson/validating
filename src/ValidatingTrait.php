@@ -326,23 +326,6 @@ trait ValidatingTrait {
     }
 
     /**
-     * Returns if the model is invalid, otherwise throws an exception.
-     *
-     * @param  string $ruleset
-     * @return bool
-     * @throws \Watson\Validating\ValidationException
-     */
-    public function isInvalidOrFail($ruleset = null)
-    {
-        if ( ! $this->isInvalid($ruleset))
-        {
-            $this->throwValidationException();
-        }
-
-        return true;
-    }
-
-    /**
      * Force the model to be saved without undergoing validation.
      *
      * @return bool
