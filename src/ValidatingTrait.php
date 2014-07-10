@@ -200,7 +200,7 @@ trait ValidatingTrait {
         }
 
         // If the ruleset requested does not exist but merge with saving is true
-        // attempt to return 
+        // attempt to return
         else if ($mergeWithSaving)
         {
             return $this->getDefaultRules();
@@ -234,7 +234,7 @@ trait ValidatingTrait {
 
         foreach ($keys as $key)
         {
-            $rulesets[] = $this->getRuleset($key);
+            $rulesets[] = $this->getRuleset($key) ?: [];
         }
 
         return array_filter(call_user_func_array('array_merge', $rulesets));
@@ -422,7 +422,7 @@ trait ValidatingTrait {
     public function getConfirmationAttributes()
     {
         $attributes = array();
-        
+
         foreach (Input::all() as $key => $value)
         {
             if (ends_with($key, '_confirmation'))
@@ -430,7 +430,7 @@ trait ValidatingTrait {
                 $attributes[$key] = $value;
             }
         }
-        
+
         return $attributes;
     }
 
@@ -482,7 +482,7 @@ trait ValidatingTrait {
         $this->setRules($this->injectUniqueIdentifierToRules($rules));
     }
 
-   /**
+    /**
      * Update the unique rules of the given ruleset to
      * include the model identifier.
      *
