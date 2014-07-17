@@ -15,6 +15,12 @@ Simply add the package to your `composer.json` file and run `composer update`.
 "watson/validating": "0.9.*"
 ```
 
+Or go to your project directory where the `composer.json` file is located and type:
+
+```sh
+composer require "watson/validating:0.9.*"
+```
+
 ## Overview
 
 First, add the trait to your model and add your validation rules and messages as needed.
