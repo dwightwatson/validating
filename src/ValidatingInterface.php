@@ -96,7 +96,7 @@ interface ValidatingInterface {
      * @param  string $ruleset
      * @return array
      */
-    public function getRuleset($ruleset,$mergeWithSaving = false);
+    public function getRuleset($ruleset, $mergeWithSaving = false);
 
     /**
      * Set the rules used for a particular ruleset.
