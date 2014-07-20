@@ -96,7 +96,7 @@ interface ValidatingInterface {
      * @param  string $ruleset
      * @return array
      */
-    public function getRuleset($ruleset);
+    public function getRuleset($ruleset, $mergeWithSaving = false);
 
     /**
      * Set the rules used for a particular ruleset.
@@ -143,7 +143,7 @@ interface ValidatingInterface {
      * @param  string $ruleset
      * @return bool
      */
-    public function isValid($ruleset = null);
+    public function isValid($ruleset = null, $mergeWithSaving = true);
 
     /**
      * Returns if the model is valid, otherwise throws an exception.
@@ -160,7 +160,7 @@ interface ValidatingInterface {
      * @param  string $ruleset
      * @return bool
      */
-    public function isInvalid($ruleset = null);
+    public function isInvalid($ruleset = null, $mergeWithSaving = true);
 
     /**
      * Returns if the model is invalid, otherwise throws an exception.
