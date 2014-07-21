@@ -198,7 +198,7 @@ interface ValidatingInterface {
     /**
      * Make a Validator instance for a given ruleset.
      *
-     * @param  string $ruleset
+     * @param  array  $rules
      * @return \Illuminate\Validation\Factory
      */
     function makeValidator($rules = []);
