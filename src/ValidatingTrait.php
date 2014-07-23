@@ -120,6 +120,27 @@ trait ValidatingTrait {
     }
 
     /**
+     * Get the validating attribute names.
+     *
+     * @return mixed
+     */
+    public function getValidationAttributeNames()
+    {
+        return isset($this->validationAttributeNames) ? $this->validationAttributeNames : null;
+    }
+
+    /**
+     * Set the validating attribute names.
+     *
+     * @param  array  $attributeNames
+     * @return mixed
+     */
+    public function setValidationAttributeNames(array $attributeNames = null)
+    {
+        $this->validationAttributeNames = $attributeNames;
+    }
+
+    /**
      * Get the global validation rules.
      *
      * @return array
@@ -411,7 +432,14 @@ trait ValidatingTrait {
         // Get the custom validation messages.
         $messages = $this->getMessages();
 
-        return $this->getValidator()->make($attributes, $rules, $messages);
+        $validator = $this->getValidator()->make($attributes, $rules, $messages);
+
+        if ($this->getValidationAttributeNames())
+        {
+            $validator->setAttributeNames($this->getValidationAttributeNames());
+        }
+
+        return $validator;
     }
 
     /**

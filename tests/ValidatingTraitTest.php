@@ -64,6 +64,19 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     }
 
 
+    public function testGetValidationAttributeNames()
+    {
+        $this->assertNull($this->trait->getValidationAttributeNames());
+    }
+
+    public function testSetValidationAttributeNames()
+    {
+        $this->trait->setValidationAttributeNames(['bar' => 'baz']);
+
+        $this->assertEquals(['bar' => 'baz'], $this->trait->getValidationAttributeNames());
+    }
+
+
     public function testGetRules()
     {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
