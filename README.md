@@ -2,6 +2,11 @@ Validating, a validation trait for Laravel
 ==========================================
 
 [![Build Status](https://travis-ci.org/dwightwatson/validating.png?branch=master)](https://travis-ci.org/dwightwatson/validating)
+[![Dependency Status](https://www.versioneye.com/php/watson:validating/0.9.4/badge.svg)](https://www.versioneye.com/php/watson:validating/0.9.4)
+[![Total Downloads](https://poser.pugx.org/watson/validating/downloads.svg)](https://packagist.org/packages/watson/validating)
+[![Latest Stable Version](https://poser.pugx.org/watson/validating/v/stable.svg)](https://packagist.org/packages/watson/validating)
+[![Latest Unstable Version](https://poser.pugx.org/watson/validating/v/unstable.svg)](https://packagist.org/packages/watson/validating)
+[![License](https://poser.pugx.org/watson/validating/license.svg)](https://packagist.org/packages/watson/validating)
 
 Validating is a trait for Laravel 4.2+ Eloquent models which ensures that models meet their validation criteria before being saved. If they are not considered valid the model will not be saved and the validation errors will be made available.
 
@@ -13,6 +18,12 @@ Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
 "watson/validating": "0.10.*"
+```
+
+Or go to your project directory where the `composer.json` file is located and type:
+
+```sh
+composer require "watson/validating:0.9.*"
 ```
 
 ## Overview
