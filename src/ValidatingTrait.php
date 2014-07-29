@@ -159,7 +159,7 @@ trait ValidatingTrait {
      */
     public function getDefaultRules()
     {
-        $rules = $this->getRuleset('saving') ?: $this->getRules();
+        $rules = $this->getRuleset('saving', false) ?: $this->getRules();
 
         return $rules ?: [];
     }
@@ -203,7 +203,7 @@ trait ValidatingTrait {
      * @param  bool   $mergeWithSaving
      * @return array
      */
-    public function getRuleset($ruleset, $mergeWithSaving = false)
+    public function getRuleset($ruleset, $mergeWithSaving = true)
     {
         $rulesets = $this->getRulesets();
 
@@ -255,7 +255,7 @@ trait ValidatingTrait {
 
         foreach ($keys as $key)
         {
-            $rulesets[] = $this->getRuleset($key) ?: [];
+            $rulesets[] = $this->getRuleset($key, false);
         }
 
         return array_filter(call_user_func_array('array_merge', $rulesets));
