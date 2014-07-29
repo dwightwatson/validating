@@ -124,6 +124,24 @@ interface ValidatingInterface {
     public function setRuleset(array $rules, $ruleset);
 
     /**
+     * Add rules to the existing rules or ruleset, overriding any existing.
+     *
+     * @param  array   $rules
+     * @param  string  $ruleset
+     * @return void
+     */
+    public function addRules(array $rules, $ruleset = null);
+
+    /**
+     * Remove rules from the existing rules or ruleset.
+     *
+     * @param  mixed   $keys
+     * @param  string  $ruleset
+     * @return void
+     */
+    public function removeRules($keys, $ruleset = null);
+
+    /**
      * Helper method to merge rulesets, with later rules overwriting
      * earlier ones
      *

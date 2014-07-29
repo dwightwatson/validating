@@ -109,6 +109,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['bar' => 'foo'], $this->trait->getRules());
     }
 
+
     public function testGetRulesets()
     {
         $rulesets = [
@@ -131,6 +132,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRulesets());
     }
 
+
     public function testGetRuleset()
     {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));
@@ -150,12 +152,43 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals(['abc' => 123], $this->trait->getRuleset('foo', false));
     }
 
+    public function testAddRules()
+    {
+        $this->trait->addRules(['abc' => 'easy as']);
+
+        $this->assertEquals(['foo' => 'bar', 'abc' => 'easy as'], $this->trait->getRules());
+    }
+
+    public function testRemoveRules()
+    {
+        $this->trait->removeRules('foo');
+
+        $this->assertEquals([], $this->trait->getRules());
+    }
+
+
+    public function testAddRulesToRuleset()
+    {
+        $this->trait->addRules(['abc' => 'easy as'], 'creating');
+
+        $this->assertEquals(['baz' => 'bat', 'foo' => 'baz', 'abc' => 'easy as'], $this->trait->getRuleset('creating'));
+    }
+
+    public function testRemoveRulesFromRuleset()
+    {
+        $this->trait->removeRules('baz', 'creating');
+
+        $this->assertEquals(['foo' => 'baz'], $this->trait->getRuleset('creating'));
+    }
+
+
     public function testMergeRulesets()
     {
         $result = $this->trait->mergeRulesets('saving', 'creating');
 
         $this->assertEquals(['baz' => 'bat', 'foo' => 'baz'], $result);
     }
+
 
     public function testGetMessages()
     {

@@ -241,6 +241,54 @@ trait ValidatingTrait {
     }
 
     /**
+     * Add rules to the existing rules or ruleset, overriding any existing.
+     *
+     * @param  array   $rules
+     * @param  string  $ruleset
+     * @return void
+     */
+    public function addRules(array $rules, $ruleset = null)
+    {
+        if ($ruleset)
+        {
+            $newRules = array_merge($this->getRuleset($ruleset), $rules);
+
+            $this->setRuleset($newRules, $ruleset);
+        }
+        else
+        {
+            $newRules = array_merge($this->getRules(), $rules);
+
+            $this->setRules($newRules);
+        }
+    }
+
+    /**
+     * Remove rules from the existing rules or ruleset.
+     *
+     * @param  mixed   $keys
+     * @param  string  $ruleset
+     * @return void
+     */
+    public function removeRules($keys, $ruleset = null)
+    {
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        $rules = $ruleset ? $this->getRuleset($ruleset) : $this->getRules();
+
+        array_forget($rules, $keys);
+
+        if ($ruleset)
+        {
+            $this->setRuleset($rules, $ruleset);
+        }
+        else
+        {
+            $this->setRules($rules);
+        }
+    }
+
+    /**
      * Helper method to merge rulesets, with later rules overwriting
      * earlier ones
      *
