@@ -376,7 +376,7 @@ trait ValidatingTrait {
      * @param  array $rules
      * @return \Illuminate\Validation\Factory
      */
-    protected function makeValidator($rules = [])
+    public function makeValidator($rules = [])
     {
         // Get the model attributes.
         $attributes = $this->getModel()->getAttributes();
@@ -401,7 +401,7 @@ trait ValidatingTrait {
      * @return bool
      * @throws \Watson\Validating\ValidationException
      */
-    protected function performValidation($rules = [])
+    public function performValidation($rules = [])
     {
         $validation = $this->makeValidator($rules);
 
@@ -466,7 +466,7 @@ trait ValidatingTrait {
      * @param  array $rules
      * @return array
      */
-    protected function injectUniqueIdentifierToRules(array $rules)
+    public function injectUniqueIdentifierToRules(array $rules)
     {
         foreach ($rules as $field => &$ruleset)
         {
@@ -493,7 +493,7 @@ trait ValidatingTrait {
      * @param  string $field
      * @return string
      */
-    protected function prepareUniqueRule($rule, $field)
+    public function prepareUniqueRule($rule, $field)
     {
         $parameters = explode(',', substr($rule, 7));
 
