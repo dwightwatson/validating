@@ -151,6 +151,17 @@ trait ValidatingTrait {
     }
 
     /**
+     * Handy method for using the static call Model::rules(). Protected access
+     * only to allow __callStatic to get to it.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return $this->getRules();
+    }
+
+    /**
      * Get the default ruleset for any event. Will first search to see if a
      * 'saving' ruleset exists, fallback to '$rules' and otherwise return
      * an empty array
