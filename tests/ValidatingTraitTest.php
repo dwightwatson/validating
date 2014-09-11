@@ -1,6 +1,7 @@
 <?php
 
 use \Mockery;
+use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Validator;
 use \Illuminate\Validation\Factory;
 
@@ -63,12 +64,45 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     }
 
 
+    public function testGetValidationAttributeNames()
+    {
+        $this->assertNull($this->trait->getValidationAttributeNames());
+    }
+
+    public function testSetValidationAttributeNames()
+    {
+        $this->trait->setValidationAttributeNames(['bar' => 'baz']);
+
+        $this->assertEquals(['bar' => 'baz'], $this->trait->getValidationAttributeNames());
+    }
+
+
     public function testGetRules()
     {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
     }
 
-    public function testSetRulesSetsValue()
+    public function testGetDefaultRulesWithRuleset()
+    {
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getDefaultRules());
+    }
+
+    public function testGetDefaultRulsetWithRules()
+    {
+        $this->trait->setRulesets(null);
+
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getDefaultRules());
+    }
+
+    public function testGetDefaultRulesetWithoutRules()
+    {
+        $this->trait->setRulesets(null);
+        $this->trait->setRules(null);
+
+        $this->assertEquals([], $this->trait->getDefaultRules());
+    }
+
+    public function testSetRules()
     {
         $this->trait->setRules(['bar' => 'foo']);
 
@@ -76,7 +110,30 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     }
 
 
-    public function testGetRulesetWithName()
+    public function testGetRulesets()
+    {
+        $rulesets = [
+            'creating' => [
+                'baz' => 'bat',
+                'foo' => 'baz'
+            ],
+            'saving' => [
+                'foo' => 'bar'
+            ]
+        ];
+
+        $this->assertEquals($rulesets, $this->trait->getRulesets());
+    }
+
+    public function testSetRulesets()
+    {
+        $this->trait->setRulesets(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $this->trait->getRulesets());
+    }
+
+
+    public function testGetRuleset()
     {
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRuleset('saving'));
     }
@@ -85,7 +142,43 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     {
         $this->trait->setRuleset(['abc' => 123], 'foo');
 
-        $this->assertEquals(['abc' => 123], $this->trait->getRuleset('foo'));
+        $this->assertEquals(['abc' => 123, 'foo' => 'bar'], $this->trait->getRuleset('foo'));
+    }
+
+    public function testSetRulesetWithNameWithoutDefaultMerged()
+    {
+        $this->trait->setRuleset(['abc' => 123], 'foo');
+
+        $this->assertEquals(['abc' => 123], $this->trait->getRuleset('foo', false));
+    }
+
+    public function testAddRules()
+    {
+        $this->trait->addRules(['abc' => 'easy as']);
+
+        $this->assertEquals(['foo' => 'bar', 'abc' => 'easy as'], $this->trait->getRules());
+    }
+
+    public function testRemoveRules()
+    {
+        $this->trait->removeRules('foo');
+
+        $this->assertEquals([], $this->trait->getRules());
+    }
+
+
+    public function testAddRulesToRuleset()
+    {
+        $this->trait->addRules(['abc' => 'easy as'], 'creating');
+
+        $this->assertEquals(['baz' => 'bat', 'foo' => 'baz', 'abc' => 'easy as'], $this->trait->getRuleset('creating'));
+    }
+
+    public function testRemoveRulesFromRuleset()
+    {
+        $this->trait->removeRules('baz', 'creating');
+
+        $this->assertEquals(['foo' => 'baz'], $this->trait->getRuleset('creating'));
     }
 
 
@@ -131,6 +224,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
             ->once()
             ->andReturn(Mockery::mock(['passes' => true]));
 
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
+
         $result = $this->trait->isValid();
 
         $this->assertTrue($result);
@@ -146,6 +243,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'passes'   => false,
                 'messages' => $messageBag
             ]));
+
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
 
         $result = $this->trait->isValid();
 
@@ -165,6 +266,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'messages' => $messageBag
             ]));
 
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
+
         $result = $this->trait->isInvalid();
 
         $this->assertTrue($result);
@@ -176,6 +281,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         Validator::shouldReceive('make')
             ->once()
             ->andReturn(Mockery::mock(['passes' => true]));
+
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
 
         $result = $this->trait->isInvalid();
 
@@ -209,6 +318,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'messages' => Mockery::mock('Illuminate\Support\MessageBag')
             ]));
 
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
+
         $this->trait->setThrowValidationExceptions(false);
 
         $result = $this->trait->performValidation();
@@ -221,6 +334,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         Validator::shouldReceive('make')
             ->once()
             ->andReturn(Mockery::mock(['passes' => true]));
+
+        $this->trait->shouldReceive('getConfirmationAttributes')
+            ->once()
+            ->andReturn([]);
 
         $result = $this->trait->performValidation();
 
@@ -242,6 +359,17 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
         $validator = $this->trait->getValidator();
         $this->assertInstanceOf('ValidatorStub', $validator, get_class($validator));
+    }
+
+    public function testGetConfirmationAttributes()
+    {
+        Input::shouldReceive('all')
+            ->once()
+            ->andReturn(['password' => 'foo', 'password_confirmation' => 'bar']);
+
+        $result = $this->trait->getConfirmationAttributes();
+
+        $this->assertEquals(['password_confirmation' => 'bar'], $result);
     }
 
     // updateRulesUniques

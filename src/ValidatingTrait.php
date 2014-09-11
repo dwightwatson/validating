@@ -1,6 +1,7 @@
 <?php namespace Watson\Validating;
 
 use \Illuminate\Support\MessageBag;
+use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Validator;
 use \Illuminate\Validation\Factory;
 
@@ -119,6 +120,27 @@ trait ValidatingTrait {
     }
 
     /**
+     * Get the validating attribute names.
+     *
+     * @return mixed
+     */
+    public function getValidationAttributeNames()
+    {
+        return isset($this->validationAttributeNames) ? $this->validationAttributeNames : null;
+    }
+
+    /**
+     * Set the validating attribute names.
+     *
+     * @param  array  $attributeNames
+     * @return mixed
+     */
+    public function setValidationAttributeNames(array $attributeNames = null)
+    {
+        $this->validationAttributeNames = $attributeNames;
+    }
+
+    /**
      * Get the global validation rules.
      *
      * @return array
@@ -129,12 +151,37 @@ trait ValidatingTrait {
     }
 
     /**
+     * Handy method for using the static call Model::rules(). Protected access
+     * only to allow __callStatic to get to it.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return $this->getRules();
+    }
+
+    /**
+     * Get the default ruleset for any event. Will first search to see if a
+     * 'saving' ruleset exists, fallback to '$rules' and otherwise return
+     * an empty array
+     *
+     * @return array
+     */
+    public function getDefaultRules()
+    {
+        $rules = $this->getRuleset('saving', false) ?: $this->getRules();
+
+        return $rules ?: [];
+    }
+
+    /**
      * Set the global validation rules.
      *
      * @param  array $rules
      * @return void
      */
-    public function setRules(array $rules)
+    public function setRules(array $rules = null)
     {
         $this->rules = $rules;
     }
@@ -150,24 +197,45 @@ trait ValidatingTrait {
     }
 
     /**
+     * Set all the rulesets.
+     *
+     * @param  array $rulesets
+     * @return void
+     */
+    public function setRulesets(array $rulesets = null)
+    {
+        $this->rulesets = $rulesets;
+    }
+
+    /**
      * Get a ruleset, and merge it with saving if required.
      *
      * @param  string $ruleset
      * @param  bool   $mergeWithSaving
      * @return array
      */
-    public function getRuleset($ruleset, $mergeWithSaving = false)
+    public function getRuleset($ruleset, $mergeWithSaving = true)
     {
         $rulesets = $this->getRulesets();
 
         if (array_key_exists($ruleset, $rulesets))
         {
+            // If the ruleset exists and merge with saving is true, return
+            // the rulesets merged.
             if ($mergeWithSaving)
             {
                 return $this->mergeRulesets(['saving', $ruleset]);
             }
 
+            // If merge with saving is not true then simply retrun the ruleset.
             return $rulesets[$ruleset];
+        }
+
+        // If the ruleset requested does not exist but merge with saving is true
+        // attempt to return
+        else if ($mergeWithSaving)
+        {
+            return $this->getDefaultRules();
         }
     }
 
@@ -181,6 +249,54 @@ trait ValidatingTrait {
     public function setRuleset(array $rules, $ruleset)
     {
         $this->rulesets[$ruleset] = $rules;
+    }
+
+    /**
+     * Add rules to the existing rules or ruleset, overriding any existing.
+     *
+     * @param  array   $rules
+     * @param  string  $ruleset
+     * @return void
+     */
+    public function addRules(array $rules, $ruleset = null)
+    {
+        if ($ruleset)
+        {
+            $newRules = array_merge($this->getRuleset($ruleset), $rules);
+
+            $this->setRuleset($newRules, $ruleset);
+        }
+        else
+        {
+            $newRules = array_merge($this->getRules(), $rules);
+
+            $this->setRules($newRules);
+        }
+    }
+
+    /**
+     * Remove rules from the existing rules or ruleset.
+     *
+     * @param  mixed   $keys
+     * @param  string  $ruleset
+     * @return void
+     */
+    public function removeRules($keys, $ruleset = null)
+    {
+        $keys = is_array($keys) ? $keys : func_get_args();
+
+        $rules = $ruleset ? $this->getRuleset($ruleset) : $this->getRules();
+
+        array_forget($rules, $keys);
+
+        if ($ruleset)
+        {
+            $this->setRuleset($rules, $ruleset);
+        }
+        else
+        {
+            $this->setRules($rules);
+        }
     }
 
     /**
@@ -198,7 +314,7 @@ trait ValidatingTrait {
 
         foreach ($keys as $key)
         {
-            $rulesets[] = $this->getRuleset($key) ?: [];
+            $rulesets[] = $this->getRuleset($key, false);
         }
 
         return array_filter(call_user_func_array('array_merge', $rulesets));
@@ -255,7 +371,7 @@ trait ValidatingTrait {
      */
     public function isValid($ruleset = null, $mergeWithSaving = true)
     {
-        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getRules();
+        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getDefaultRules();
 
         return $this->performValidation($rules);
     }
@@ -287,23 +403,6 @@ trait ValidatingTrait {
     public function isInvalid($ruleset = null, $mergeWithSaving = true)
     {
         return ! $this->isValid($ruleset, $mergeWithSaving);
-    }
-
-    /**
-     * Returns if the model is invalid, otherwise throws an exception.
-     *
-     * @param  string $ruleset
-     * @return bool
-     * @throws \Watson\Validating\ValidationException
-     */
-    public function isInvalidOrFail($ruleset = null)
-    {
-        if ( ! $this->isInvalid($ruleset))
-        {
-            $this->throwValidationException();
-        }
-
-        return true;
     }
 
     /**
@@ -379,7 +478,10 @@ trait ValidatingTrait {
     protected function makeValidator($rules = [])
     {
         // Get the model attributes.
-        $attributes = $this->getModel()->getAttributes();
+        $attributes = array_merge(
+            $this->getConfirmationAttributes(),
+            $this->getModel()->getAttributes()
+        );
 
         if ($this->exists && $this->getInjectUniqueIdentifier())
         {
@@ -389,7 +491,34 @@ trait ValidatingTrait {
         // Get the custom validation messages.
         $messages = $this->getMessages();
 
-        return $this->getValidator()->make($attributes, $rules, $messages);
+        $validator = $this->getValidator()->make($attributes, $rules, $messages);
+
+        if ($this->getValidationAttributeNames())
+        {
+            $validator->setAttributeNames($this->getValidationAttributeNames());
+        }
+
+        return $validator;
+    }
+
+    /**
+     * Get all the confirmation attributes from the input.
+     *
+     * @return array
+     */
+    public function getConfirmationAttributes()
+    {
+        $attributes = array();
+
+        foreach (Input::all() as $key => $value)
+        {
+            if (ends_with($key, '_confirmation'))
+            {
+                $attributes[$key] = $value;
+            }
+        }
+
+        return $attributes;
     }
 
     /**
@@ -440,7 +569,7 @@ trait ValidatingTrait {
         $this->setRules($this->injectUniqueIdentifierToRules($rules));
     }
 
-   /**
+    /**
      * Update the unique rules of the given ruleset to
      * include the model identifier.
      *
@@ -510,7 +639,7 @@ trait ValidatingTrait {
         }
 
         // If the identifier isn't set, add it.
-        if ( ! isset($parameters[2]))
+        if ( ! isset($parameters[2]) || strtolower($parameters[2]) === 'null')
         {
             $parameters[2] = $this->getModel()->getKey();
         }

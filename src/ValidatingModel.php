@@ -1,8 +1,9 @@
 <?php namespace Watson\Validating;
 
 use \Illuminate\Database\Eloquent\Model as Eloquent;
+use \Illuminate\Support\Contracts\MessageProviderInterface;
 
-abstract class ValidatingModel extends Eloquent implements ValidatingInterface {
+abstract class ValidatingModel extends Eloquent implements MessageProviderInterface, ValidatingInterface {
 
     /**
      * Make model validate attributes.
@@ -24,5 +25,15 @@ abstract class ValidatingModel extends Eloquent implements ValidatingInterface {
      * @var array
      */
     protected $rulesets = [];
+
+    /**
+     * Get the messages for the instance.
+     *
+     * @return \Illuminate\Support\MessageBag
+     */
+    public function getMessageBag()
+    {
+        return $this->getErrors();
+    }
 
 }
