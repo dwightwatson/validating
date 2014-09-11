@@ -639,7 +639,7 @@ trait ValidatingTrait {
         }
 
         // If the identifier isn't set, add it.
-        if ( ! isset($parameters[2]))
+        if ( ! isset($parameters[2]) || strtolower($parameters[2]) === 'null')
         {
             $parameters[2] = $this->getModel()->getKey();
         }
