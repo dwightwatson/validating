@@ -405,11 +405,9 @@ trait ValidatingTrait {
     {
         $validation = $this->makeValidator($rules);
 
-        if ($validation->passes()) return true;
-
         $this->setErrors($validation->messages());
 
-        return false;
+        return $validation->passes();
     }
 
     /**
