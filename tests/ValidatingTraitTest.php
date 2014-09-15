@@ -1,17 +1,14 @@
 <?php
 
-use \Mockery;
 use \Illuminate\Support\Facades\Input;
 use \Illuminate\Support\Facades\Validator;
-use \Illuminate\Validation\Factory;
 
 class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     public $trait;
 
     public function setUp()
     {
-        $this->trait = Mockery::mock('DatabaseValidatingTraitStub');
-        $this->trait->shouldDeferMissing();
+        $this->trait = Mockery::mock('DatabaseValidatingTraitStub')->makePartial();
     }
 
     public function tearDown()
@@ -214,7 +211,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
         $this->trait->setErrors($messageBag);
 
-        $this->assertEquals($messageBag, $this->trait->getErrors());
+        $this->assertSame($messageBag, $this->trait->getErrors());
     }
 
 
@@ -222,7 +219,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     {
         Validator::shouldReceive('make')
             ->once()
-            ->andReturn(Mockery::mock(['passes' => true]));
+            ->andReturn(Mockery::mock([
+              'passes' => true,
+              'messages' => Mockery::mock('Illuminate\Support\MessageBag')
+            ]));
 
         $this->trait->shouldReceive('getConfirmationAttributes')
             ->once()
@@ -251,46 +251,49 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $result = $this->trait->isValid();
 
         $this->assertFalse($result);
-        $this->assertEquals($messageBag, $this->trait->getErrors());
+        $this->assertSame($messageBag, $this->trait->getErrors());
     }
 
-
-    public function testIsInvalidReturnsTrueWithValidationFails()
+    public function testIsValidClearsErrors()
     {
-        $messageBag = Mockery::mock('Illuminate\Support\MessageBag');
+      $this->trait->setErrors(Mockery::mock('Illuminate\Support\MessageBag'));
 
-        Validator::shouldReceive('make')
-            ->once()
-            ->andReturn(Mockery::mock([
-                'passes'   => false,
-                'messages' => $messageBag
-            ]));
+      $validMessageBag = Mockery::mock('Illuminate\Support\MessageBag');
 
-        $this->trait->shouldReceive('getConfirmationAttributes')
-            ->once()
-            ->andReturn([]);
+      Validator::shouldReceive('make')
+        ->once()
+        ->andReturn(Mockery::mock([
+          'passes'   => true,
+          'messages' => $validMessageBag
+        ]));
 
-        $result = $this->trait->isInvalid();
+      $this->trait->shouldReceive('getConfirmationAttributes')
+        ->once()
+        ->andReturn([]);
 
-        $this->assertTrue($result);
-        $this->assertEquals($messageBag, $this->trait->getErrors());
+      $result = $this->trait->isValid();
+
+      $this->assertTrue($result);
+      $this->assertSame($validMessageBag, $this->trait->getErrors());
     }
 
-    public function testIsInvalidReturnsFalseWhenValidationPasses()
+    public function testIsInvalidReturnsFalseIfIsValidIsTrue()
     {
-        Validator::shouldReceive('make')
-            ->once()
-            ->andReturn(Mockery::mock(['passes' => true]));
-
-        $this->trait->shouldReceive('getConfirmationAttributes')
-            ->once()
-            ->andReturn([]);
+        $this->trait->shouldReceive('isValid')->once()->andReturn(true);
 
         $result = $this->trait->isInvalid();
 
         $this->assertFalse($result);
     }
 
+    public function testIsInvalidReturnsTrueIfIsValidIsFalse()
+    {
+      $this->trait->shouldReceive('isValid')->once()->andReturn(false);
+
+      $result = $this->trait->isInvalid();
+
+      $this->assertTrue($result);
+    }
 
     public function testForceSaveSavesOnInvalidModel()
     {
@@ -333,7 +336,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     {
         Validator::shouldReceive('make')
             ->once()
-            ->andReturn(Mockery::mock(['passes' => true]));
+            ->andReturn(Mockery::mock([
+                'passes' => true,
+                'messages' => Mockery::mock('Illuminate\Support\MessageBag')
+            ]));
 
         $this->trait->shouldReceive('getConfirmationAttributes')
             ->once()
