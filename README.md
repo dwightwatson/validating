@@ -13,7 +13,6 @@ Validating is a trait for Laravel 4.2+ Eloquent models which ensures that models
 Validating allows for multiple rulesets, injecting the model ID into `unique` validation rules and raising exceptions on failed validations. It's small and flexible to fit right into your workflow and help you save valid data only.
 
 # Installation
-
 Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
@@ -27,7 +26,6 @@ composer require "watson/validating:0.9.*"
 ```
 
 ## Overview
-
 First, add the trait to your model and add your validation rules and messages as needed.
 
 ```php
@@ -100,7 +98,6 @@ catch (Watson\Validating\ValidationException $e)
 Note that you can just pass the exception to the `withErrors()` method like `withErrors($e)` and Laravel will know how to handle it.
 
 ### Bypass validation
-
 If you're using the model and you wish to perform a save that bypasses validation you can. This will return the same result as if you called `save()` on a model without the trait.
 
 ```php
@@ -108,7 +105,6 @@ $post->forceSave();
 ```
 
 ### Validation exceptions by default
-
 If you would prefer to have exceptions thrown by default when using the `save()` method instead of having to use `saveOrFail()` you can just set the following property on your model or `BaseModel`.
 
 ```php
@@ -124,7 +120,6 @@ protected $throwValidationExceptions = true;
 If you'd like to perform a one-off save using exceptions or return values, you can use the `saveOrFail()` and `saveOrReturn` methods.
 
 ### Multiple rulesets
-
 In some instances you may wish to use different rulesets depending on the action that is occurring. For example, you might require different rules if a model is being created to when a model is being updated. Utilising different rules is easy.
 
 ```php
@@ -196,7 +191,6 @@ $post->isValid('my_custom_rules', false);
 ```
 
 #### Merging rulesets
-
 There's a small helper method for merging rulesets. Pass the names of rulesets where the later ones will override the earlier ones.
 
 ```php
@@ -204,11 +198,9 @@ $mergedRules = $post->mergeRulesets('saving', 'creating');
 ```
 
 ### Confirmation rules
-
 If you are using confirmation rules, any `*_confirmation` input will be passed to the validator as well. You won't need to pass it to your model, the trait will simply look at the request input and pass through the required attributes.
 
 ### Unique rules
-
 You may have noticed we're using the `unique` rule on the slug, which wouldn't work if we were updating a persisted model. Luckily, Validation will take care of this for you and append the model's primary key to the rule so that the rule will work as expected; ignoring the current model.
 
 You can adjust this functionality by setting the `$injectUniqueIdentifier` property on your model.
@@ -225,7 +217,6 @@ protected $injectUniqueIdentifier = true;
 ```
 
 ### Accessors and mutators
-
 You also have access to some really existing getters and setters, which allow you to get and set your validation rules and messages.
 
 ```php
@@ -242,13 +233,23 @@ $post->setMessages(['title.required' => "Please, please set a title."])
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
 
 ### Events
-
 Various events are fired by the trait during the validation process which you can hook into to impact the validation process.
 
-When validation is about to occur, the `validating.$event` event will be fired, where `$event` will be `saving`, `creating`, `updating`, `deleting` or `restoring`. If you listen for any of these events and return a value you can prevent validation from occurring completely.
+To hook in, you first need to add the `$observeables` property onto your model (or base model). This simply lets Eloquent know that your model can response to these events.
 
 ```php
-Event::listen('validating.*', function($model)
+/**
+ * User exposed observable events
+ *
+ * @var array
+ */
+protected $observables = ['validating', 'validated'];
+```
+
+When validation is about to occur, the `eloquent.validating.$event: ModelName` event will be fired, where `$event` will be `saving`, `creating`, `updating`, `deleting` or `restoring`. For example, if you were updating a namespaced model `App\User` the event would be `eloquent.validating.updating: App\User`. If you listen for any of these events and return a value you can prevent validation from occurring completely.
+
+```php
+Event::listen('eloquent.validating.*', function($model)
 {
     // Psuedo-Russian roulette validation.
     if (rand(1, 6) === 1)
@@ -259,10 +260,9 @@ Event::listen('validating.*', function($model)
 });
 ```
 
-After validation occurs, either `validating.passed` or `validating.failed` will be fired depending on the state of the validation.
+After validation occurs, there are also a range of `validated` events you can hook into, for the `passed`, `failed` and `skipped` events. For the above example failing validation, you could get the event `eloquent.validated.passed: App\User`.
 
 ## Controller usage
-
 There are a few ways to go about using the validating model in your controllers, but here's the simple way I like to do it. Really clean, clear as to what is going on and easy to test. Of course you can mix it up as you need, it's just one approach.
 
 ```php
