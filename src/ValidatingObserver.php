@@ -123,6 +123,7 @@ class ValidatingObserver {
      */
     protected function fireValidatedEvent($event, Model $model)
     {
+        Event::fire("eloquent.validated: ".get_class($model), $model);
         Event::fire("eloquent.validated.$event: ".get_class($model), $model);
     }
 

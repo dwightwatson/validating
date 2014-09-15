@@ -260,7 +260,7 @@ Event::listen('eloquent.validating.*', function($model)
 });
 ```
 
-After validation occurs, there are also a range of `validated` events you can hook into, for the `passed`, `failed` and `skipped` events. For the above example failing validation, you could get the event `eloquent.validated.passed: App\User`.
+After validation occurs, there are also a range of `validated` events you can hook into, for the `passed`, `failed` and `skipped` events. For the above example failing validation, you could get the event `eloquent.validated.passed: App\User`. Alternatively there is also `eloquent.validated: App\User` which will fire no matter what happens.
 
 ## Controller usage
 There are a few ways to go about using the validating model in your controllers, but here's the simple way I like to do it. Really clean, clear as to what is going on and easy to test. Of course you can mix it up as you need, it's just one approach.
