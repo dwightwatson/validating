@@ -2,7 +2,7 @@ Validating, a validation trait for Laravel
 ==========================================
 
 [![Build Status](https://travis-ci.org/dwightwatson/validating.png?branch=master)](https://travis-ci.org/dwightwatson/validating)
-[![Dependency Status](https://www.versioneye.com/php/watson:validating/0.9.4/badge.svg)](https://www.versioneye.com/php/watson:validating/0.9.4)
+[![Dependency Status](https://www.versioneye.com/php/watson:validating/0.10.0/badge.svg)](https://www.versioneye.com/php/watson:validating/0.10.0)
 [![Total Downloads](https://poser.pugx.org/watson/validating/downloads.svg)](https://packagist.org/packages/watson/validating)
 [![Latest Stable Version](https://poser.pugx.org/watson/validating/v/stable.svg)](https://packagist.org/packages/watson/validating)
 [![Latest Unstable Version](https://poser.pugx.org/watson/validating/v/unstable.svg)](https://packagist.org/packages/watson/validating)
@@ -22,7 +22,7 @@ Simply add the package to your `composer.json` file and run `composer update`.
 Or go to your project directory where the `composer.json` file is located and type:
 
 ```sh
-composer require "watson/validating:0.9.*"
+composer require "watson/validating:0.10.*"
 ```
 
 ## Overview
