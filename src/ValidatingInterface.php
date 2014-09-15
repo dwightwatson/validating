@@ -1,15 +1,11 @@
 <?php namespace Watson\Validating;
 
 use \Illuminate\Support\MessageBag;
+use \Illuminate\Support\Facades\Input;
+use \Illuminate\Support\Facades\Validator;
+use \Illuminate\Validation\Factory;
 
 interface ValidatingInterface {
-
-    /**
-     * Boot the trait. Adds an observer class for validating.
-     *
-     * @return void
-     */
-    public static function bootValidatingTrait();
 
     /**
      * Returns whether or not the model will attempt to validate
@@ -19,7 +15,7 @@ interface ValidatingInterface {
      */
     public function getValidating();
 
-    /**
+     /**
      * Set whether the model should attempt validation on saving.
      *
      * @param  bool $value
@@ -41,6 +37,7 @@ interface ValidatingInterface {
      *
      * @param  bool $value
      * @return void
+     * @throws InvalidArgumentException
      */
     public function setThrowValidationExceptions($value);
 
@@ -58,6 +55,7 @@ interface ValidatingInterface {
      *
      * @param  bool $value
      * @return void
+     * @throws InvalidArgumentException
      */
     public function setInjectUniqueIdentifier($value);
 
@@ -76,12 +74,21 @@ interface ValidatingInterface {
     public function getRules();
 
     /**
+     * Get the default ruleset for any event. Will first search to see if a
+     * 'saving' ruleset exists, fallback to '$rules' and otherwise return
+     * an empty array
+     *
+     * @return array
+     */
+    public function getDefaultRules();
+
+    /**
      * Set the global validation rules.
      *
      * @param  array $rules
      * @return void
      */
-    public function setRules(array $rules);
+    public function setRules(array $rules = null);
 
     /**
      * Get all the rulesets.
@@ -91,9 +98,18 @@ interface ValidatingInterface {
     public function getRulesets();
 
     /**
-     * Get a ruleset.
+     * Set all the rulesets.
+     *
+     * @param  array $rulesets
+     * @return void
+     */
+    public function setRulesets(array $rulesets = null);
+
+    /**
+     * Get a ruleset, and merge it with saving if required.
      *
      * @param  string $ruleset
+     * @param  bool   $mergeWithSaving
      * @return array
      */
     public function getRuleset($ruleset, $mergeWithSaving = false);
@@ -106,6 +122,33 @@ interface ValidatingInterface {
      * @return void
      */
     public function setRuleset(array $rules, $ruleset);
+
+    /**
+     * Add rules to the existing rules or ruleset, overriding any existing.
+     *
+     * @param  array   $rules
+     * @param  string  $ruleset
+     * @return void
+     */
+    public function addRules(array $rules, $ruleset = null);
+
+    /**
+     * Remove rules from the existing rules or ruleset.
+     *
+     * @param  mixed   $keys
+     * @param  string  $ruleset
+     * @return void
+     */
+    public function removeRules($keys, $ruleset = null);
+
+    /**
+     * Helper method to merge rulesets, with later rules overwriting
+     * earlier ones
+     *
+     * @param  array $keys
+     * @return array
+     */
+    public function mergeRulesets($keys);
 
     /**
      * Get the custom validation messages being used by the model.
@@ -132,15 +175,16 @@ interface ValidatingInterface {
     /**
      * Set the error messages.
      *
-     * @param  \Illuminate\Support\MessageBag $errors
+     * @param  \Illuminate\Support\MessageBag $validationErrors
      * @return void
      */
-    public function setErrors(MessageBag $errors);
+    public function setErrors(MessageBag $validationErrors);
 
     /**
      * Returns whether the model is valid or not.
      *
-     * @param  string $ruleset
+     * @param  mixed $ruleset
+     * @param  bool  $mergeWithSaving
      * @return bool
      */
     public function isValid($ruleset = null, $mergeWithSaving = true);
@@ -158,18 +202,10 @@ interface ValidatingInterface {
      * Returns whether the model is invalid or not.
      *
      * @param  string $ruleset
+     * @param  bool   $mergeWithSaving
      * @return bool
      */
     public function isInvalid($ruleset = null, $mergeWithSaving = true);
-
-    /**
-     * Returns if the model is invalid, otherwise throws an exception.
-     *
-     * @param  string $ruleset
-     * @return bool
-     * @throws \Watson\Validating\ValidationException
-     */
-    public function isInvalidOrFail($ruleset = null);
 
     /**
      * Force the model to be saved without undergoing validation.
@@ -196,23 +232,32 @@ interface ValidatingInterface {
     public function saveOrReturn();
 
     /**
-     * Make a Validator instance for a given ruleset.
+     * Get the Validator instance
      *
-     * @param  array  $rules
      * @return \Illuminate\Validation\Factory
      */
-    function makeValidator($rules = []);
+    public function getValidator();
 
     /**
-     * Validate the model against it's rules, returning whether
-     * or not it passes and setting the error messages on the
-     * model if required.
+     * Set the Validator instance
      *
-     * @param  string $ruleset
-     * @return bool
-     * @throws ValidationException
+     * @param \Illuminate\Validation\Factory $validator
      */
-    function performValidation($ruleset = null);
+    public function setValidator(Factory $validator);
+
+    /**
+     * Get all the confirmation attributes from the input.
+     *
+     * @return array
+     */
+    public function getConfirmationAttributes();
+
+    /**
+     * Throw a validation exception.
+     *
+     * @throws \Watson\Validating\ValidationException
+     */
+    public function throwValidationException();
 
     /**
      * Update the unique rules of the global rules to
@@ -230,29 +275,5 @@ interface ValidatingInterface {
      * @return void
      */
     public function updateRulesetUniques($ruleset = null);
-
-    /**
-     * If the model already exists and it has unique validations
-     * it is going to fail validation unless we also pass it's
-     * primary key to the rule so that it may be ignored.
-     *
-     * This will go through all the rules and append the model's
-     * primary key to the unique rules so that the validation
-     * will work as expected.
-     *
-     * @param  array $rules
-     * @return array
-     */
-    function injectUniqueIdentifierToRules(array $rules);
-
-    /**
-     * Take a unique rule, add the database table, column and
-     * model identifier if required.
-     *
-     * @param  string $rule
-     * @param  string $field
-     * @return string
-     */
-    function prepareUniqueRule($rule, $field);
 
 }
