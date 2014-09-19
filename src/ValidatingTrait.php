@@ -314,7 +314,7 @@ trait ValidatingTrait {
 
         foreach ($keys as $key)
         {
-            $rulesets[] = $this->getRuleset($key, false);
+            $rulesets[] = (array) $this->getRuleset($key, false);
         }
 
         return array_filter(call_user_func_array('array_merge', $rulesets));
