@@ -265,6 +265,8 @@ After validation occurs, there are also a range of `validated` events you can ho
 ## Testing
 There is currently a bug in Laravel (see issue [#1181](https://github.com/laravel/framework/issues/1181)) that prevents model events from firing more than once in a test suite. This means that the first test that uses model tests will pass but any subseqeuent tests will fail. There are a couple of temporary solutions listed in that thread which you can use to make your tests pass in the meantime.
 
+**Since Laravel has switched to Liferaft for the purpose of tracking bugs and pull requests, the issue mentioned above may not be available. [This Gist has an example `TestCase.php`](https://gist.github.com/dwightwatson/a645e7f5f6c8c52445d80) which shows you how to reset the events of all your models between tests so that they work as expected.
+
 ## Controller usage
 There are a few ways to go about using the validating model in your controllers, but here's the simple way I like to do it. Really clean, clear as to what is going on and easy to test. Of course you can mix it up as you need, it's just one approach.
 
