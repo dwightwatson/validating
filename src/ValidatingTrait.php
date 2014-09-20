@@ -534,9 +534,11 @@ trait ValidatingTrait {
     {
         $validation = $this->makeValidator($rules);
 
+        $result = $validation->passes();
+
         $this->setErrors($validation->messages());
 
-        return $validation->passes();
+        return $result;
     }
 
     /**
