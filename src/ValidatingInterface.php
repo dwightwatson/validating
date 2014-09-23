@@ -74,81 +74,12 @@ interface ValidatingInterface {
     public function getRules();
 
     /**
-     * Get the default ruleset for any event. Will first search to see if a
-     * 'saving' ruleset exists, fallback to '$rules' and otherwise return
-     * an empty array
-     *
-     * @return array
-     */
-    public function getDefaultRules();
-
-    /**
      * Set the global validation rules.
      *
      * @param  array $rules
      * @return void
      */
     public function setRules(array $rules = null);
-
-    /**
-     * Get all the rulesets.
-     *
-     * @return array
-     */
-    public function getRulesets();
-
-    /**
-     * Set all the rulesets.
-     *
-     * @param  array $rulesets
-     * @return void
-     */
-    public function setRulesets(array $rulesets = null);
-
-    /**
-     * Get a ruleset, and merge it with saving if required.
-     *
-     * @param  string $ruleset
-     * @param  bool   $mergeWithSaving
-     * @return array
-     */
-    public function getRuleset($ruleset, $mergeWithSaving = false);
-
-    /**
-     * Set the rules used for a particular ruleset.
-     *
-     * @param  array  $rules
-     * @param  string $ruleset
-     * @return void
-     */
-    public function setRuleset(array $rules, $ruleset);
-
-    /**
-     * Add rules to the existing rules or ruleset, overriding any existing.
-     *
-     * @param  array   $rules
-     * @param  string  $ruleset
-     * @return void
-     */
-    public function addRules(array $rules, $ruleset = null);
-
-    /**
-     * Remove rules from the existing rules or ruleset.
-     *
-     * @param  mixed   $keys
-     * @param  string  $ruleset
-     * @return void
-     */
-    public function removeRules($keys, $ruleset = null);
-
-    /**
-     * Helper method to merge rulesets, with later rules overwriting
-     * earlier ones
-     *
-     * @param  array $keys
-     * @return array
-     */
-    public function mergeRulesets($keys);
 
     /**
      * Get the validation error messages from the model.
@@ -168,29 +99,24 @@ interface ValidatingInterface {
     /**
      * Returns whether the model is valid or not.
      *
-     * @param  mixed $ruleset
-     * @param  bool  $mergeWithSaving
      * @return bool
      */
-    public function isValid($ruleset = null, $mergeWithSaving = true);
+    public function isValid();
 
     /**
      * Returns if the model is valid, otherwise throws an exception.
      *
-     * @param  string $ruleset
      * @return bool
      * @throws \Watson\Validating\ValidationException
      */
-    public function isValidOrFail($ruleset = null);
+    public function isValidOrFail();
 
     /**
      * Returns whether the model is invalid or not.
      *
-     * @param  string $ruleset
-     * @param  bool   $mergeWithSaving
      * @return bool
      */
-    public function isInvalid($ruleset = null, $mergeWithSaving = true);
+    public function isInvalid();
 
     /**
      * Force the model to be saved without undergoing validation.
@@ -244,14 +170,5 @@ interface ValidatingInterface {
      * @return void
      */
     public function updateRulesUniques();
-
-    /**
-     * Update the unique rules of the given ruleset to
-     * include the model identifier.
-     *
-     * @param  string $ruleset
-     * @return void
-     */
-    public function updateRulesetUniques($ruleset = null);
 
 }

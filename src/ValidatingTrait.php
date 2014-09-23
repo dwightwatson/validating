@@ -162,20 +162,6 @@ trait ValidatingTrait {
     }
 
     /**
-     * Get the default ruleset for any event. Will first search to see if a
-     * 'saving' ruleset exists, fallback to '$rules' and otherwise return
-     * an empty array
-     *
-     * @return array
-     */
-    public function getDefaultRules()
-    {
-        $rules = $this->getRuleset('saving', false) ?: $this->getRules();
-
-        return $rules ?: [];
-    }
-
-    /**
      * Set the global validation rules.
      *
      * @param  array $rules
@@ -184,140 +170,6 @@ trait ValidatingTrait {
     public function setRules(array $rules = null)
     {
         $this->rules = $rules;
-    }
-
-    /**
-     * Get all the rulesets.
-     *
-     * @return array
-     */
-    public function getRulesets()
-    {
-        return $this->rulesets ?: [];
-    }
-
-    /**
-     * Set all the rulesets.
-     *
-     * @param  array $rulesets
-     * @return void
-     */
-    public function setRulesets(array $rulesets = null)
-    {
-        $this->rulesets = $rulesets;
-    }
-
-    /**
-     * Get a ruleset, and merge it with saving if required.
-     *
-     * @param  string $ruleset
-     * @param  bool   $mergeWithSaving
-     * @return array
-     */
-    public function getRuleset($ruleset, $mergeWithSaving = true)
-    {
-        $rulesets = $this->getRulesets();
-
-        if (array_key_exists($ruleset, $rulesets))
-        {
-            // If the ruleset exists and merge with saving is true, return
-            // the rulesets merged.
-            if ($mergeWithSaving)
-            {
-                return $this->mergeRulesets(['saving', $ruleset]);
-            }
-
-            // If merge with saving is not true then simply retrun the ruleset.
-            return $rulesets[$ruleset];
-        }
-
-        // If the ruleset requested does not exist but merge with saving is true
-        // attempt to return
-        else if ($mergeWithSaving)
-        {
-            return $this->getDefaultRules();
-        }
-    }
-
-    /**
-     * Set the rules used for a particular ruleset.
-     *
-     * @param  array  $rules
-     * @param  string $ruleset
-     * @return void
-     */
-    public function setRuleset(array $rules, $ruleset)
-    {
-        $this->rulesets[$ruleset] = $rules;
-    }
-
-    /**
-     * Add rules to the existing rules or ruleset, overriding any existing.
-     *
-     * @param  array   $rules
-     * @param  string  $ruleset
-     * @return void
-     */
-    public function addRules(array $rules, $ruleset = null)
-    {
-        if ($ruleset)
-        {
-            $newRules = array_merge($this->getRuleset($ruleset), $rules);
-
-            $this->setRuleset($newRules, $ruleset);
-        }
-        else
-        {
-            $newRules = array_merge($this->getRules(), $rules);
-
-            $this->setRules($newRules);
-        }
-    }
-
-    /**
-     * Remove rules from the existing rules or ruleset.
-     *
-     * @param  mixed   $keys
-     * @param  string  $ruleset
-     * @return void
-     */
-    public function removeRules($keys, $ruleset = null)
-    {
-        $keys = is_array($keys) ? $keys : func_get_args();
-
-        $rules = $ruleset ? $this->getRuleset($ruleset) : $this->getRules();
-
-        array_forget($rules, $keys);
-
-        if ($ruleset)
-        {
-            $this->setRuleset($rules, $ruleset);
-        }
-        else
-        {
-            $this->setRules($rules);
-        }
-    }
-
-    /**
-     * Helper method to merge rulesets, with later rules overwriting
-     * earlier ones
-     *
-     * @param  array $keys
-     * @return array
-     */
-    public function mergeRulesets($keys)
-    {
-        $keys = is_array($keys) ? $keys : func_get_args();
-
-        $rulesets = [];
-
-        foreach ($keys as $key)
-        {
-            $rulesets[] = (array) $this->getRuleset($key, false);
-        }
-
-        return array_filter(call_user_func_array('array_merge', $rulesets));
     }
 
     /**
@@ -344,13 +196,11 @@ trait ValidatingTrait {
     /**
      * Returns whether the model is valid or not.
      *
-     * @param  mixed $ruleset
-     * @param  bool  $mergeWithSaving
      * @return bool
      */
-    public function isValid($ruleset = null, $mergeWithSaving = true)
+    public function isValid()
     {
-        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getDefaultRules();
+        $rules = $this->getRules();
 
         return $this->performValidation($rules);
     }
@@ -358,13 +208,12 @@ trait ValidatingTrait {
     /**
      * Returns if the model is valid, otherwise throws an exception.
      *
-     * @param  string $ruleset
      * @return bool
      * @throws \Watson\Validating\ValidationException
      */
-    public function isValidOrFail($ruleset = null)
+    public function isValidOrFail()
     {
-        if ( ! $this->isValid($ruleset))
+        if ( ! $this->isValid())
         {
             $this->throwValidationException();
         }
@@ -375,13 +224,11 @@ trait ValidatingTrait {
     /**
      * Returns whether the model is invalid or not.
      *
-     * @param  string $ruleset
-     * @param  bool   $mergeWithSaving
      * @return bool
      */
-    public function isInvalid($ruleset = null, $mergeWithSaving = true)
+    public function isInvalid()
     {
-        return ! $this->isValid($ruleset, $mergeWithSaving);
+        return ! $this->isValid();
     }
 
     /**
@@ -520,20 +367,6 @@ trait ValidatingTrait {
         $rules = $this->getRules();
 
         $this->setRules($this->injectUniqueIdentifierToRules($rules));
-    }
-
-    /**
-     * Update the unique rules of the given ruleset to
-     * include the model identifier.
-     *
-     * @param  string $ruleset
-     * @return void
-     */
-    public function updateRulesetUniques($ruleset = null)
-    {
-        $rules = $this->getRuleset($ruleset);
-
-        $this->setRuleset($ruleset, $this->injectUniqueIdentifierToRules($rules));
     }
 
     /**

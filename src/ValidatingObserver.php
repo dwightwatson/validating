@@ -37,10 +37,7 @@ class ValidatingObserver {
      */
     public function saving(Model $model)
     {
-        if ( ! $model->getRuleset('creating') && ! $model->getRuleset('updating'))
-        {
-            return $this->performValidation($model, 'saving');
-        }
+        return $this->performValidation($model, 'saving');
     }
 
     /**
@@ -70,7 +67,7 @@ class ValidatingObserver {
             // if it returns a value.
             if ($this->fireValidatingEvent($event, $model) !== null) return;
 
-            if ($model->isValid($event) === false)
+            if ($model->isValid() === false)
             {
                 // Fire the validating.failed event.
                 $this->fireValidatedEvent('failed', $model);

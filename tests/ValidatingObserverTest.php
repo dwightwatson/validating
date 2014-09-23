@@ -58,7 +58,6 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
     {
         $this->model->shouldReceive('isValid')
             ->once()
-            ->with('creating')
             ->andReturn(true);
 
         $this->observer->creating($this->model);
@@ -68,7 +67,6 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
     {
         $this->model->shouldReceive('isValid')
             ->once()
-            ->with('updating')
             ->andReturn(true);
 
         $this->observer->updating($this->model);
@@ -76,56 +74,9 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
 
     public function testSavingPerformsValidation()
     {
-        $this->model->shouldReceive('getRuleset')
-            ->with('creating')
-            ->andReturn(null);
-
-        $this->model->shouldReceive('getRuleset')
-            ->with('updating')
-            ->andReturn(null);
-
         $this->model->shouldReceive('isValid')
-            ->with('saving')
+            ->once()
             ->andReturn(true);
-
-        $this->observer->saving($this->model);
-    }
-
-    public function testSavingWithCreatingRulesDoesNotPerformValidation()
-    {
-        $this->model->shouldReceive('getRuleset')
-            ->with('creating')
-            ->andReturn(['foo' => 'bar']);
-
-        $this->model->shouldReceive('getRuleset')
-            ->with('updating')
-            ->andReturn(['foo' => 'bar']);
-
-        $this->observer->saving($this->model);
-    }
-
-    public function testSavingWithUpdatingRulesDoesNotPerformValidation()
-    {
-        $this->model->shouldReceive('getRuleset')
-            ->with('creating')
-            ->andReturn(null);
-
-        $this->model->shouldReceive('getRuleset')
-            ->with('updating')
-            ->andReturn(['foo' => 'bar']);
-
-        $this->observer->saving($this->model);
-    }
-
-    public function testSavingWithRulesDoesNotPerformValidation()
-    {
-        $this->model->shouldReceive('getRuleset')
-            ->with('creating')
-            ->andReturn(['foo' => 'bar']);
-
-        $this->model->shouldReceive('getRuleset')
-            ->with('updating')
-            ->andReturn(['foo' => 'bar']);
 
         $this->observer->saving($this->model);
     }
@@ -134,7 +85,6 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
     {
         $this->model->shouldReceive('isValid')
             ->once()
-            ->with('restoring')
             ->andReturn(true);
 
         $this->observer->restoring($this->model);
