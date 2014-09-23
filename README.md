@@ -13,7 +13,9 @@ Validating is a trait for Laravel 5.0+ Eloquent models which ensures that models
 Validating allows for multiple rulesets, injecting the model ID into `unique` validation rules and raising exceptions on failed validations. It's small and flexible to fit right into your workflow and help you save valid data only.
 
 ## Laravel 4.2+
-Looking to use Validating on Laravel 4.2+? [Take a look at the 4.2 branch for documentation and installation instructions](https://github.com/dwightwatson/validating/tree/0.10).
+Looking to use Validating on Laravel 4.2+? [Take a look at the 4.2 branch for documentation and installation instructions](https://github.com/dwightwatson/validating/tree/0.10). 
+
+The Laravel 4.2 version is better suited to doing form validation; it supports custom validation messages, confirmation rules and multiple rulesets. Because Laravel 5.0 has `FormRequest` validation Validating is now designed to keep your core data valid and leave form validation to the framework.
 
 # Installation
 Simply add the package to your `composer.json` file and run `composer update`.
