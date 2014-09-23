@@ -321,27 +321,6 @@ trait ValidatingTrait {
     }
 
     /**
-     * Get the custom validation messages being used by the model.
-     *
-     * @return array
-     */
-    public function getMessages()
-    {
-        return $this->validationMessages ?: [];
-    }
-
-    /**
-     * Set the validation messages to be used by the validator.
-     *
-     * @param  array $messages
-     * @return void
-     */
-    public function setMessages(array $messages)
-    {
-        $this->validationMessages = $messages;
-    }
-
-    /**
      * Get the validation error messages from the model.
      *
      * @return \Illuminate\Support\MessageBag
@@ -485,10 +464,7 @@ trait ValidatingTrait {
             $rules = $this->injectUniqueIdentifierToRules($rules);
         }
 
-        // Get the custom validation messages.
-        $messages = $this->getMessages();
-
-        $validator = $this->getValidator()->make($attributes, $rules, $messages);
+        $validator = $this->getValidator()->make($attributes, $rules);
 
         if ($this->getValidationAttributeNames())
         {

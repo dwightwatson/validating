@@ -45,10 +45,6 @@ class Post extends Eloquent
 		'slug'    => 'required|unique:posts,slug',
 		'content' => 'required'
 	];
-
-	protected $validationMessages = [
-		'slug.unique' => "Another post is using that slug already."
-	];
 }
 ```
 

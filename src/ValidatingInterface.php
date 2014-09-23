@@ -151,21 +151,6 @@ interface ValidatingInterface {
     public function mergeRulesets($keys);
 
     /**
-     * Get the custom validation messages being used by the model.
-     *
-     * @return array
-     */
-    public function getMessages();
-
-    /**
-     * Set the validation messages to be used by the validator.
-     *
-     * @param  array $messages
-     * @return void
-     */
-    public function setMessages(array $messages);
-
-    /**
      * Get the validation error messages from the model.
      *
      * @return \Illuminate\Support\MessageBag

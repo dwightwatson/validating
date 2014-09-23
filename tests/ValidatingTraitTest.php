@@ -187,19 +187,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     }
 
 
-    public function testGetMessages()
-    {
-        $this->assertEquals(['bar' => 'baz'], $this->trait->getMessages());
-    }
-
-    public function testSetMessagesSetsValue()
-    {
-        $this->trait->setMessages(['bar' => 'foo']);
-
-        $this->assertEquals(['bar' => 'foo'], $this->trait->getMessages());
-    }
-
-
     public function testGetErrors()
     {
         $this->assertEquals(0, $this->trait->getErrors()->count());
