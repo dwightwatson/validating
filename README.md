@@ -12,18 +12,23 @@ Validating is a trait for Laravel 5.0+ Eloquent models which ensures that models
 
 Validating allows for multiple rulesets, injecting the model ID into `unique` validation rules and raising exceptions on failed validations. It's small and flexible to fit right into your workflow and help you save valid data only.
 
+## Laravel 4.2+
+Looking to use Validating on Laravel 4.2+? [Take a look at the 4.2 branch for documentation and installation instructions](https://github.com/dwightwatson/validating/tree/4.2).
+
 # Installation
 Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
-"watson/validating": "0.10.*"
+"watson/validating": "dev-master"
 ```
 
 Or go to your project directory where the `composer.json` file is located and type:
 
 ```sh
-composer require "watson/validating:0.10.*"
+composer require "watson/validating:dev-master"
 ```
+
+[View installation instructions for Laravel 4.2+](https://github.com/dwightwatson/validating/tree/4.2).
 
 ## Overview
 First, add the trait to your model and add your validation rules and messages as needed.
