@@ -246,10 +246,10 @@ To hook in, you first need to add the `$observeables` property onto your model (
 protected $observables = ['validating', 'validated'];
 ```
 
-When validation is about to occur, the `eloquent.validating.$event: ModelName` event will be fired, where `$event` will be `saving`, `creating`, `updating`, `deleting` or `restoring`. For example, if you were updating a namespaced model `App\User` the event would be `eloquent.validating.updating: App\User`. If you listen for any of these events and return a value you can prevent validation from occurring completely.
+When validation is about to occur, the `eloquent.validating: ModelName` event will be fired, where the `$event` parameter will be `saving` or `restoring`. For example, if you were updating a namespaced model `App\User` the event would be `eloquent.validating: App\User`. If you listen for any of these events and return a value you can prevent validation from occurring completely.
 
 ```php
-Event::listen('eloquent.validating.*', function($model)
+Event::listen('eloquent.validating.*', function($model, $event)
 {
     // Psuedo-Russian roulette validation.
     if (rand(1, 6) === 1)
@@ -260,7 +260,7 @@ Event::listen('eloquent.validating.*', function($model)
 });
 ```
 
-After validation occurs, there are also a range of `validated` events you can hook into, for the `passed`, `failed` and `skipped` events. For the above example failing validation, you could get the event `eloquent.validated.passed: App\User`. Alternatively there is also `eloquent.validated: App\User` which will fire no matter what happens.
+After validation occurs, there are also a range of `validated` events you can hook into, for the `passed`, `failed` and `skipped` events. For the above example failing validation, you could get the event `eloquent.validated: App\User`.
 
 ## Testing
 There is currently a bug in Laravel (see issue [#1181](https://github.com/laravel/framework/issues/1181)) that prevents model events from firing more than once in a test suite. This means that the first test that uses model tests will pass but any subseqeuent tests will fail. There are a couple of temporary solutions listed in that thread which you can use to make your tests pass in the meantime.
