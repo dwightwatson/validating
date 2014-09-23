@@ -7,28 +7,6 @@ use \Watson\Validating\ValidationException;
 class ValidatingObserver {
 
     /**
-     * Register the validation event for creating the model.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @return boolean
-     */
-    public function creating(Model $model)
-    {
-        return $this->performValidation($model, 'creating');
-    }
-
-    /**
-     * Register the validation event for updating the model.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @return boolean
-     */
-    public function updating(Model $model)
-    {
-        return $this->performValidation($model, 'updating');
-    }
-
-    /**
      * Register the validation event for saving the model. Saving validation
      * should only occur if creating and updating validation does not.
      *

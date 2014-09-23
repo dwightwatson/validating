@@ -36,7 +36,7 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
         Event::shouldReceive('fire')
             ->once();
 
-        $response = $this->observer->creating($this->model);
+        $response = $this->observer->saving($this->model);
         $this->assertNotFalse($response);
     }
 
@@ -50,26 +50,8 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
             ->once()
             ->andReturn(false);
 
-        $response = $this->observer->creating($this->model);
+        $response = $this->observer->saving($this->model);
         $this->assertFalse($response);
-    }
-
-    public function testCreatingPerformsValidation()
-    {
-        $this->model->shouldReceive('isValid')
-            ->once()
-            ->andReturn(true);
-
-        $this->observer->creating($this->model);
-    }
-
-    public function testUpdatingPerformsValidation()
-    {
-        $this->model->shouldReceive('isValid')
-            ->once()
-            ->andReturn(true);
-
-        $this->observer->updating($this->model);
     }
 
     public function testSavingPerformsValidation()
