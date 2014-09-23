@@ -185,10 +185,17 @@ There is currently a bug in Laravel (see issue [#1181](https://github.com/larave
 **Since Laravel has switched to Liferaft for the purpose of tracking bugs and pull requests, the issue mentioned above may not be available. [This Gist has an example `TestCase.php`](https://gist.github.com/dwightwatson/a645e7f5f6c8c52445d80) which shows you how to reset the events of all your models between tests so that they work as expected.
 
 ## Controller usage
-There are a few ways to go about using the validating model in your controllers, but here's the simple way I like to do it. Really clean, clear as to what is going on and easy to test. Of course you can mix it up as you need, it's just one approach.
+There are a number of ways you can go about using the validating validating model in your controllers, however here is one example that makes use of the new FormRequest in Laravel 5 (if you'd like to see another controller example without the FormRequest, check the [4.2+ version of this package](https://github.com/dwightwatson/validating/tree/0.10).
+
+This example keeps your code clean by allowing the FormRequest to handle your form validation and the model to handle it's own validation. By enabling validation exceptions you can reduce repetitive controller code (try/catch blocks) and handle model validation exceptions globally (your form requests should keep your models valid, so if your model becomes invalid it's an *exceptional* event).
 
 ```php
-class PostsController extends BaseController
+<?php namespace App\Http\Controllers;
+
+use App\Http\Requests\PostFormRequest;
+use Illuminate\Routing\Controller;
+
+class PostsController extends Controller
 {
     protected $post;
 
@@ -199,21 +206,10 @@ class PostsController extends BaseController
 
     // ...
 
-    public function store()
+    public function store(PostFormRequest $request)
     {
-        // We can use all input if we have the $fillable property
-        // set on our model.
-        $input = Input::all();
-
-        $post = $this->post->fill($input);
-
-        if ( ! $post->save())
-        {
-            // The post did not save due to validation errors.
-            return Redirect::route('posts.create')
-                ->withErrors($e)
-                ->withInput();
-        }
+        // Post will throw an exception if it is not valid.
+        $post = $this->post->create($request->input());
 
         // Post was saved successfully.
         return Redirect::route('posts.show', $post->id);
@@ -221,13 +217,13 @@ class PostsController extends BaseController
 }
 ```
 
-It's important to note that `$post->save()` should only return false if validation fails (unless you have other observers watching your model events). If there is an issue with saving in the database your app would raise an exception instead.
-
-You might also like to reduce the number of lines in your code by doing the above test all in one line...
+You can then catch a model validation exception globally and deal with it as you need.
 
 ```php
-if ( ! $this->post->create(Input::all()))
+App::error(function(Watson\Validating\ValidationException $e)
 {
-    //
-}
+    return Redirect::back()
+        ->withErrors($e)
+        ->withInput();
+});
 ```
