@@ -8,7 +8,7 @@ Validating, a validation trait for Laravel
 [![Latest Unstable Version](https://poser.pugx.org/watson/validating/v/unstable.svg)](https://packagist.org/packages/watson/validating)
 [![License](https://poser.pugx.org/watson/validating/license.svg)](https://packagist.org/packages/watson/validating)
 
-Validating is a trait for Laravel 4.2+ Eloquent models which ensures that models meet their validation criteria before being saved. If they are not considered valid the model will not be saved and the validation errors will be made available.
+Validating is a trait for Laravel 5.0+ Eloquent models which ensures that models meet their validation criteria before being saved. If they are not considered valid the model will not be saved and the validation errors will be made available.
 
 Validating allows for multiple rulesets, injecting the model ID into `unique` validation rules and raising exceptions on failed validations. It's small and flexible to fit right into your workflow and help you save valid data only.
 

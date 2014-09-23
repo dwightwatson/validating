@@ -11,19 +11,19 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/database": "~4.2.6",
-        "illuminate/events": "~4.2.6",
-        "illuminate/support": "~4.2.6",
-        "illuminate/validation": "~4.2.6"
+        "illuminate/database": "~5.0",
+        "illuminate/events": "~5.0",
+        "illuminate/support": "~5.0",
+        "illuminate/validation": "~5.0"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "4.1.*"
+        "phpunit/phpunit": "4.2.*"
     },
     "autoload": {
         "psr-4": {
             "Watson\\Validating\\": "src/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev"
 }
