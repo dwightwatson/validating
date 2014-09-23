@@ -168,7 +168,7 @@ When validation is about to occur, the `eloquent.validating: ModelName` event wi
 ```php
 Event::listen('eloquent.validating.*', function($model, $event)
 {
-    // Psuedo-Russian roulette validation.
+    // Pseudo-Russian roulette validation.
     if (rand(1, 6) === 1)
     {
         return false;
