@@ -130,16 +130,6 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
         $this->observer->saving($this->model);
     }
 
-    public function testDeletingPerformsValidation()
-    {
-        $this->model->shouldReceive('isValid')
-            ->once()
-            ->with('deleting')
-            ->andReturn(true);
-
-        $this->observer->deleting($this->model);
-    }
-
     public function testRestoringPerformsValidation()
     {
         $this->model->shouldReceive('isValid')

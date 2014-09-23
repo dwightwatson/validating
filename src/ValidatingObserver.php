@@ -44,17 +44,6 @@ class ValidatingObserver {
     }
 
     /**
-     * Register the validation event for deleting the model.
-     *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @return boolean
-     */
-    public function deleting(Model $model)
-    {
-        return $this->performValidation($model, 'deleting');
-    }
-
-    /**
      * Register the validation event for restoring the model.
      *
      * @param  \Illuminate\Database\Eloquent\Model $model
