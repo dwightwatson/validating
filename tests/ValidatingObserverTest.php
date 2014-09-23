@@ -33,9 +33,6 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
             ->once()
             ->andReturn(true);
 
-        Event::shouldReceive('fire')
-            ->once();
-
         $response = $this->observer->saving($this->model);
         $this->assertNotFalse($response);
     }

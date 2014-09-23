@@ -43,12 +43,12 @@ class ValidatingObserver {
         {
             // Fire the namespaced validating event and prevent validation
             // if it returns a value.
-            if ($this->fireValidatingEvent($event, $model) !== null) return;
+            if ($this->fireValidatingEvent($model, $event) !== null) return;
 
             if ($model->isValid() === false)
             {
-                // Fire the validating.failed event.
-                $this->fireValidatedEvent('failed', $model);
+                // Fire the validating failed event.
+                $this->fireValidatedEvent($model, 'failed');
 
                 if ($model->getThrowValidationExceptions())
                 {
@@ -58,37 +58,36 @@ class ValidatingObserver {
                 return false;
             }
             // Fire the validating.passed event.
-            $this->fireValidatedEvent('passed', $model);
+            $this->fireValidatedEvent($model, 'passed');
         }
         else
         {
-            $this->fireValidatedEvent('skipped', $model);
+            $this->fireValidatedEvent($model, 'skipped');
         }
     }
 
     /**
      * Fire the namespaced validating event.
      *
-     * @param  string $event
      * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $event
      * @return mixed
      */
-    protected function fireValidatingEvent($event, Model $model)
+    protected function fireValidatingEvent(Model $model, $event)
     {
-        return Event::until("eloquent.validating.$event: ".get_class($model), $model);
+        return Event::until("eloquent.validating: ".get_class($model), [$model, $event]);
     }
 
     /**
      * Fire the namespaced post-validation event.
      *
-     * @param  string $event
      * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  string $status
      * @return void
      */
-    protected function fireValidatedEvent($event, Model $model)
+    protected function fireValidatedEvent(Model $model, $status)
     {
-        Event::fire("eloquent.validated: ".get_class($model), $model);
-        Event::fire("eloquent.validated.$event: ".get_class($model), $model);
+        Event::fire("eloquent.validated: ".get_class($model), [$model, $status]);
     }
 
 }
