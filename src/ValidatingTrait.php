@@ -478,10 +478,7 @@ trait ValidatingTrait {
     protected function makeValidator($rules = [])
     {
         // Get the model attributes.
-        $attributes = array_merge(
-            $this->getConfirmationAttributes(),
-            $this->getModel()->getAttributes()
-        );
+        $attributes = $this->getModel()->getAttributes();
 
         if ($this->exists && $this->getInjectUniqueIdentifier())
         {
@@ -499,26 +496,6 @@ trait ValidatingTrait {
         }
 
         return $validator;
-    }
-
-    /**
-     * Get all the confirmation attributes from the input.
-     *
-     * @return array
-     */
-    public function getConfirmationAttributes()
-    {
-        $attributes = array();
-
-        foreach (Input::all() as $key => $value)
-        {
-            if (ends_with($key, '_confirmation'))
-            {
-                $attributes[$key] = $value;
-            }
-        }
-
-        return $attributes;
     }
 
     /**

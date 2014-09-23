@@ -224,10 +224,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
               'messages' => Mockery::mock('Illuminate\Support\MessageBag')
             ]));
 
-        $this->trait->shouldReceive('getConfirmationAttributes')
-            ->once()
-            ->andReturn([]);
-
         $result = $this->trait->isValid();
 
         $this->assertTrue($result);
@@ -243,10 +239,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'passes'   => false,
                 'messages' => $messageBag
             ]));
-
-        $this->trait->shouldReceive('getConfirmationAttributes')
-            ->once()
-            ->andReturn([]);
 
         $result = $this->trait->isValid();
 
@@ -266,10 +258,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
           'passes'   => true,
           'messages' => $validMessageBag
         ]));
-
-      $this->trait->shouldReceive('getConfirmationAttributes')
-        ->once()
-        ->andReturn([]);
 
       $result = $this->trait->isValid();
 
@@ -321,10 +309,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'messages' => Mockery::mock('Illuminate\Support\MessageBag')
             ]));
 
-        $this->trait->shouldReceive('getConfirmationAttributes')
-            ->once()
-            ->andReturn([]);
-
         $this->trait->setThrowValidationExceptions(false);
 
         $result = $this->trait->performValidation();
@@ -340,10 +324,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
                 'passes' => true,
                 'messages' => Mockery::mock('Illuminate\Support\MessageBag')
             ]));
-
-        $this->trait->shouldReceive('getConfirmationAttributes')
-            ->once()
-            ->andReturn([]);
 
         $result = $this->trait->performValidation();
 
@@ -365,17 +345,6 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
         $validator = $this->trait->getValidator();
         $this->assertInstanceOf('ValidatorStub', $validator, get_class($validator));
-    }
-
-    public function testGetConfirmationAttributes()
-    {
-        Input::shouldReceive('all')
-            ->once()
-            ->andReturn(['password' => 'foo', 'password_confirmation' => 'bar']);
-
-        $result = $this->trait->getConfirmationAttributes();
-
-        $this->assertEquals(['password_confirmation' => 'bar'], $result);
     }
 
     // updateRulesUniques

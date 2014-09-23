@@ -246,13 +246,6 @@ interface ValidatingInterface {
     public function setValidator(Factory $validator);
 
     /**
-     * Get all the confirmation attributes from the input.
-     *
-     * @return array
-     */
-    public function getConfirmationAttributes();
-
-    /**
      * Throw a validation exception.
      *
      * @throws \Watson\Validating\ValidationException
