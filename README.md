@@ -139,16 +139,6 @@ You can adjust this functionality by setting the `$injectUniqueIdentifier` prope
 protected $injectUniqueIdentifier = true;
 ```
 
-### Accessors and mutators
-You also have access to some really existing getters and setters, which allow you to get and set your validation rules and messages.
-
-```php
-// YOLO no rules
-$post->setRules([]);
-```
-
-These are handy if you need to adjust the rules in a specific scenario differently.
-
 ### Events
 Various events are fired by the trait during the validation process which you can hook into to impact the validation process.
 
