@@ -156,7 +156,7 @@ trait ValidatingTrait {
      *
      * @return array
      */
-    protected function rules()
+    protected function validationRules()
     {
         return $this->getRules();
     }
