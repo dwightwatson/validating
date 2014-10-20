@@ -139,7 +139,7 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     {
         $this->trait->setRuleset(['abc' => 123], 'foo');
 
-        $this->assertEquals(['abc' => 123, 'foo' => 'bar'], $this->trait->getRuleset('foo'));
+        $this->assertEquals(['abc' => 123], $this->trait->getRuleset('foo'));
     }
 
     public function testSetRulesetWithNameWithoutDefaultMerged()

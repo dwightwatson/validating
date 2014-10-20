@@ -214,7 +214,7 @@ trait ValidatingTrait {
      * @param  bool   $mergeWithSaving
      * @return array
      */
-    public function getRuleset($ruleset, $mergeWithSaving = true)
+    public function getRuleset($ruleset, $mergeWithSaving = false)
     {
         $rulesets = $this->getRulesets();
 
