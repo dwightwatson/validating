@@ -29,6 +29,10 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
 
     public function testPerformValidation()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->with('creating')
+            ->andReturn(true);
+
         $this->model->shouldReceive('isValid')
             ->once()
             ->andReturn(true);
@@ -39,6 +43,10 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
 
     public function testPerformValidationReturnsFalse()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->with('creating')
+            ->andReturn(true);
+
         $this->model->shouldReceive('isValid')
             ->once()
             ->andReturn(false);
@@ -53,6 +61,10 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
 
     public function testCreatingPerformsValidation()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->with('creating')
+            ->andReturn(true);
+
         $this->model->shouldReceive('isValid')
             ->once()
             ->with('creating')
@@ -63,6 +75,10 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
 
     public function testUpdatingPerformsValidation()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->with('updating')
+            ->andReturn(true);
+
         $this->model->shouldReceive('isValid')
             ->once()
             ->with('updating')
@@ -129,6 +145,10 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
 
     public function testDeletingPerformsValidation()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->with('deleting')
+            ->andReturn(true);
+
         $this->model->shouldReceive('isValid')
             ->once()
             ->with('deleting')
@@ -139,6 +159,10 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
 
     public function testRestoringPerformsValidation()
     {
+        $this->model->shouldReceive('getRuleset')
+            ->with('restoring')
+            ->andReturn(true);
+
         $this->model->shouldReceive('isValid')
             ->once()
             ->with('restoring')

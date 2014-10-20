@@ -14,7 +14,10 @@ class ValidatingObserver {
      */
     public function creating(Model $model)
     {
-        return $this->performValidation($model, 'creating');
+        if ($model->getRuleset('creating'))
+        {
+            return $this->performValidation($model, 'creating');
+        }
     }
 
     /**
@@ -25,7 +28,10 @@ class ValidatingObserver {
      */
     public function updating(Model $model)
     {
-        return $this->performValidation($model, 'updating');
+        if ($model->getRuleset('updating'))
+        {
+            return $this->performValidation($model, 'updating');
+        }
     }
 
     /**
@@ -51,7 +57,10 @@ class ValidatingObserver {
      */
     public function deleting(Model $model)
     {
-        return $this->performValidation($model, 'deleting');
+        if ($model->getRuleset('deleting'))
+        {
+            return $this->performValidation($model, 'deleting');
+        }
     }
 
     /**
@@ -62,7 +71,10 @@ class ValidatingObserver {
      */
     public function restoring(Model $model)
     {
-        return $this->performValidation($model, 'restoring');
+        if ($model->getRuleset('restoring'))
+        {
+            return $this->performValidation($model, 'restoring');
+        }
     }
 
     /**
