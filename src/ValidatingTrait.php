@@ -644,6 +644,12 @@ trait ValidatingTrait {
             $parameters[2] = $this->getModel()->getKey();
         }
 
+        // Add the primary key if it isn't set in case it isn't id.
+        if ( ! isset($parameters[3]))
+        {
+            $parameters[3] = $this->getModel()->getKeyName();
+        }
+
         return 'unique:' . implode(',', $parameters);
     }
 
