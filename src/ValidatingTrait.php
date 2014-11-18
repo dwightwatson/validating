@@ -483,7 +483,7 @@ trait ValidatingTrait {
             $this->getModel()->getAttributes()
         );
 
-        if ($this->exists && $this->getInjectUniqueIdentifier())
+        if ($this->getInjectUniqueIdentifier())
         {
             $rules = $this->injectUniqueIdentifierToRules($rules);
         }
@@ -624,7 +624,7 @@ trait ValidatingTrait {
      */
     protected function prepareUniqueRule($rule, $field)
     {
-        $parameters = explode(',', substr($rule, 7));
+        $parameters = array_filter(explode(',', substr($rule, 7)));
 
         // If the table name isn't set, get it.
         if ( ! isset($parameters[0]))
@@ -638,18 +638,21 @@ trait ValidatingTrait {
             $parameters[1] = $field;
         }
 
-        // If the identifier isn't set, add it.
-        if ( ! isset($parameters[2]) || strtolower($parameters[2]) === 'null')
+        if($this->exists)
         {
-            $parameters[2] = $this->getModel()->getKey();
+            // If the identifier isn't set, add it.
+            if ( ! isset($parameters[2]) || strtolower($parameters[2]) === 'null')
+            {
+                $parameters[2] = $this->getModel()->getKey();
+            }
+    
+            // Add the primary key if it isn't set in case it isn't id.
+            if ( ! isset($parameters[3]))
+            {
+                $parameters[3] = $this->getModel()->getKeyName();
+            }
         }
-
-        // Add the primary key if it isn't set in case it isn't id.
-        if ( ! isset($parameters[3]))
-        {
-            $parameters[3] = $this->getModel()->getKeyName();
-        }
-
+        
         return 'unique:' . implode(',', $parameters);
     }
 
