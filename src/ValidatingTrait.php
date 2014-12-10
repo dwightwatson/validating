@@ -390,7 +390,7 @@ trait ValidatingTrait {
 
             foreach ($ruleset as &$rule)
             {
-                if (starts_with($rule, 'unique'))
+                if (starts_with($rule, 'unique:'))
                 {
                     $rule = $this->prepareUniqueRule($rule, $field);
                 }
@@ -423,7 +423,7 @@ trait ValidatingTrait {
         {
             $parameters[1] = $field;
         }
-        
+
         if($this->exists)
         {
             // If the identifier isn't set, add it.
@@ -431,14 +431,14 @@ trait ValidatingTrait {
             {
                 $parameters[2] = $this->getModel()->getKey();
             }
-    
+
             // Add the primary key if it isn't set in case it isn't id.
             if ( ! isset($parameters[3]))
             {
                 $parameters[3] = $this->getModel()->getKeyName();
             }
         }
-        
+
         return 'unique:' . implode(',', $parameters);
     }
 
