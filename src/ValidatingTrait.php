@@ -584,6 +584,14 @@ trait ValidatingTrait {
     }
 
     /**
+     * @return array
+     */
+    protected function getUniqueInjectionRules()
+    {
+        return $this->uniqueInjectionRules ?: ['unique'];
+    }
+
+    /**
      * If the model already exists and it has unique validations
      * it is going to fail validation unless we also pass it's
      * primary key to the rule so that it may be ignored.
@@ -597,63 +605,24 @@ trait ValidatingTrait {
      */
     protected function injectUniqueIdentifierToRules(array $rules)
     {
-        foreach ($rules as $field => &$ruleset)
-        {
-            // If the ruleset is a pipe-delimited string, convert it to an array.
-            $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
-
-            foreach ($ruleset as &$rule)
+        if ($this->exists) {
+            foreach ($rules as $field => &$ruleset)
             {
-                if (starts_with($rule, 'unique:'))
+                // If the ruleset is a pipe-delimited string, convert it to an array.
+                $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
+
+                foreach ($ruleset as &$rule)
                 {
-                    $rule = $this->prepareUniqueRule($rule, $field);
+                    list($name, $parameters) = explode(':', $rule);
+
+                    if (in_array($name, $this->getUniqueInjectionRules()))
+                    {
+                        $rule .= ',' . $this->getKey();
+                    }
                 }
             }
         }
 
         return $rules;
     }
-
-    /**
-     * Take a unique rule, add the database table, column and
-     * model identifier if required.
-     *
-     * @param  string $rule
-     * @param  string $field
-     * @return string
-     */
-    protected function prepareUniqueRule($rule, $field)
-    {
-        $parameters = array_filter(explode(',', substr($rule, 7)));
-
-        // If the table name isn't set, get it.
-        if ( ! isset($parameters[0]))
-        {
-            $parameters[0] = $this->getModel()->getTable();
-        }
-
-        // If the field name isn't set, infer it.
-        if ( ! isset($parameters[1]))
-        {
-            $parameters[1] = $field;
-        }
-        
-        if($this->exists)
-        {
-            // If the identifier isn't set, add it.
-            if ( ! isset($parameters[2]) || strtolower($parameters[2]) === 'null')
-            {
-                $parameters[2] = $this->getModel()->getKey();
-            }
-    
-            // Add the primary key if it isn't set in case it isn't id.
-            if ( ! isset($parameters[3]))
-            {
-                $parameters[3] = $this->getModel()->getKeyName();
-            }
-        }
-
-        return 'unique:' . implode(',', $parameters);
-    }
-
 }
