@@ -311,6 +311,8 @@ trait ValidatingTrait {
             $rules = $this->injectUniqueIdentifierToRules($rules);
         }
 
+        # This line solves the bug #96
+        $this->getValidator()->getPresenceVerifier()->setConnection($this->getModel()->connection);
         $validator = $this->getValidator()->make($attributes, $rules);
 
         if ($this->getValidationAttributeNames())
