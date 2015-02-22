@@ -371,7 +371,7 @@ trait ValidatingTrait {
      */
     public function isValid($ruleset = null, $mergeWithSaving = true)
     {
-        $rules = $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getDefaultRules();
+        $rules = is_array($ruleset) ? $ruleset : $this->getRuleset($ruleset, $mergeWithSaving) ?: $this->getDefaultRules();
 
         return $this->performValidation($rules);
     }
@@ -396,7 +396,7 @@ trait ValidatingTrait {
     /**
      * Returns whether the model is invalid or not.
      *
-     * @param  string $ruleset
+     * @param  mixed  $ruleset
      * @param  bool   $mergeWithSaving
      * @return bool
      */
@@ -637,7 +637,7 @@ trait ValidatingTrait {
         {
             $parameters[1] = $field;
         }
-        
+
         if($this->exists)
         {
             // If the identifier isn't set, add it.
@@ -645,7 +645,7 @@ trait ValidatingTrait {
             {
                 $parameters[2] = $this->getModel()->getKey();
             }
-    
+
             // Add the primary key if it isn't set in case it isn't id.
             if ( ! isset($parameters[3]))
             {
