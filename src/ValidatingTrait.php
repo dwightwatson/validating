@@ -331,17 +331,6 @@ trait ValidatingTrait {
     }
 
     /**
-     * Set the validation messages to be used by the validator.
-     *
-     * @param  array $messages
-     * @return void
-     */
-    public function setMessages(array $messages)
-    {
-        $this->validationMessages = $messages;
-    }
-
-    /**
      * Get the validation error messages from the model.
      *
      * @return \Illuminate\Support\MessageBag

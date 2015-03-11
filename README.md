@@ -225,9 +225,6 @@ $post->setRules([]);
 
 // Or set a specific ruleset
 $post->setRuleset([], 'creating');
-
-// Be a little nicer
-$post->setMessages(['title.required' => "Please, please set a title."])
 ```
 
 These are handy if you need to adjust the rules or messages in a specific scenario differently.
