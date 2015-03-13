@@ -126,7 +126,7 @@ trait ValidatingTrait {
      */
     public function getValidationMessages()
     {
-        return isset($this->validationMessages) ? $validationMessages : [];
+        return isset($this->validationMessages) ? $this->validationMessages : [];
     }
 
     /**
