@@ -123,6 +123,20 @@ protected $throwValidationExceptions = true;
 
 If you'd like to perform a one-off save using exceptions or return values, you can use the `saveOrFail()` and `saveOrReturn` methods.
 
+### Validation messages
+To show custom validation error messages, just add the `$validationMessages` property to your model.
+
+```php
+/**
+ * Validation messages to be passed to the validator.
+ *
+ * @var array
+ */
+protected $validationMessages = [
+    'slug.unique' => "Another post is using that slug already."
+];
+```
+
 ### Unique rules
 You may have noticed we're using the `unique` rule on the slug, which wouldn't work if we were updating a persisted model. Luckily, Validation will take care of this for you and append the model's primary key to the rule so that the rule will work as expected; ignoring the current model.
 

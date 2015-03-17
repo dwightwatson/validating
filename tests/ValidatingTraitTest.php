@@ -60,6 +60,11 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($this->trait, $this->trait->getModel());
     }
 
+    public function testGetValidationMessages()
+    {
+        $this->assertEquals(['bar' => 'baz'], $this->trait->getValidationMessages());
+    }
+
 
     public function testGetValidationAttributeNames()
     {
@@ -255,6 +260,10 @@ class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterf
 
     protected $rules = [
         'foo' => 'bar'
+    ];
+
+    protected $validationMessages = [
+        'bar' => 'baz'
     ];
 
     public function getTable()

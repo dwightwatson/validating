@@ -120,6 +120,16 @@ trait ValidatingTrait {
     }
 
     /**
+     * Get the custom validation messages being used by the model.
+     *
+     * @return array
+     */
+    public function getValidationMessages()
+    {
+        return isset($this->validationMessages) ? $this->validationMessages : [];
+    }
+
+    /**
      * Get the validating attribute names.
      *
      * @return mixed
@@ -311,7 +321,9 @@ trait ValidatingTrait {
             $rules = $this->injectUniqueIdentifierToRules($rules);
         }
 
-        $validator = $this->getValidator()->make($attributes, $rules);
+        $messages = $this->getValidationMessages();
+
+        $validator = $this->getValidator()->make($attributes, $rules, $messages);
 
         if ($this->getValidationAttributeNames())
         {
