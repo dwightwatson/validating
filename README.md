@@ -21,13 +21,13 @@ The Laravel 4.2 version is better suited to doing form validation; it supports c
 Simply add the package to your `composer.json` file and run `composer update`.
 
 ```
-"watson/validating": "dev-master"
+"watson/validating": "~1.0"
 ```
 
 Or go to your project directory where the `composer.json` file is located and type:
 
 ```sh
-composer require "watson/validating:dev-master"
+composer require "watson/validating"
 ```
 
 [View installation instructions for Laravel 4.2+](https://github.com/dwightwatson/validating/tree/0.10).
