@@ -2,7 +2,7 @@ Validating, a validation trait for Laravel
 ==========================================
 
 [![Build Status](https://img.shields.io/travis/dwightwatson/validating/master.svg)](https://travis-ci.org/dwightwatson/validating)
-[![Dependency Status](https://www.versioneye.com/php/watson:validating/0.10.0/badge.svg)](https://www.versioneye.com/php/watson:validating/0.10.0)
+[![Dependency Status](https://www.versioneye.com/php/watson:validating/1.0.0/badge.svg)](https://www.versioneye.com/php/watson:validating/1.0.0)
 [![Total Downloads](https://poser.pugx.org/watson/validating/downloads.svg)](https://packagist.org/packages/watson/validating)
 [![Latest Stable Version](https://poser.pugx.org/watson/validating/v/stable.svg)](https://packagist.org/packages/watson/validating)
 [![Latest Unstable Version](https://poser.pugx.org/watson/validating/v/unstable.svg)](https://packagist.org/packages/watson/validating)
