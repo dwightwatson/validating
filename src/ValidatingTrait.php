@@ -157,7 +157,7 @@ trait ValidatingTrait {
      */
     public function getRules()
     {
-        return $this->rules ?: [];
+        return isset($this->rules) ? $this->rules : [];
     }
 
     /**
