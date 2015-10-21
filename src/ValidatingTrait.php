@@ -1,12 +1,14 @@
-<?php namespace Watson\Validating;
+<?php
 
-use \Illuminate\Support\MessageBag;
-use \Illuminate\Support\Facades\Input;
-use \Illuminate\Support\Facades\Validator;
-use \Illuminate\Validation\Factory;
+namespace Watson\Validating;
 
-trait ValidatingTrait {
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Factory;
 
+trait ValidatingTrait
+{
     /**
      * Error messages as provided by the validator.
      *
@@ -223,8 +225,7 @@ trait ValidatingTrait {
      */
     public function isValidOrFail()
     {
-        if ( ! $this->isValid())
-        {
+        if (! $this->isValid()) {
             $this->throwValidationException();
         }
 
@@ -268,8 +269,7 @@ trait ValidatingTrait {
      */
     public function saveOrFail()
     {
-        if ( ! $this->getModel()->save())
-        {
+        if (! $this->getModel()->save()) {
             $this->throwValidationException();
         }
     }
@@ -316,8 +316,7 @@ trait ValidatingTrait {
         // Get the model attributes.
         $attributes = $this->getModel()->getAttributes();
 
-        if ($this->getInjectUniqueIdentifier())
-        {
+        if ($this->getInjectUniqueIdentifier()) {
             $rules = $this->injectUniqueIdentifierToRules($rules);
         }
 
@@ -325,8 +324,7 @@ trait ValidatingTrait {
 
         $validator = $this->getValidator()->make($attributes, $rules, $messages);
 
-        if ($this->getValidationAttributeNames())
-        {
+        if ($this->getValidationAttributeNames()) {
             $validator->setAttributeNames($this->getValidationAttributeNames());
         }
 
@@ -395,15 +393,12 @@ trait ValidatingTrait {
      */
     protected function injectUniqueIdentifierToRules(array $rules)
     {
-        foreach ($rules as $field => &$ruleset)
-        {
+        foreach ($rules as $field => &$ruleset) {
             // If the ruleset is a pipe-delimited string, convert it to an array.
             $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
 
-            foreach ($ruleset as &$rule)
-            {
-                if (starts_with($rule, 'unique:'))
-                {
+            foreach ($ruleset as &$rule) {
+                if (starts_with($rule, 'unique:')) {
                     $rule = $this->prepareUniqueRule($rule, $field);
                 }
             }
@@ -424,22 +419,18 @@ trait ValidatingTrait {
     {
         $parameters = explode(',', substr($rule, 7));
 
-        if ($this->exists)
-        {
+        if ($this->exists) {
             // If the identifier isn't set, add it.
-            if ( ! isset($parameters[2]) || strtolower($parameters[2]) === 'null')
-            {
+            if (! isset($parameters[2]) || strtolower($parameters[2]) === 'null') {
                 $parameters[2] = $this->getModel()->getKey();
             }
 
             // Add the primary key if it isn't set in case it isn't id.
-            if ( ! isset($parameters[3]))
-            {
+            if (! isset($parameters[3])) {
                 $parameters[3] = $this->getModel()->getKeyName();
             }
         }
 
         return 'unique:' . implode(',', $parameters);
     }
-
 }

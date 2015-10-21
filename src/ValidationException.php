@@ -1,12 +1,14 @@
-<?php namespace Watson\Validating;
+<?php
 
-use \RuntimeException;
-use \Illuminate\Contracts\Support\MessageProvider;
-use \Illuminate\Support\MessageBag;
-use \Illuminate\Database\Eloquent\Model;
+namespace Watson\Validating;
 
-class ValidationException extends RuntimeException implements MessageProvider {
+use RuntimeException;
+use Illuminate\Contracts\Support\MessageProvider;
+use Illuminate\Support\MessageBag;
+use Illuminate\Database\Eloquent\Model;
 
+class ValidationException extends RuntimeException implements MessageProvider
+{
     /**
      * The model.
      *
@@ -72,5 +74,4 @@ class ValidationException extends RuntimeException implements MessageProvider {
     {
         $this->model = $model;
     }
-
 }

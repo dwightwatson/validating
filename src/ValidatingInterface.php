@@ -1,12 +1,14 @@
-<?php namespace Watson\Validating;
+<?php
 
-use \Illuminate\Support\MessageBag;
-use \Illuminate\Support\Facades\Input;
-use \Illuminate\Support\Facades\Validator;
-use \Illuminate\Validation\Factory;
+namespace Watson\Validating;
 
-interface ValidatingInterface {
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Factory;
 
+interface ValidatingInterface
+{
     /**
      * Returns whether or not the model will attempt to validate
      * itself when saving.
@@ -170,5 +172,4 @@ interface ValidatingInterface {
      * @return void
      */
     public function updateRulesUniques();
-
 }

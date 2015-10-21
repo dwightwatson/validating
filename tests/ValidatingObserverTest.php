@@ -1,10 +1,10 @@
 <?php
 
-use \Illuminate\Support\Facades\Event;
-use \Watson\Validating\ValidatingObserver;
+use Illuminate\Support\Facades\Event;
+use Watson\Validating\ValidatingObserver;
 
-class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
-
+class ValidatingObserverTest extends PHPUnit_Framework_TestCase
+{
     public function setUp()
     {
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
@@ -67,5 +67,4 @@ class ValidatingObserverTest extends \PHPUnit_Framework_TestCase {
 
         $this->observer->restoring($this->model);
     }
-
 }

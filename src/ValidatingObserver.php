@@ -1,11 +1,13 @@
-<?php namespace Watson\Validating;
+<?php
 
-use \Illuminate\Database\Eloquent\Model;
-use \Illuminate\Support\Facades\Event;
-use \Watson\Validating\ValidationException;
+namespace Watson\Validating;
 
-class ValidatingObserver {
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Event;
+use Watson\Validating\ValidationException;
 
+class ValidatingObserver
+{
     /**
      * Register the validation event for saving the model. Saving validation
      * should only occur if creating and updating validation does not.
@@ -39,19 +41,18 @@ class ValidatingObserver {
     protected function performValidation(Model $model, $event)
     {
         // If the model has validating enabled, perform it.
-        if ($model->getValidating())
-        {
+        if ($model->getValidating()) {
             // Fire the namespaced validating event and prevent validation
             // if it returns a value.
-            if ($this->fireValidatingEvent($model, $event) !== null) return;
+            if ($this->fireValidatingEvent($model, $event) !== null) {
+                return;
+            }
 
-            if ($model->isValid() === false)
-            {
+            if ($model->isValid() === false) {
                 // Fire the validating failed event.
                 $this->fireValidatedEvent($model, 'failed');
 
-                if ($model->getThrowValidationExceptions())
-                {
+                if ($model->getThrowValidationExceptions()) {
                     $model->throwValidationException();
                 }
 
@@ -59,9 +60,7 @@ class ValidatingObserver {
             }
             // Fire the validating.passed event.
             $this->fireValidatedEvent($model, 'passed');
-        }
-        else
-        {
+        } else {
             $this->fireValidatedEvent($model, 'skipped');
         }
     }
@@ -89,5 +88,4 @@ class ValidatingObserver {
     {
         Event::fire("eloquent.validated: ".get_class($model), [$model, $status]);
     }
-
 }

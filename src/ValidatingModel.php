@@ -1,10 +1,12 @@
-<?php namespace Watson\Validating;
+<?php
 
-use \Illuminate\Database\Eloquent\Model as Eloquent;
-use \Illuminate\Contracts\Support\MessageProvider;
+namespace Watson\Validating;
 
-abstract class ValidatingModel extends Eloquent implements MessageProvider, ValidatingInterface {
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Contracts\Support\MessageProvider;
 
+abstract class ValidatingModel extends Eloquent implements MessageProvider, ValidatingInterface
+{
     /**
      * Make model validate attributes.
      *
@@ -35,5 +37,4 @@ abstract class ValidatingModel extends Eloquent implements MessageProvider, Vali
     {
         return $this->getErrors();
     }
-
 }

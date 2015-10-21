@@ -1,9 +1,10 @@
 <?php
 
-use \Illuminate\Support\Facades\Input;
-use \Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 
-class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
+class ValidatingTraitTest extends PHPUnit_Framework_TestCase
+{
     public $trait;
 
     public function setUp()
@@ -140,21 +141,21 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
     public function testIsValidClearsErrors()
     {
-      $this->trait->setErrors(Mockery::mock('Illuminate\Support\MessageBag'));
+        $this->trait->setErrors(Mockery::mock('Illuminate\Support\MessageBag'));
 
-      $validMessageBag = Mockery::mock('Illuminate\Support\MessageBag');
+        $validMessageBag = Mockery::mock('Illuminate\Support\MessageBag');
 
-      Validator::shouldReceive('make')
+        Validator::shouldReceive('make')
         ->once()
         ->andReturn(Mockery::mock([
           'passes'   => true,
           'messages' => $validMessageBag
         ]));
 
-      $result = $this->trait->isValid();
+        $result = $this->trait->isValid();
 
-      $this->assertTrue($result);
-      $this->assertSame($validMessageBag, $this->trait->getErrors());
+        $this->assertTrue($result);
+        $this->assertSame($validMessageBag, $this->trait->getErrors());
     }
 
     public function testIsInvalidReturnsFalseIfIsValidIsTrue()
@@ -168,11 +169,11 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
 
     public function testIsInvalidReturnsTrueIfIsValidIsFalse()
     {
-      $this->trait->shouldReceive('isValid')->once()->andReturn(false);
+        $this->trait->shouldReceive('isValid')->once()->andReturn(false);
 
-      $result = $this->trait->isInvalid();
+        $result = $this->trait->isInvalid();
 
-      $this->assertTrue($result);
+        $this->assertTrue($result);
     }
 
     public function testForceSaveSavesOnInvalidModel()
@@ -246,12 +247,10 @@ class ValidatingTraitTest extends \PHPUnit_Framework_TestCase {
     // injectUniqueIdentifiersToRules
 
     // prepareUniqueRule
-
-
 }
 
-class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterface{
-
+class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterface
+{
     use \Watson\Validating\ValidatingTrait;
 
     public $exists = false;
@@ -285,9 +284,8 @@ class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterf
     {
         return ['abc' => '123'];
     }
-
 }
 
-class ValidatorStub extends \Illuminate\Validation\Factory {
-
+class ValidatorStub extends \Illuminate\Validation\Factory
+{
 }
