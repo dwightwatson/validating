@@ -419,6 +419,16 @@ trait ValidatingTrait
     {
         $parameters = explode(',', substr($rule, 7));
 
+        // If the table name isn't set, get it.
+        if (! isset($parameters[0])) {
+            $parameters[0] = $this->getModel()->getTable();
+        }
+
+        // If the field name isn't get, infer it.
+        if (! isset($parameters[1])) {
+            $parameters[1] = $field;
+        }
+
         if ($this->exists) {
             // If the identifier isn't set, add it.
             if (! isset($parameters[2]) || strtolower($parameters[2]) === 'null') {
