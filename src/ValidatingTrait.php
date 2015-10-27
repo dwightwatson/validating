@@ -398,7 +398,7 @@ trait ValidatingTrait
             $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
 
             foreach ($ruleset as &$rule) {
-                if (starts_with($rule, 'unique:')) {
+                if (starts_with($rule, 'unique:') || $rule === 'unique') {
                     $rule = $this->prepareUniqueRule($rule, $field);
                 }
             }
