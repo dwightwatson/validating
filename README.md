@@ -221,13 +221,15 @@ class PostsController extends Controller
 }
 ```
 
-You can then catch a model validation exception globally and deal with it as you need.
+You can then catch a model validation exception in your `app/Exceptions/Handler.php` and deal with it as you need.
 
 ```php
-App::error(function(Watson\Validating\ValidationException $e)
+public function render($request, Exception $e)
 {
-    return Redirect::back()
-        ->withErrors($e)
-        ->withInput();
-});
+    if ($e instanceof \Watson\Validating\ValidationException) {
+        return back()->withErrors($e)->withInput();
+    }
+
+    parent::render($request, $e);
+}
 ```
