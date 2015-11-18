@@ -420,7 +420,7 @@ trait ValidatingTrait
         $parameters = explode(',', substr($rule, 7));
 
         // If the table name isn't set, get it.
-        if (! isset($parameters[0])) {
+        if (! isset($parameters[0]) || strlen($parameters[0]) === 0) {
             $parameters[0] = $this->getModel()->getTable();
         }
 
