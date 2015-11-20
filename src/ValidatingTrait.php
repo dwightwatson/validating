@@ -420,23 +420,23 @@ trait ValidatingTrait
         $parameters = explode(',', substr($rule, 7));
 
         // If the table name isn't set, get it.
-        if (! isset($parameters[0])) {
+        if (empty($parameters[0])) { //will be empty string when no parameters given (so don't use `isset()`)
             $parameters[0] = $this->getModel()->getTable();
         }
 
         // If the field name isn't get, infer it.
-        if (! isset($parameters[1])) {
+        if (empty($parameters[1])) {
             $parameters[1] = $field;
         }
 
         if ($this->exists) {
             // If the identifier isn't set, add it.
-            if (! isset($parameters[2]) || strtolower($parameters[2]) === 'null') {
+            if (empty($parameters[2]) || strtolower($parameters[2]) === 'null') {
                 $parameters[2] = $this->getModel()->getKey();
             }
 
             // Add the primary key if it isn't set in case it isn't id.
-            if (! isset($parameters[3])) {
+            if (empty($parameters[3])) {
                 $parameters[3] = $this->getModel()->getKeyName();
             }
         }
