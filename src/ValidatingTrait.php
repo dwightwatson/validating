@@ -408,8 +408,8 @@ trait ValidatingTrait
     }
 
     /**
-     * Take a unique rule, add the database table, column and
-     * model identifier if required.
+     * Take a unique rule, add the database connection, table, column
+     * and model identifier if required.
      *
      * @param  string $rule
      * @param  string $field
@@ -419,23 +419,30 @@ trait ValidatingTrait
     {
         $parameters = explode(',', substr($rule, 7));
 
-        // If the table name isn't set, get it.
+        // If the table name isn't set, infer it.
         if (empty($parameters[0])) {
             $parameters[0] = $this->getModel()->getTable();
         }
 
-        // If the field name isn't get, infer it.
+        // If the connection name isn't set, infer it.
+        if (strpos($parameters[0], '.') === false) {
+            $parameters[0] = $this->getModel()->getConnectionName().'.'.$parameters[0];
+        }
+
+        // If the field name isn't set, infer it.
         if (! isset($parameters[1])) {
             $parameters[1] = $field;
         }
 
+        // Identifier is required if the model exists.
         if ($this->exists) {
-            // If the identifier isn't set, add it.
+
+            // If the identifier isn't set, infer it.
             if (! isset($parameters[2]) || strtolower($parameters[2]) === 'null') {
                 $parameters[2] = $this->getModel()->getKey();
             }
 
-            // Add the primary key if it isn't set in case it isn't id.
+            // If the primary key isn't set, infer it.
             if (! isset($parameters[3])) {
                 $parameters[3] = $this->getModel()->getKeyName();
             }
