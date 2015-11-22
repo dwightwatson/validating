@@ -85,6 +85,15 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
     }
 
+    public function testRules()
+    {
+        $this->trait->shouldReceive('getRules')->once()->andReturn('foo');
+
+        $result = $this->trait->rules();
+
+        $this->assertEquals('foo', $result);
+    }
+
     public function testSetRules()
     {
         $this->trait->setRules(['bar' => 'foo']);
@@ -113,8 +122,8 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         Validator::shouldReceive('make')
             ->once()
             ->andReturn(Mockery::mock([
-              'passes' => true,
-              'messages' => Mockery::mock('Illuminate\Support\MessageBag')
+                'passes' => true,
+                'messages' => Mockery::mock('Illuminate\Support\MessageBag')
             ]));
 
         $result = $this->trait->isValid();
@@ -146,16 +155,34 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $validMessageBag = Mockery::mock('Illuminate\Support\MessageBag');
 
         Validator::shouldReceive('make')
-        ->once()
-        ->andReturn(Mockery::mock([
-          'passes'   => true,
-          'messages' => $validMessageBag
-        ]));
+            ->once()
+            ->andReturn(Mockery::mock([
+                'passes'   => true,
+                'messages' => $validMessageBag
+            ]));
 
         $result = $this->trait->isValid();
 
         $this->assertTrue($result);
         $this->assertSame($validMessageBag, $this->trait->getErrors());
+    }
+
+    public function testIsValidOrFailThrowsException()
+    {
+        $this->trait->shouldReceive('isValid')->once()->andReturn(false);
+
+        $this->trait->shouldReceive('throwValidationException')->once();
+
+        $this->trait->isValidOrFail();
+    }
+
+    public function testIsValidOrFailReturnsTrue()
+    {
+        $this->trait->shouldReceive('isValid')->once()->andReturn(true);
+
+        $result = $this->trait->isValidOrFail();
+
+        $this->assertTrue($result);
     }
 
     public function testIsInvalidReturnsFalseIfIsValidIsTrue()
@@ -189,9 +216,36 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
-    // saveOrFail
 
-    // saveOrReturn
+    public function testSaveOrFailThrowsExceptionOnInvalidModel()
+    {
+        $this->trait->shouldReceive('save')->once()->andReturn(false);
+
+        $this->trait->shouldReceive('throwValidationException')->once();
+
+        $result = $this->trait->saveOrFail();
+
+        $this->assertNull($result);
+    }
+
+    public function testSaveOrFailReturnsTrueOnValidModel()
+    {
+        $this->trait->shouldReceive('save')->once()->andReturn(true);
+
+        $result = $this->trait->saveOrFail();
+
+        $this->assertTrue($result);
+    }
+
+
+    public function testSaveOrReturn()
+    {
+        $this->trait->shouldReceive('save')->once()->andReturn('foo');
+
+        $result = $this->trait->saveOrReturn();
+
+        $this->assertEquals('foo', $result);
+    }
 
     public function testPerformValidationReturnsFalseOnInvalidModel()
     {
@@ -238,6 +292,13 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
         $validator = $this->trait->getValidator();
         $this->assertInstanceOf('ValidatorStub', $validator, get_class($validator));
+    }
+
+    public function testThrowValidationException()
+    {
+        $this->setExpectedException('Watson\Validating\ValidationException');
+
+        $this->trait->throwValidationException();
     }
 
     // updateRulesUniques

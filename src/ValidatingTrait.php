@@ -270,8 +270,10 @@ trait ValidatingTrait
     public function saveOrFail()
     {
         if (! $this->getModel()->save()) {
-            $this->throwValidationException();
+            return $this->throwValidationException();
         }
+
+        return true;
     }
 
     /**
