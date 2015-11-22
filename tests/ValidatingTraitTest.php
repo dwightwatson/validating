@@ -294,6 +294,23 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ValidatorStub', $validator, get_class($validator));
     }
 
+    public function testMakeValidatorSetsValidationAttributeNames()
+    {
+        $validatorMock = Mockery::mock('ValidatorStub');
+
+        $validatorMock->shouldReceive('make')
+            ->once()
+            ->andReturn($validatorMock);
+
+        $validatorMock->shouldReceive('setAttributeNames')->once()->with(['foo']);
+
+        $this->trait->setValidator($validatorMock);
+
+        $this->trait->setValidationAttributeNames(['foo']);
+
+        $this->trait->makeValidator();
+    }
+
     public function testThrowValidationException()
     {
         $this->setExpectedException('Watson\Validating\ValidationException');
@@ -301,13 +318,75 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->trait->throwValidationException();
     }
 
-    // updateRulesUniques
 
-    // updateRulesetUniques
+    public function testUpdateRulesUniquesWithoutUniques()
+    {
+        $this->trait->setRules(['user_id' => ['required']]);
 
-    // injectUniqueIdentifiersToRules
+        $this->trait->updateRulesUniques();
 
-    // prepareUniqueRule
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['user_id' => ['required']], $result);
+    }
+
+    public function testUpdateRulesUniquesWithUniquesInfersAttribtues()
+    {
+        $this->trait->exists = true;
+
+        $this->trait->shouldReceive('getTable')->andReturn('users');
+
+        $this->trait->setRules(['user_id' => 'unique']);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['user_id' => ['unique:users,user_id,1,id']], $result);
+    }
+
+    public function testUpdateRulesUniquesWithNonPersistedModelInfersAttributes()
+    {
+        $this->trait->shouldReceive('getTable')->andReturn('users');
+
+        $this->trait->setRules(['user_id' => 'unique']);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['user_id' => ['unique:users,user_id']], $result);
+    }
+
+    public function testUpdateRulesUniquesWorksWithMultipleUniques()
+    {
+        $this->trait->shouldReceive('getTable')->andReturn('users');
+
+        $this->trait->setRules([
+            'email' => 'unique',
+            'slug'  => 'unique'
+        ]);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals([
+            'email' => ['unique:users,email'],
+            'slug'  => ['unique:users,slug']
+        ], $result);
+    }
+
+    public function testUpdateRulesUniquesDoesNotOverrideProvidedParameters()
+    {
+        $this->trait->setRules(['users' => 'unique:foo,bar,5,bat']);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['users' => ['unique:foo,bar,5,bat']], $result);
+    }
 }
 
 class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterface
