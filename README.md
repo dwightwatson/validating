@@ -166,7 +166,7 @@ protected $observables = ['validating', 'validated'];
 When validation is about to occur, the `eloquent.validating: ModelName` event will be fired, where the `$event` parameter will be `saving` or `restoring`. For example, if you were updating a namespaced model `App\User` the event would be `eloquent.validating: App\User`. If you listen for any of these events and return a value you can prevent validation from occurring completely.
 
 ```php
-Event::listen('eloquent.validating*', function($model, $event) {
+Event::listen('eloquent.validating:*', function($model, $event) {
     // Pseudo-Russian roulette validation.
     if (rand(1, 6) === 1) {
         return false;
