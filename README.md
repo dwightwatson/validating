@@ -69,31 +69,27 @@ $post->getErrors(); // errors MessageBag
 Model validation also becomes really simple.
 
 ```php
-if ( ! $post->save())
-{
+if ( ! $post->save()) {
     // Oops.
-    return Redirect::route('posts.create')
+    return redirect()->route('posts.create')
         ->withErrors($post->getErrors())
         ->withInput();
 }
 
-return Redirect::route('posts.show', $post->id)
+return redirect()->route('posts.show', $post->id)
     ->withSuccess("Your post was saved successfully.");
 ```
 
 Otherwise, if you prefer to use exceptions when validating models you can use the `saveOrFail()` method. Now, an exception will be raised when you attempt to save an invalid model.
 
 ```php
-try
-{
+try {
     $post->saveOrFail();
 
-}
-catch (Watson\Validating\ValidationException $e)
-{
+} catch (Watson\Validating\ValidationException $e) {
     $errors = $e->getErrors();
 
-    return Redirect::route('posts.create')
+    return redirect()->route('posts.create')
         ->withErrors($errors)
         ->withInput();
 }
@@ -170,14 +166,11 @@ protected $observables = ['validating', 'validated'];
 When validation is about to occur, the `eloquent.validating: ModelName` event will be fired, where the `$event` parameter will be `saving` or `restoring`. For example, if you were updating a namespaced model `App\User` the event would be `eloquent.validating: App\User`. If you listen for any of these events and return a value you can prevent validation from occurring completely.
 
 ```php
-Event::listen('eloquent.validating*', function($model, $event)
-{
+Event::listen('eloquent.validating*', function($model, $event) {
     // Pseudo-Russian roulette validation.
-    if (rand(1, 6) === 1)
-    {
+    if (rand(1, 6) === 1) {
         return false;
     }
-}
 });
 ```
 
@@ -216,7 +209,7 @@ class PostsController extends Controller
         $post = $this->post->create($request->input());
 
         // Post was saved successfully.
-        return Redirect::route('posts.show', $post);
+        return redirect()->route('posts.show', $post);
     }
 }
 ```
