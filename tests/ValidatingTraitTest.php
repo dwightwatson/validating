@@ -85,6 +85,15 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
     }
 
+    public function testRules()
+    {
+        $this->trait->shouldReceive('getRules')->once()->andReturn('foo');
+
+        $result = $this->trait->rules();
+
+        $this->assertEquals('foo', $result);
+    }
+
     public function testSetRules()
     {
         $this->trait->setRules(['bar' => 'foo']);
@@ -113,8 +122,8 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         Validator::shouldReceive('make')
             ->once()
             ->andReturn(Mockery::mock([
-              'passes' => true,
-              'messages' => Mockery::mock('Illuminate\Support\MessageBag')
+                'passes' => true,
+                'messages' => Mockery::mock('Illuminate\Support\MessageBag')
             ]));
 
         $result = $this->trait->isValid();
@@ -146,16 +155,34 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $validMessageBag = Mockery::mock('Illuminate\Support\MessageBag');
 
         Validator::shouldReceive('make')
-        ->once()
-        ->andReturn(Mockery::mock([
-          'passes'   => true,
-          'messages' => $validMessageBag
-        ]));
+            ->once()
+            ->andReturn(Mockery::mock([
+                'passes'   => true,
+                'messages' => $validMessageBag
+            ]));
 
         $result = $this->trait->isValid();
 
         $this->assertTrue($result);
         $this->assertSame($validMessageBag, $this->trait->getErrors());
+    }
+
+    public function testIsValidOrFailThrowsException()
+    {
+        $this->trait->shouldReceive('isValid')->once()->andReturn(false);
+
+        $this->trait->shouldReceive('throwValidationException')->once();
+
+        $this->trait->isValidOrFail();
+    }
+
+    public function testIsValidOrFailReturnsTrue()
+    {
+        $this->trait->shouldReceive('isValid')->once()->andReturn(true);
+
+        $result = $this->trait->isValidOrFail();
+
+        $this->assertTrue($result);
     }
 
     public function testIsInvalidReturnsFalseIfIsValidIsTrue()
@@ -189,9 +216,36 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
-    // saveOrFail
 
-    // saveOrReturn
+    public function testSaveOrFailThrowsExceptionOnInvalidModel()
+    {
+        $this->trait->shouldReceive('save')->once()->andReturn(false);
+
+        $this->trait->shouldReceive('throwValidationException')->once();
+
+        $result = $this->trait->saveOrFail();
+
+        $this->assertNull($result);
+    }
+
+    public function testSaveOrFailReturnsTrueOnValidModel()
+    {
+        $this->trait->shouldReceive('save')->once()->andReturn(true);
+
+        $result = $this->trait->saveOrFail();
+
+        $this->assertTrue($result);
+    }
+
+
+    public function testSaveOrReturn()
+    {
+        $this->trait->shouldReceive('save')->once()->andReturn('foo');
+
+        $result = $this->trait->saveOrReturn();
+
+        $this->assertEquals('foo', $result);
+    }
 
     public function testPerformValidationReturnsFalseOnInvalidModel()
     {
@@ -240,13 +294,99 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('ValidatorStub', $validator, get_class($validator));
     }
 
-    // updateRulesUniques
+    public function testMakeValidatorSetsValidationAttributeNames()
+    {
+        $validatorMock = Mockery::mock('ValidatorStub');
 
-    // updateRulesetUniques
+        $validatorMock->shouldReceive('make')
+            ->once()
+            ->andReturn($validatorMock);
 
-    // injectUniqueIdentifiersToRules
+        $validatorMock->shouldReceive('setAttributeNames')->once()->with(['foo']);
 
-    // prepareUniqueRule
+        $this->trait->setValidator($validatorMock);
+
+        $this->trait->setValidationAttributeNames(['foo']);
+
+        $this->trait->makeValidator();
+    }
+
+    public function testThrowValidationException()
+    {
+        $this->setExpectedException('Watson\Validating\ValidationException');
+
+        $this->trait->throwValidationException();
+    }
+
+
+    public function testUpdateRulesUniquesWithoutUniques()
+    {
+        $this->trait->setRules(['user_id' => ['required']]);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['user_id' => ['required']], $result);
+    }
+
+    public function testUpdateRulesUniquesWithUniquesInfersAttribtues()
+    {
+        $this->trait->exists = true;
+
+        $this->trait->shouldReceive('getTable')->andReturn('users');
+
+        $this->trait->setRules(['user_id' => 'unique']);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['user_id' => ['unique:users,user_id,1,id']], $result);
+    }
+
+    public function testUpdateRulesUniquesWithNonPersistedModelInfersAttributes()
+    {
+        $this->trait->shouldReceive('getTable')->andReturn('users');
+
+        $this->trait->setRules(['user_id' => 'unique']);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['user_id' => ['unique:users,user_id']], $result);
+    }
+
+    public function testUpdateRulesUniquesWorksWithMultipleUniques()
+    {
+        $this->trait->shouldReceive('getTable')->andReturn('users');
+
+        $this->trait->setRules([
+            'email' => 'unique',
+            'slug'  => 'unique'
+        ]);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals([
+            'email' => ['unique:users,email'],
+            'slug'  => ['unique:users,slug']
+        ], $result);
+    }
+
+    public function testUpdateRulesUniquesDoesNotOverrideProvidedParameters()
+    {
+        $this->trait->setRules(['users' => 'unique:foo,bar,5,bat']);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['users' => ['unique:foo,bar,5,bat']], $result);
+    }
 }
 
 class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterface

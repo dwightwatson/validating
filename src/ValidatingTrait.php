@@ -270,8 +270,10 @@ trait ValidatingTrait
     public function saveOrFail()
     {
         if (! $this->getModel()->save()) {
-            $this->throwValidationException();
+            return $this->throwValidationException();
         }
+
+        return true;
     }
 
     /**
@@ -398,7 +400,7 @@ trait ValidatingTrait
             $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
 
             foreach ($ruleset as &$rule) {
-                if (starts_with($rule, 'unique:')) {
+                if (starts_with($rule, 'unique:') || $rule === 'unique') {
                     $rule = $this->prepareUniqueRule($rule, $field);
                 }
             }
@@ -420,7 +422,7 @@ trait ValidatingTrait
         $parameters = explode(',', substr($rule, 7));
 
         // If the table name isn't set, get it.
-        if (! isset($parameters[0])) {
+        if (empty($parameters[0])) {
             $parameters[0] = $this->getModel()->getTable();
         }
 
