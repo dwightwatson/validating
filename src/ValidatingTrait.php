@@ -264,16 +264,17 @@ trait ValidatingTrait
      * Perform a one-off save that will raise an exception on validation error
      * instead of returning a boolean (which is the default behaviour).
      *
-     * @return void
-     * @throws \Watson\Validating\ValidatingException
+     * @param  array  $options
+     * @return bool
+     * @throws \Throwabke
      */
-    public function saveOrFail()
+    public function saveOrFail(array $options = [])
     {
-        if (! $this->getModel()->save()) {
+        if ($this->isInvalid()) {
             return $this->throwValidationException();
         }
 
-        return true;
+        return $this->getModel()->saveOrFail($options);
     }
 
     /**
