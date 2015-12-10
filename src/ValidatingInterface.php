@@ -69,6 +69,13 @@ interface ValidatingInterface
     public function getModel();
 
     /**
+     * Get the casted model attributes.
+     *
+     * @return array
+     */
+    public function getModelAttributes();
+
+    /**
      * Get the global validation rules.
      *
      * @return array

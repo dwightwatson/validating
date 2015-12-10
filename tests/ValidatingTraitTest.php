@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Model;
 
 class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 {
@@ -82,7 +83,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
     public function testGetRules()
     {
-        $this->assertEquals(['foo' => 'bar'], $this->trait->getRules());
+        $this->assertEquals(['foo' => 'bar', 'def' => 'array'], $this->trait->getRules());
     }
 
     public function testRules()
@@ -99,6 +100,12 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->trait->setRules(['bar' => 'foo']);
 
         $this->assertEquals(['bar' => 'foo'], $this->trait->getRules());
+    }
+
+
+    public function testAttributesAreCasted()
+    {
+        $this->assertEquals(['abc' => '123', 'def' => ['456']], $this->trait->getModelAttributes());
     }
 
 
@@ -391,7 +398,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterface
+class DatabaseValidatingTraitStub extends Model implements \Watson\Validating\ValidatingInterface
 {
     use \Watson\Validating\ValidatingTrait;
 
@@ -400,12 +407,18 @@ class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterf
     protected $addUniqueIdentifierToRules = true;
 
     protected $rules = [
-        'foo' => 'bar'
+        'foo' => 'bar',
+        'def' => 'array'
     ];
 
     protected $validationMessages = [
         'bar' => 'baz'
     ];
+
+    protected $casts = [
+        'def' => 'array'
+    ];
+
 
     public function getTable()
     {
@@ -424,7 +437,7 @@ class DatabaseValidatingTraitStub implements \Watson\Validating\ValidatingInterf
 
     public function getAttributes()
     {
-        return ['abc' => '123'];
+        return ['abc' => '123', 'def' => $this->asJson(['456'])];
     }
 }
 
