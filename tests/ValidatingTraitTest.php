@@ -436,7 +436,7 @@ class DatabaseValidatingTraitStub extends Model implements \Watson\Validating\Va
 
     public function getAttributes()
     {
-        return ['abc' => '123', 'def' => $this->asJson(['456'])];
+        return ['abc' => '123', 'def' => '["456"]'];
     }
 }
 
