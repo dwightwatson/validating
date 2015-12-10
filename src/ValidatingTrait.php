@@ -335,7 +335,7 @@ trait ValidatingTrait
     protected function makeValidator($rules = [])
     {
         // Get the casted model attributes.
-        $attributes = $this->getModelAttributes();
+        $attributes = $this->getModel()->getModelAttributes();
 
         if ($this->getInjectUniqueIdentifier()) {
             $rules = $this->injectUniqueIdentifierToRules($rules);

@@ -411,14 +411,13 @@ class DatabaseValidatingTraitStub extends Model implements \Watson\Validating\Va
         'def' => 'array'
     ];
 
-    protected $validationMessages = [
-        'bar' => 'baz'
-    ];
-
     protected $casts = [
         'def' => 'array'
     ];
 
+    protected $validationMessages = [
+        'bar' => 'baz'
+    ];
 
     public function getTable()
     {
