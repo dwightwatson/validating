@@ -122,6 +122,24 @@ trait ValidatingTrait
     }
 
     /**
+     * Get the casted model attributes.
+     *
+     * @return array
+     */
+    public function getModelAttributes()
+    {
+        $attributes = $this->getAttributes();
+
+        foreach ($attributes as $key => $value) {
+            if ($this->hasCast($key)) {
+                $attributes[$key] = $this->castAttribute($key, $value);
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
      * Get the custom validation messages being used by the model.
      *
      * @return array
@@ -316,8 +334,8 @@ trait ValidatingTrait
      */
     protected function makeValidator($rules = [])
     {
-        // Get the model attributes.
-        $attributes = $this->getModel()->getAttributes();
+        // Get the casted model attributes.
+        $attributes = $this->getModelAttributes();
 
         if ($this->getInjectUniqueIdentifier()) {
             $rules = $this->injectUniqueIdentifierToRules($rules);
