@@ -128,7 +128,7 @@ trait ValidatingTrait
      */
     public function getModelAttributes()
     {
-        $attributes = $this->getAttributes();
+        $attributes = $this->getModel()->getAttributes();
 
         foreach ($attributes as $key => $value) {
             if ($this->hasCast($key)) {
@@ -335,7 +335,7 @@ trait ValidatingTrait
     protected function makeValidator($rules = [])
     {
         // Get the casted model attributes.
-        $attributes = $this->getModel()->getModelAttributes();
+        $attributes = $this->getModelAttributes();
 
         if ($this->getInjectUniqueIdentifier()) {
             $rules = $this->injectUniqueIdentifierToRules($rules);
