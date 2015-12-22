@@ -226,7 +226,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
     public function testSaveOrFailThrowsExceptionOnInvalidModel()
     {
-        $this->trait->shouldReceive('save')->once()->andReturn(false);
+        $this->trait->shouldReceive('isInvalid')->once()->andReturn(true);
 
         $this->trait->shouldReceive('throwValidationException')->once();
 
@@ -237,9 +237,11 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
     public function testSaveOrFailReturnsTrueOnValidModel()
     {
-        $this->trait->shouldReceive('save')->once()->andReturn(true);
+        $this->trait->shouldReceive('isInvalid')->once()->andReturn(false);
 
-        $result = $this->trait->saveOrFail();
+        $this->trait->shouldReceive('getModel->saveOrFail')->once()->with(['foo' => 'bar'])->andReturn(true);
+
+        $result = $this->trait->saveOrFail(['foo' => 'bar']);
 
         $this->assertTrue($result);
     }

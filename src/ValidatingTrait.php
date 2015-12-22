@@ -288,11 +288,11 @@ trait ValidatingTrait
      */
     public function saveOrFail(array $options = [])
     {
-        if ( ! $this->getModel()->save()) {
+        if ($this->isInvalid()) {
             return $this->throwValidationException();
         }
 
-        return true;
+        return $this->getModel()->saveOrFail($options);
     }
 
     /**
