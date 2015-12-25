@@ -18,16 +18,10 @@ Looking to use Validating on Laravel 4.2+? [Take a look at the 4.2 branch for do
 The Laravel 4.2 version is better suited to doing form validation; it supports custom validation messages, confirmation rules and multiple rulesets. Because Laravel 5.0 has `FormRequest` validation Validating is now designed to keep your core data valid and leave form validation to the framework.
 
 # Installation
-Simply add the package to your `composer.json` file and run `composer update`.
-
-```
-"watson/validating": "~1.0"
-```
-
-Or go to your project directory where the `composer.json` file is located and type:
+Simply go to your project directory where the `composer.json` file is located and type:
 
 ```sh
-composer require "watson/validating"
+composer require watson/validating
 ```
 
 [View installation instructions for Laravel 4.2+](https://github.com/dwightwatson/validating/tree/0.10).

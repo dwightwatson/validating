@@ -11,11 +11,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/contracts": "~5.0",
-        "illuminate/database": "~5.0",
-        "illuminate/events": "~5.0",
-        "illuminate/support": "~5.0",
-        "illuminate/validation": "~5.0"
+        "illuminate/contracts": ">=5.1.27|5.2.*",
+        "illuminate/database": ">=5.1.27|5.2.*",
+        "illuminate/events": ">=5.1.27|5.2.*",
+        "illuminate/support": ">=5.1.27|5.2.*",
+        "illuminate/validation": ">=5.1.27|5.2.*"
     },
     "require-dev": {
         "mockery/mockery": "0.9.*",
