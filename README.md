@@ -146,7 +146,7 @@ protected $injectUniqueIdentifier = true;
 ### Events
 Various events are fired by the trait during the validation process which you can hook into to impact the validation process.
 
-To hook in, you first need to add the `$observeables` property onto your model (or base model). This simply lets Eloquent know that your model can response to these events.
+To hook in, you first need to add the `$observeables` property onto your model (or base model). This simply lets Eloquent know that your model can respond to these events.
 
 ```php
 /**
