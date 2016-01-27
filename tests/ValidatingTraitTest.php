@@ -239,11 +239,18 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
     {
         $this->trait->shouldReceive('isInvalid')->once()->andReturn(false);
 
-        $this->trait->shouldReceive('getModel->saveOrFail')->once()->with(['foo' => 'bar'])->andReturn(true);
+        $this->trait->shouldReceive('getModel->parentSaveOrFail')->once()->with(['foo' => 'bar'])->andReturn(true);
 
         $result = $this->trait->saveOrFail(['foo' => 'bar']);
 
         $this->assertTrue($result);
+    }
+
+    public function testParentSaveOrFailCallsParentSaveOrFail()
+    {
+        $result = $this->trait->parentSaveOrFail(['foo' => 'bar']);
+
+        $this->assertEquals(['foo' => 'bar'], $result);
     }
 
 
@@ -398,7 +405,20 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
     }
 }
 
-class DatabaseValidatingTraitStub extends Model implements \Watson\Validating\ValidatingInterface
+class ValidatorStub extends \Illuminate\Validation\Factory
+{
+    //
+}
+
+class ModelStub extends Model
+{
+    public function saveOrFail(array $options = [])
+    {
+        return $options;
+    }
+}
+
+class DatabaseValidatingTraitStub extends ModelStub implements \Watson\Validating\ValidatingInterface
 {
     use \Watson\Validating\ValidatingTrait;
 
@@ -438,8 +458,4 @@ class DatabaseValidatingTraitStub extends Model implements \Watson\Validating\Va
     {
         return ['abc' => '123', 'def' => '["456"]'];
     }
-}
-
-class ValidatorStub extends \Illuminate\Validation\Factory
-{
 }

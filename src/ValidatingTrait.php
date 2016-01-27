@@ -284,7 +284,7 @@ trait ValidatingTrait
      *
      * @param  array  $options
      * @return bool
-     * @throws \Throwabke
+     * @throws \Throwable
      */
     public function saveOrFail(array $options = [])
     {
@@ -292,7 +292,19 @@ trait ValidatingTrait
             return $this->throwValidationException();
         }
 
-        return $this->getModel()->saveOrFail($options);
+        return $this->getModel()->parentSaveOrFail($options);
+    }
+
+    /**
+     * Call the parent save or fail method provided by Eloquent.
+     *
+     * @param  array  $options
+     * @return bool
+     * @throws \Throwable
+     */
+    public function parentSaveOrFail($options)
+    {
+        return parent::saveOrFail($options);
     }
 
     /**
