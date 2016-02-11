@@ -143,6 +143,17 @@ You can adjust this functionality by setting the `$injectUniqueIdentifier` prope
 protected $injectUniqueIdentifier = true;
 ```
 
+For automatically injecting model identifiers for third-party validators with unique-like behavior, set the `uniqueRulesForInjection` property on a model.
+
+```php
+/**
+ * Additional rules for injection of the model identifier.
+ *
+ * @var array
+ */
+protected $uniqueRulesForInjection = ['unique_with'];
+```
+
 ### Events
 Various events are fired by the trait during the validation process which you can hook into to impact the validation process.
 
