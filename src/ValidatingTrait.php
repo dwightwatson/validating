@@ -400,9 +400,32 @@ trait ValidatingTrait
     }
 
     /**
+     * Returns the rules for injection of the model identifier.
+     *
+     * @return array
+     */
+    public function getUniqueRulesForInjection()
+    {
+        return isset($this->uniqueRulesForInjection) ? array_unique(array_merge($this->uniqueRulesForInjection, ['unique'])) : ['unique'];
+    }
+
+    /**
+     * Set the rules for injection of the model identifier.
+     *
+     * @param  array $value
+     * @return void
+     * @throws InvalidArgumentException
+     */
+    public function setUniqueRulesForInjection(array $value)
+    {
+        $this->uniqueRulesForInjection = $value;
+    }
+
+    /**
      * Update the unique rules of the global rules to
      * include the model identifier.
      *
+     * @param string|array $uniqueRule
      * @return void
      */
     public function updateRulesUniques()
@@ -431,8 +454,10 @@ trait ValidatingTrait
             $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
 
             foreach ($ruleset as &$rule) {
-                if (starts_with($rule, 'unique:') || $rule === 'unique') {
-                    $rule = $this->prepareUniqueRule($rule, $field);
+                foreach ($this->getUniqueRulesForInjection() as $forRule) {
+                    if (starts_with($rule, $forRule . ':') || $rule === $forRule) {
+                        $rule = $this->prepareUniqueRule($rule, $field);
+                    }
                 }
             }
         }
