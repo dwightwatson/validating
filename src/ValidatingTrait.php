@@ -482,6 +482,11 @@ trait ValidatingTrait {
 
         $validator = $this->getValidator()->make($attributes, $rules, $messages);
 
+        $verifier = \App::make('validation.presence');
+        $verifier->setConnection($this->connection);
+
+        $validator->setPresenceVerifier($verifier);
+
         if ($this->getValidationAttributeNames())
         {
             $validator->setAttributeNames($this->getValidationAttributeNames());
