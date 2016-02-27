@@ -3,7 +3,6 @@
 namespace Watson\Validating;
 
 use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Factory;
 
@@ -109,6 +108,21 @@ trait ValidatingTrait
     public function setInjectUniqueIdentifier($value)
     {
         $this->injectUniqueIdentifier = (boolean) $value;
+    }
+
+    /**
+     * Get the unique identifier injector array.
+     *
+     * @return array
+     */
+    public function getUniqueIdentifierInjectors()
+    {
+        $coreInjectors = [
+            'unique'      => 'prepareUniqueRule',
+            'unique_with' => 'prepareUniqueWithRule',
+        ];
+
+        return isset($this->uniqueIdentifierInjectors) ? ($this->uniqueIdentifierInjectors + $coreInjectors) : $coreInjectors;
     }
 
     /**
@@ -431,8 +445,16 @@ trait ValidatingTrait
             $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
 
             foreach ($ruleset as &$rule) {
-                if (starts_with($rule, 'unique:') || $rule === 'unique') {
-                    $rule = $this->prepareUniqueRule($rule, $field);
+                $parameters = explode(':', $rule);
+                $validationRule = array_shift($parameters);
+
+                $injectors = $this->getUniqueIdentifierInjectors();
+
+                if (array_key_exists($validationRule, $injectors)) {
+                    $rule = call_user_func_array(
+                        [$this, $injectors[$validationRule]],
+                        [explode(',',head($parameters)), $field]
+                    );
                 }
             }
         }
@@ -444,14 +466,12 @@ trait ValidatingTrait
      * Take a unique rule, add the database table, column and
      * model identifier if required.
      *
-     * @param  string $rule
+     * @param  array  $parameters
      * @param  string $field
      * @return string
      */
-    protected function prepareUniqueRule($rule, $field)
+    protected function prepareUniqueRule($parameters, $field)
     {
-        $parameters = explode(',', substr($rule, 7));
-
         // If the table name isn't set, get it.
         if (empty($parameters[0])) {
             $parameters[0] = $this->getModel()->getTable();
@@ -475,5 +495,25 @@ trait ValidatingTrait
         }
 
         return 'unique:' . implode(',', $parameters);
+    }
+    /**
+     * Take a unique_with rule, model identifier if required.
+     *
+     * @param  array  $parameters
+     * @param  string $field
+     * @return string
+     */
+    protected function prepareUniqueWithRule($parameters, $field)
+    {
+        // Table and intermediary fields are required for this validator to work and cannot be guessed.
+        // Let's just check the model identifier.
+        if ($this->exists) {
+            // If the identifier isn't set, add it.
+            if (count($parameters) < 3 || !preg_match('/^\d+(\s?=\s?\w*)?$/', last($parameters))) {
+                $parameters[] = $this->getModel()->getKey();
+            }
+        }
+
+        return 'unique_with:' . implode(',', $parameters);
     }
 }
