@@ -143,6 +143,31 @@ You can adjust this functionality by setting the `$injectUniqueIdentifier` prope
 protected $injectUniqueIdentifier = true;
 ```
 
+Out of the box, we support both the Laravel `unique` rule as well as the [felixkiss/uniquewith-validator](https://github.com/felixkiss/uniquewith-validator) rule. 
+
+It's easy to support additional injection rules too, if you like. Say you wanted to support an additional rule you've got called `unique_ids` which simply takes the model's primary key (for whatever reason). You just need to add a camel-cased rule which accepts any existing parameters and the field name, and returns the replacement rule.
+
+```php
+/**
+ * Prepare a unique_ids rule, adding a model identifier if required.
+ *
+ * @param  array  $parameters
+ * @param  string $field
+ * @return string
+ */
+protected function prepareUniqueIdsRule($parameters, $field)
+{
+    // Only perform a replacement if the model has been persisted.
+    if ($this->exists) {
+        return 'unique_ids:' . $this->getKey();
+    }
+
+    return 'unique_ids';
+}
+```
+
+In this case if the model has been saved and has a primary key of `10`, the rule `unique_ids` will be replaced with `unique_ids:10`.
+
 ### Events
 Various events are fired by the trait during the validation process which you can hook into to impact the validation process.
 
