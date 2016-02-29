@@ -469,9 +469,14 @@ trait ValidatingTrait
      */
     protected function prepareUniqueRule($parameters, $field)
     {
-        // If the table name isn't set, get it.
+        // If the table name isn't set, infer it.
         if (empty($parameters[0])) {
             $parameters[0] = $this->getModel()->getTable();
+        }
+
+        // If the connection name isn't set, infer it.
+        if (strpos($parameters[0], '.') === false) {
+            $parameters[0] = $this->getModel()->getConnectionName().'.'.$parameters[0];
         }
 
         // If the field name isn't get, infer it.
@@ -480,12 +485,12 @@ trait ValidatingTrait
         }
 
         if ($this->exists) {
-            // If the identifier isn't set, add it.
+            // If the identifier isn't set, infer it.
             if (! isset($parameters[2]) || strtolower($parameters[2]) === 'null') {
                 $parameters[2] = $this->getModel()->getKey();
             }
 
-            // Add the primary key if it isn't set in case it isn't id.
+            // If the primary key isn't set, infer it.
             if (! isset($parameters[3])) {
                 $parameters[3] = $this->getModel()->getKeyName();
             }
@@ -495,7 +500,7 @@ trait ValidatingTrait
     }
 
     /**
-     * Prepare a unique_with rule, adding the model identified if required.
+     * Prepare a unique_with rule, adding the model identifier if required.
      *
      * @param  array  $parameters
      * @param  string $field

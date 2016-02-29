@@ -358,7 +358,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
         $result = $this->trait->getRules();
 
-        $this->assertEquals(['user_id' => ['unique:users,user_id,1,id']], $result);
+        $this->assertEquals(['user_id' => ['unique:sqlite.users,user_id,1,id']], $result);
     }
 
     public function testUpdateRulesUniquesWithNonPersistedModelInfersAttributes()
@@ -371,7 +371,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
         $result = $this->trait->getRules();
 
-        $this->assertEquals(['user_id' => ['unique:users,user_id']], $result);
+        $this->assertEquals(['user_id' => ['unique:sqlite.users,user_id']], $result);
     }
 
     public function testUpdateRulesUniquesWorksWithMultipleUniques()
@@ -388,8 +388,8 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $result = $this->trait->getRules();
 
         $this->assertEquals([
-            'email' => ['unique:users,email'],
-            'slug'  => ['unique:users,slug']
+            'email' => ['unique:sqlite.users,email'],
+            'slug'  => ['unique:sqlite.users,slug']
         ], $result);
     }
 
@@ -401,7 +401,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
         $result = $this->trait->getRules();
 
-        $this->assertEquals(['users' => ['unique:foo,bar,5,bat']], $result);
+        $this->assertEquals(['users' => ['unique:sqlite.foo,bar,5,bat']], $result);
     }
 
     public function testUpdateRulesUniquesUniqueWithWithUniquesInfersAttributes()
@@ -487,5 +487,10 @@ class DatabaseValidatingTraitStub extends ModelStub implements \Watson\Validatin
     public function getAttributes()
     {
         return ['abc' => '123', 'def' => '["456"]'];
+    }
+
+    public function getConnectionName()
+    {
+        return 'sqlite';
     }
 }
