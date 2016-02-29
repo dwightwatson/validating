@@ -346,7 +346,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['user_id' => ['required']], $result);
     }
 
-    public function testUpdateRulesUniquesWithUniquesInfersAttribtues()
+    public function testUpdateRulesUniquesWithUniquesInfersAttributes()
     {
         $this->trait->exists = true;
 
@@ -402,6 +402,36 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $result = $this->trait->getRules();
 
         $this->assertEquals(['users' => ['unique:foo,bar,5,bat']], $result);
+    }
+
+    public function testUpdateRulesUniquesUniqueWithWithUniquesInfersAttributes()
+    {
+        $this->trait->exists = true;
+
+        $this->trait->setRules([
+            'first_name' => 'unique_with:users,last_name'
+        ]);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['first_name' => ['unique_with:users,last_name,1']], $result);
+    }
+
+    public function testUpdateRulesUniquesUniqueWithDoesNotOverrideProvidedParameters()
+    {
+        $this->trait->exists = true;
+
+        $this->trait->setRules([
+            'first_name' => 'unique_with:users,last_name,5'
+        ]);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['first_name' => ['unique_with:users,last_name,5']], $result);
     }
 }
 

@@ -3,8 +3,8 @@
 namespace Watson\Validating;
 
 use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Factory;
+use Illuminate\Support\Facades\Validator;
 
 trait ValidatingTrait
 {
@@ -108,21 +108,6 @@ trait ValidatingTrait
     public function setInjectUniqueIdentifier($value)
     {
         $this->injectUniqueIdentifier = (boolean) $value;
-    }
-
-    /**
-     * Get the unique identifier injector array.
-     *
-     * @return array
-     */
-    public function getUniqueIdentifierInjectors()
-    {
-        $coreInjectors = [
-            'unique'      => 'prepareUniqueRule',
-            'unique_with' => 'prepareUniqueWithRule',
-        ];
-
-        return isset($this->uniqueIdentifierInjectors) ? ($this->uniqueIdentifierInjectors + $coreInjectors) : $coreInjectors;
     }
 
     /**
@@ -448,18 +433,30 @@ trait ValidatingTrait
                 $parameters = explode(':', $rule);
                 $validationRule = array_shift($parameters);
 
-                $injectors = $this->getUniqueIdentifierInjectors();
-
-                if (array_key_exists($validationRule, $injectors)) {
+                if ($method = $this->getUniqueIdentifierInjectorMethod($validationRule)) {
                     $rule = call_user_func_array(
-                        [$this, $injectors[$validationRule]],
-                        [explode(',',head($parameters)), $field]
+                        [$this, $method],
+                        [explode(',', head($parameters)), $field]
                     );
                 }
             }
         }
 
         return $rules;
+    }
+
+    /**
+     * Get the dynamic method name for a unique identifier injector rule if it
+     * exists, otherwise return false.
+     *
+     * @param  string $validationRule
+     * @return mixed
+     */
+    protected function getUniqueIdentifierInjectorMethod($validationRule)
+    {
+        $method = 'prepare' . studly_case($validationRule) . 'Rule';
+
+        return method_exists($this, $method) ? $method : false;
     }
 
     /**
