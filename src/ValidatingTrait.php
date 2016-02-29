@@ -460,8 +460,8 @@ trait ValidatingTrait
     }
 
     /**
-     * Take a unique rule, add the database table, column and
-     * model identifier if required.
+     * Prepare a unique rule, adding the table name, column and model indetifier
+     * if required.
      *
      * @param  array  $parameters
      * @param  string $field
@@ -493,8 +493,9 @@ trait ValidatingTrait
 
         return 'unique:' . implode(',', $parameters);
     }
+
     /**
-     * Take a unique_with rule, model identifier if required.
+     * Prepare a unique_with rule, adding the model identified if required.
      *
      * @param  array  $parameters
      * @param  string $field
