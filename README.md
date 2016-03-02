@@ -143,7 +143,7 @@ You can adjust this functionality by setting the `$injectUniqueIdentifier` prope
 protected $injectUniqueIdentifier = true;
 ```
 
-Out of the box, we support both the Laravel `unique` rule as well as the [felixkiss/uniquewith-validator](https://github.com/felixkiss/uniquewith-validator) rule. 
+Out of the box, we support the Laravel provided `unique` rule. We also support the popular [felixkiss/uniquewith-validator](https://github.com/felixkiss/uniquewith-validator) rule, but you'll need to opt-in. Just add `use \Watson\Validating\Injectors\UniqueWithInjector` after you've imported the validating trait.
 
 It's easy to support additional injection rules too, if you like. Say you wanted to support an additional rule you've got called `unique_ids` which simply takes the model's primary key (for whatever reason). You just need to add a camel-cased rule which accepts any existing parameters and the field name, and returns the replacement rule.
 
