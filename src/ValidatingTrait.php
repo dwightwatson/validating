@@ -5,9 +5,12 @@ namespace Watson\Validating;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\Factory;
 use Illuminate\Support\Facades\Validator;
+use Watson\Validating\Injectors\UniqueInjector;
 
 trait ValidatingTrait
 {
+    use UniqueInjector;
+
     /**
      * Error messages as provided by the validator.
      *
@@ -457,66 +460,5 @@ trait ValidatingTrait
         $method = 'prepare' . studly_case($validationRule) . 'Rule';
 
         return method_exists($this, $method) ? $method : false;
-    }
-
-    /**
-     * Prepare a unique rule, adding the table name, column and model indetifier
-     * if required.
-     *
-     * @param  array  $parameters
-     * @param  string $field
-     * @return string
-     */
-    protected function prepareUniqueRule($parameters, $field)
-    {
-        // If the table name isn't set, infer it.
-        if (empty($parameters[0])) {
-            $parameters[0] = $this->getModel()->getTable();
-        }
-
-        // If the connection name isn't set, infer it.
-        if (strpos($parameters[0], '.') === false) {
-            $parameters[0] = $this->getModel()->getConnectionName().'.'.$parameters[0];
-        }
-
-        // If the field name isn't get, infer it.
-        if (! isset($parameters[1])) {
-            $parameters[1] = $field;
-        }
-
-        if ($this->exists) {
-            // If the identifier isn't set, infer it.
-            if (! isset($parameters[2]) || strtolower($parameters[2]) === 'null') {
-                $parameters[2] = $this->getModel()->getKey();
-            }
-
-            // If the primary key isn't set, infer it.
-            if (! isset($parameters[3])) {
-                $parameters[3] = $this->getModel()->getKeyName();
-            }
-        }
-
-        return 'unique:' . implode(',', $parameters);
-    }
-
-    /**
-     * Prepare a unique_with rule, adding the model identifier if required.
-     *
-     * @param  array  $parameters
-     * @param  string $field
-     * @return string
-     */
-    protected function prepareUniqueWithRule($parameters, $field)
-    {
-        // Table and intermediary fields are required for this validator to work and cannot be guessed.
-        // Let's just check the model identifier.
-        if ($this->exists) {
-            // If the identifier isn't set, add it.
-            if (count($parameters) < 3 || !preg_match('/^\d+(\s?=\s?\w*)?$/', last($parameters))) {
-                $parameters[] = $this->getModel()->getKey();
-            }
-        }
-
-        return 'unique_with:' . implode(',', $parameters);
     }
 }

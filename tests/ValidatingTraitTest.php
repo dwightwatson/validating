@@ -333,106 +333,6 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
         $this->trait->throwValidationException();
     }
-
-
-    public function testUpdateRulesUniquesWithoutUniques()
-    {
-        $this->trait->setRules(['user_id' => ['required']]);
-
-        $this->trait->updateRulesUniques();
-
-        $result = $this->trait->getRules();
-
-        $this->assertEquals(['user_id' => ['required']], $result);
-    }
-
-    public function testUpdateRulesUniquesWithUniquesInfersAttributes()
-    {
-        $this->trait->exists = true;
-
-        $this->trait->shouldReceive('getTable')->andReturn('users');
-
-        $this->trait->setRules(['user_id' => 'unique']);
-
-        $this->trait->updateRulesUniques();
-
-        $result = $this->trait->getRules();
-
-        $this->assertEquals(['user_id' => ['unique:sqlite.users,user_id,1,id']], $result);
-    }
-
-    public function testUpdateRulesUniquesWithNonPersistedModelInfersAttributes()
-    {
-        $this->trait->shouldReceive('getTable')->andReturn('users');
-
-        $this->trait->setRules(['user_id' => 'unique']);
-
-        $this->trait->updateRulesUniques();
-
-        $result = $this->trait->getRules();
-
-        $this->assertEquals(['user_id' => ['unique:sqlite.users,user_id']], $result);
-    }
-
-    public function testUpdateRulesUniquesWorksWithMultipleUniques()
-    {
-        $this->trait->shouldReceive('getTable')->andReturn('users');
-
-        $this->trait->setRules([
-            'email' => 'unique',
-            'slug'  => 'unique'
-        ]);
-
-        $this->trait->updateRulesUniques();
-
-        $result = $this->trait->getRules();
-
-        $this->assertEquals([
-            'email' => ['unique:sqlite.users,email'],
-            'slug'  => ['unique:sqlite.users,slug']
-        ], $result);
-    }
-
-    public function testUpdateRulesUniquesDoesNotOverrideProvidedParameters()
-    {
-        $this->trait->setRules(['users' => 'unique:foo,bar,5,bat']);
-
-        $this->trait->updateRulesUniques();
-
-        $result = $this->trait->getRules();
-
-        $this->assertEquals(['users' => ['unique:sqlite.foo,bar,5,bat']], $result);
-    }
-
-    public function testUpdateRulesUniquesUniqueWithWithUniquesInfersAttributes()
-    {
-        $this->trait->exists = true;
-
-        $this->trait->setRules([
-            'first_name' => 'unique_with:users,last_name'
-        ]);
-
-        $this->trait->updateRulesUniques();
-
-        $result = $this->trait->getRules();
-
-        $this->assertEquals(['first_name' => ['unique_with:users,last_name,1']], $result);
-    }
-
-    public function testUpdateRulesUniquesUniqueWithDoesNotOverrideProvidedParameters()
-    {
-        $this->trait->exists = true;
-
-        $this->trait->setRules([
-            'first_name' => 'unique_with:users,last_name,5'
-        ]);
-
-        $this->trait->updateRulesUniques();
-
-        $result = $this->trait->getRules();
-
-        $this->assertEquals(['first_name' => ['unique_with:users,last_name,5']], $result);
-    }
 }
 
 class ValidatorStub extends \Illuminate\Validation\Factory
@@ -452,10 +352,6 @@ class DatabaseValidatingTraitStub extends ModelStub implements \Watson\Validatin
 {
     use \Watson\Validating\ValidatingTrait;
 
-    public $exists = false;
-
-    protected $addUniqueIdentifierToRules = true;
-
     protected $rules = [
         'foo' => 'bar',
         'def' => 'array'
@@ -469,28 +365,8 @@ class DatabaseValidatingTraitStub extends ModelStub implements \Watson\Validatin
         'bar' => 'baz'
     ];
 
-    public function getTable()
-    {
-        return 'foo';
-    }
-
-    public function getKeyName()
-    {
-        return 'id';
-    }
-
-    public function getKey()
-    {
-        return 1;
-    }
-
     public function getAttributes()
     {
         return ['abc' => '123', 'def' => '["456"]'];
-    }
-
-    public function getConnectionName()
-    {
-        return 'sqlite';
     }
 }
