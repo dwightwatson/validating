@@ -133,9 +133,7 @@ trait ValidatingTrait
         $attributes = $this->getModel()->getAttributes();
 
         foreach ($attributes as $key => $value) {
-            if ($this->hasCast($key)) {
-                $attributes[$key] = $this->castAttribute($key, $value);
-            }
+            $attributes[$key] = $this->getModel()->getAttributeValue($key);
         }
 
         return $attributes;
