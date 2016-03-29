@@ -19,9 +19,9 @@ trait UniqueInjector
             $parameters[0] = $this->getModel()->getTable();
         }
 
-        // If the connection name isn't set, infer it.
-        if (strpos($parameters[0], '.') === false) {
-            $parameters[0] = $this->getModel()->getConnectionName().'.'.$parameters[0];
+        // If the connection name isn't set but exists, infer it.
+        if ((strpos($parameters[0], '.') === false) && (($connectionName = $this->getModel()->getConnectionName()) !== null)) {
+            $parameters[0] = $connectionName.'.'.$parameters[0];
         }
 
         // If the field name isn't get, infer it.
