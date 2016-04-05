@@ -2,76 +2,50 @@
 
 namespace Watson\Validating;
 
-use RuntimeException;
-use Illuminate\Contracts\Support\MessageProvider;
-use Illuminate\Support\MessageBag;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Support\MessageProvider;
+use Illuminate\Contracts\Validation\ValidationException as BaseValidationException;
 
-class ValidationException extends RuntimeException implements MessageProvider
+class ValidationException extends BaseValidationException implements MessageProvider
 {
     /**
-     * The model.
+     * The model with validation errors.
      *
      * @var \Illuminate\Database\Eloquent\Model
      */
     protected $model;
 
     /**
-     * The validation errors.
+     * Create a new validation exception instance.
      *
-     * @var \Illuminate\Support\MessageBag
-     */
-    protected $errors;
-
-    /**
-     * Get the validation errors.
-     *
-     * @return \Illuminate\Support\MessageBag
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    /**
-     * Get the messages for the instance.
-     *
-     * @return \Illuminate\Support\MessageBag
-     */
-    public function getMessageBag()
-    {
-        return $this->getErrors();
-    }
-
-    /**
-     * Set the validation errors.
-     *
-     * @param  \Illuminate\Support\MessageBag $errors
+     * @param  \Illuminate\Contracts\Support\MessageProvider  $provider
+     * @param  \Illuminate\Database\Eloquent\Model            $model
      * @return void
      */
-    public function setErrors(MessageBag $errors)
+    public function __construct(MessageProvider $provider, Model $model = null)
     {
-        $this->errors = $errors;
+        parent::__construct($provider);
+
+        $this->model = $model;
     }
 
     /**
-     * Get the model.
+     * Get the mdoel with validation errors.
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function getModel()
+    public function model()
     {
         return $this->model;
     }
 
     /**
-     * Set the model.
+     * Get the messages for the instance.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @return void
+     * @return \Illuminate\Contracts\Support\MessageBag
      */
-    public function setModel($model)
+    public function getMessageBag()
     {
-        $this->model = $model;
+        return $this->errors();
     }
 }

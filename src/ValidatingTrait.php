@@ -391,12 +391,7 @@ trait ValidatingTrait
      */
     public function throwValidationException()
     {
-        $exception = new ValidationException(get_class($this) . ' model could not be persisted as it failed validation.');
-
-        $exception->setModel($this);
-        $exception->setErrors($this->getErrors());
-
-        throw $exception;
+        throw new ValidationException($this->getErrors(), $this);
     }
 
     /**
