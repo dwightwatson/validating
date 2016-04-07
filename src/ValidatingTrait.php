@@ -133,6 +133,13 @@ trait ValidatingTrait
         $attributes = $this->getModel()->getAttributes();
 
         foreach ($attributes as $key => $value) {
+            // The validator doesn't handle Carbon instances, so instead of casting
+            // them we'll return their raw value instead.
+            if (in_array($key, $this->getDates()) || $this->isDateCastable($key)) {
+                $attributes[$key] = $value;
+                continue;
+            }
+
             $attributes[$key] = $this->getModel()->getAttributeValue($key);
         }
 

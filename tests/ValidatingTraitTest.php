@@ -105,7 +105,14 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
     public function testAttributesAreMutated()
     {
-        $this->assertEquals(['abc' => '123', 'def' => ['456'], 'bar' => 'rab'], $this->trait->getModelAttributes());
+        $expected = [
+            'abc'        => '123',
+            'def'        => ['456'],
+            'bar'        => 'rab',
+            'created_at' => '2015-01-01 00:00:00'
+        ];
+
+        $this->assertEquals($expected, $this->trait->getModelAttributes());
     }
 
 
@@ -366,9 +373,10 @@ class DatabaseValidatingTraitStub extends ModelStub implements \Watson\Validatin
     ];
 
     protected $attributes = [
-        'abc' => '123',
-        'def' => '["456"]',
-        'bar' => 'bar'
+        'abc'        => '123',
+        'def'        => '["456"]',
+        'bar'        => 'bar',
+        'created_at' => '2015-01-01 00:00:00'
     ];
 
     public function getBarAttribute($value)
