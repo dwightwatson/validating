@@ -32,6 +32,13 @@ trait ValidatingTrait
      * @return \Illuminate\Validation\Factory
      */
     protected $validator;
+    
+    /**
+     * The custom validation attribute names.
+     * 
+     * @var array;
+     */
+    protected $validationAttributeNames;
 
     /**
      * Boot the trait. Adds an observer class for validating.
