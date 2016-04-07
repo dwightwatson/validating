@@ -40,6 +40,26 @@ class ValidationException extends BaseValidationException implements MessageProv
     }
 
     /**
+     * Get the mdoel with validation errors.
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getModel()
+    {
+        return $this->model();
+    }
+
+    /**
+     * Get the validation errors.
+     *
+     * @return \Illuminate\Support\MessageBag
+     */
+    public function getErrors()
+    {
+        return $this->errors();
+    }
+
+    /**
      * Get the messages for the instance.
      *
      * @return \Illuminate\Contracts\Support\MessageBag

@@ -27,6 +27,20 @@ class ValidationExceptionTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->model, $this->exception->model());
     }
 
+    public function testGetModel()
+    {
+        $this->assertEquals($this->model, $this->exception->getModel());
+    }
+
+    public function testGetErrors()
+    {
+       $this->messageBag->shouldReceive('getMessageBag')
+           ->once()
+           ->andReturn('errors');
+
+       $this->assertEquals('errors', $this->exception->getErrors());
+    }
+
     public function testGetsMessageBag()
     {
         $this->messageBag->shouldReceive('getMessageBag')
