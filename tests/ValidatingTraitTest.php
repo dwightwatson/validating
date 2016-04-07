@@ -383,4 +383,9 @@ class DatabaseValidatingTraitStub extends ModelStub implements \Watson\Validatin
     {
         return strrev($value);
     }
+
+    protected function isDateCastable($key)
+    {
+        return false;
+    }
 }
