@@ -30,7 +30,7 @@ class ValidatingObserverTest extends PHPUnit_Framework_TestCase
         Event::shouldReceive('fire')
             ->once();
 
-        $response = $this->observer->saving($this->model);
+        $response = $this->observer->creating($this->model);
         $this->assertNotFalse($response);
     }
 
@@ -40,7 +40,7 @@ class ValidatingObserverTest extends PHPUnit_Framework_TestCase
 
         Event::shouldReceive('until')->once()->andReturn(false);
 
-        $result = $this->observer->saving($this->model);
+        $result = $this->observer->updating($this->model);
 
         $this->assertNull($result);
     }
@@ -57,7 +57,7 @@ class ValidatingObserverTest extends PHPUnit_Framework_TestCase
             ->once()
             ->andReturn(false);
 
-        $response = $this->observer->saving($this->model);
+        $response = $this->observer->creating($this->model);
         $this->assertFalse($response);
     }
 
@@ -76,11 +76,11 @@ class ValidatingObserverTest extends PHPUnit_Framework_TestCase
         $this->model->shouldReceive('throwValidationException')
             ->once();
 
-        $response = $this->observer->saving($this->model);
+        $response = $this->observer->updating($this->model);
         $this->assertFalse($response);
     }
 
-    public function testSavingPerformsValidation()
+    public function testCreatingPerformsValidation()
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(true);
 
@@ -94,7 +94,24 @@ class ValidatingObserverTest extends PHPUnit_Framework_TestCase
         Event::shouldReceive('fire')
             ->once();
 
-        $this->observer->saving($this->model);
+        $this->observer->creating($this->model);
+    }
+
+    public function testUpdatingPerformsValidation()
+    {
+        $this->model->shouldReceive('getValidating')->once()->andReturn(true);
+
+        $this->model->shouldReceive('isValid')
+            ->once()
+            ->andReturn(true);
+
+        Event::shouldReceive('until')
+            ->once();
+
+        Event::shouldReceive('fire')
+            ->once();
+
+        $this->observer->updating($this->model);
     }
 
     public function testRestoringPerformsValidation()
@@ -121,6 +138,6 @@ class ValidatingObserverTest extends PHPUnit_Framework_TestCase
         Event::shouldReceive('fire')
             ->once();
 
-        $this->observer->saving($this->model);
+        $this->observer->creating($this->model);
     }
 }

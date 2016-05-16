@@ -47,7 +47,7 @@ trait ValidatingTrait
      */
     public static function bootValidatingTrait()
     {
-        static::observe(new ValidatingObserver);
+        static::observe(new ValidatingObserver, -100);
     }
 
     /**
