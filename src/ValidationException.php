@@ -2,12 +2,19 @@
 
 namespace Watson\Validating;
 
+use RuntimeException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Support\MessageProvider;
-use Illuminate\Validation\ValidationException as BaseValidationException;
 
-class ValidationException extends BaseValidationException implements MessageProvider
+class ValidationException extends RuntimeException implements MessageProvider
 {
+    /**
+     * The message provider implementation.
+     *
+     * @var \Illuminate\Contracts\Support\MessageProvider
+     */
+    protected $provider;
+
     /**
      * The model with validation errors.
      *
@@ -22,10 +29,9 @@ class ValidationException extends BaseValidationException implements MessageProv
      * @param  \Illuminate\Database\Eloquent\Model            $model
      * @return void
      */
-    public function __construct(MessageProvider $provider, Model $model = null)
+    public function __construct(MessageProvider $provider, Model $model)
     {
-        parent::__construct($provider);
-
+        $this->provider = $provider;
         $this->model = $model;
     }
 
@@ -52,7 +58,17 @@ class ValidationException extends BaseValidationException implements MessageProv
     /**
      * Get the validation errors.
      *
-     * @return \Illuminate\Support\MessageBag
+     * @return \Illuminate\Contracts\Support\Messagebag
+     */
+    public function errors()
+    {
+        return $this->provider->getMessageBag();
+    }
+
+    /**
+     * Get the validation errors.
+     *
+     * @return \Illuminate\Contracts\Support\MessageBag
      */
     public function getErrors()
     {
@@ -67,5 +83,15 @@ class ValidationException extends BaseValidationException implements MessageProv
     public function getMessageBag()
     {
         return $this->errors();
+    }
+
+    /**
+     * Get the validation error message provider.
+     *
+     * @return \Illuminate\Contracts\Support\MessageProvider
+     */
+    public function getMessageProvider()
+    {
+        return $this->provider;
     }
 }
