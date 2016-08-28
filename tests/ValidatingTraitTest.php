@@ -341,6 +341,17 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
         $this->trait->makeValidator();
     }
+
+    public function testThrowValidationException()
+    {
+        $this->setExpectedException('Watson\Validating\ValidationException');
+
+        Validator::shouldReceive('make')->once()->andReturn(
+            Mockery::mock('Illuminate\Contracts\Validation\Validator')
+        );
+
+        $this->trait->throwValidationException();
+    }
 }
 
 class ValidatorStub extends \Illuminate\Validation\Factory
