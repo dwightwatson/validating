@@ -8,14 +8,19 @@ Validating, a validation trait for Laravel
 [![Latest Unstable Version](https://poser.pugx.org/watson/validating/v/unstable.svg)](https://packagist.org/packages/watson/validating)
 [![License](https://poser.pugx.org/watson/validating/license.svg)](https://packagist.org/packages/watson/validating)
 
-Validating is a trait for Laravel 5.0+ Eloquent models which ensures that models meet their validation criteria before being saved. If they are not considered valid the model will not be saved and the validation errors will be made available.
+Validating is a trait for Laravel Eloquent models which ensures that models meet their validation criteria before being saved. If they are not considered valid the model will not be saved and the validation errors will be made available.
 
 Validating allows for multiple rulesets, injecting the model ID into `unique` validation rules and raising exceptions on failed validations. It's small and flexible to fit right into your workflow and help you save valid data only.
 
 ## Laravel 4.2+
-Looking to use Validating on Laravel 4.2+? [Take a look at the 4.2 branch for documentation and installation instructions](https://github.com/dwightwatson/validating/tree/0.10). 
+Looking to use Validating on Laravel 4.2+? [Take a look at the 0.10.x branch for documentation and installation instructions](https://github.com/dwightwatson/validating/tree/0.10.x).
 
 The Laravel 4.2 version is better suited to doing form validation; it supports custom validation messages, confirmation rules and multiple rulesets. Because Laravel 5.0 has `FormRequest` validation Validating is now designed to keep your core data valid and leave form validation to the framework.
+
+## Laravel 5.0 - 5.2
+Looking to use Validating on Laravel 5.0 to 5.2? [Take a look at the 2.x branch for documentation and installation instructions](https://github.com/dwightwatson/validating/tree/2.x).
+
+The Laravel 5.0 - 5.2 version used a since-deprecated `ValidationException` contract from the Laravel framework. For Laravel 5.3 we now extend the core validation `ValidationException` which means the framework will automatically redirect back with errors when a validation error occurs, much like a `FormRequest` would.
 
 # Installation
 Simply go to your project directory where the `composer.json` file is located and type:
@@ -24,7 +29,8 @@ Simply go to your project directory where the `composer.json` file is located an
 composer require watson/validating
 ```
 
-[View installation instructions for Laravel 4.2+](https://github.com/dwightwatson/validating/tree/0.10).
+[View installation instructions for Laravel 4.2+](https://github.com/dwightwatson/validating/tree/0.10.x).
+[View installation instructions for Laravel 5.0 - 5.2](https://github.com/dwightwatson/validating/tree/2.x).
 
 ## Overview
 First, add the trait to your model and add your validation rules and messages as needed.
@@ -55,7 +61,7 @@ $post->isValid(); // true
 // Or check if it is invalid or not.
 $post->isInvalid(); // false
 
-// Once you've determined the validity of the model, 
+// Once you've determined the validity of the model,
 // you can get the errors.
 $post->getErrors(); // errors MessageBag
 ```
@@ -75,6 +81,12 @@ return redirect()->route('posts.show', $post->id)
 ```
 
 Otherwise, if you prefer to use exceptions when validating models you can use the `saveOrFail()` method. Now, an exception will be raised when you attempt to save an invalid model.
+
+```php
+$post->saveOrFail();
+```
+
+You *don't need to catch the exception*, if you don't want to. Laravel knows how to handle a `ValidationException` and will automatically redirect back with form input and errors. If you want to handle it yourself though you may.
 
 ```php
 try {
