@@ -183,9 +183,13 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
     public function testIsValidOrFailThrowsException()
     {
-        $this->trait->shouldReceive('isValid')->once()->andReturn(false);
+        $this->setExpectedException('Watson\Validating\ValidationException');
 
-        $this->trait->shouldReceive('throwValidationException')->once();
+        Validator::shouldReceive('make')->once()->andReturn(
+            Mockery::mock('Illuminate\Contracts\Validation\Validator')
+        );
+
+        $this->trait->shouldReceive('isValid')->once()->andReturn(false);
 
         $this->trait->isValidOrFail();
     }
@@ -233,9 +237,13 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
     public function testSaveOrFailThrowsExceptionOnInvalidModel()
     {
-        $this->trait->shouldReceive('isInvalid')->once()->andReturn(true);
+        $this->setExpectedException('Watson\Validating\ValidationException');
 
-        $this->trait->shouldReceive('throwValidationException')->once();
+        Validator::shouldReceive('make')->once()->andReturn(
+            Mockery::mock('Illuminate\Contracts\Validation\Validator')
+        );
+
+        $this->trait->shouldReceive('isInvalid')->once()->andReturn(true);
 
         $result = $this->trait->saveOrFail();
 
@@ -332,13 +340,6 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->trait->setValidationAttributeNames(['foo']);
 
         $this->trait->makeValidator();
-    }
-
-    public function testThrowValidationException()
-    {
-        $this->setExpectedException('Watson\Validating\ValidationException');
-
-        $this->trait->throwValidationException();
     }
 }
 

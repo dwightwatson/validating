@@ -4,7 +4,7 @@ use Watson\Validating\ValidationException;
 
 class ValidationExceptionTest extends PHPUnit_Framework_TestCase
 {
-    public $messageBag;
+    public $validator;
 
     public $model;
 
@@ -12,12 +12,12 @@ class ValidationExceptionTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->messageBag = Mockery::mock('Illuminate\Support\MessageBag');
+        $this->validator = Mockery::mock('Illuminate\Contracts\Validation\Validator');
 
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
 
         $this->exception = new ValidationException(
-            $this->messageBag,
+            $this->validator,
             $this->model
         );
     }
@@ -34,7 +34,7 @@ class ValidationExceptionTest extends PHPUnit_Framework_TestCase
 
     public function testGetErrors()
     {
-       $this->messageBag->shouldReceive('getMessageBag')
+       $this->validator->shouldReceive('errors')
            ->once()
            ->andReturn('errors');
 
@@ -43,7 +43,7 @@ class ValidationExceptionTest extends PHPUnit_Framework_TestCase
 
     public function testGetsMessageBag()
     {
-        $this->messageBag->shouldReceive('getMessageBag')
+        $this->validator->shouldReceive('errors')
             ->once()
             ->andReturn('errors');
 

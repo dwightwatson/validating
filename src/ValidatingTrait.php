@@ -19,8 +19,7 @@ trait ValidatingTrait
     protected $validationErrors;
 
     /**
-     * Whether the model should undergo validation
-     * when saving or not.
+     * Whether the model should undergo validation when saving or not.
      *
      * @var bool
      */
@@ -29,7 +28,7 @@ trait ValidatingTrait
     /**
      * The Validator factory class used for validation.
      *
-     * @return \Illuminate\Validation\Factory
+     * @var \Illuminate\Validation\Factory
      */
     protected $validator;
 
@@ -257,7 +256,7 @@ trait ValidatingTrait
      */
     public function isValidOrFail()
     {
-        if (! $this->isValid()) {
+        if ( ! $this->isValid()) {
             $this->throwValidationException();
         }
 
@@ -333,7 +332,7 @@ trait ValidatingTrait
     }
 
     /**
-     * Get the Validator instance
+     * Get the Validator instance.
      *
      * @return \Illuminate\Validation\Factory
      */
@@ -343,7 +342,7 @@ trait ValidatingTrait
     }
 
     /**
-     * Set the Validator instance
+     * Set the Validator instance.
      *
      * @param \Illuminate\Validation\Factory $validator
      */
@@ -403,9 +402,11 @@ trait ValidatingTrait
      *
      * @throws \Watson\Validating\ValidationException
      */
-    public function throwValidationException()
+    protected function throwValidationException()
     {
-        throw new ValidationException($this->getErrors(), $this);
+        $validator = $this->makeValidator($this->getRules());
+
+        throw new ValidationException($validator, $this);
     }
 
     /**

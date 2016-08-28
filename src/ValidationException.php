@@ -2,19 +2,13 @@
 
 namespace Watson\Validating;
 
-use RuntimeException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Contracts\Support\MessageProvider;
+use Illuminate\Validation\ValidationException as BaseValidationException;
 
-class ValidationException extends RuntimeException implements MessageProvider
+class ValidationException extends BaseValidationException implements MessageProvider
 {
-    /**
-     * The message provider implementation.
-     *
-     * @var \Illuminate\Contracts\Support\MessageProvider
-     */
-    protected $provider;
-
     /**
      * The model with validation errors.
      *
@@ -25,13 +19,14 @@ class ValidationException extends RuntimeException implements MessageProvider
     /**
      * Create a new validation exception instance.
      *
-     * @param  \Illuminate\Contracts\Support\MessageProvider  $provider
-     * @param  \Illuminate\Database\Eloquent\Model            $model
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @param  \Illuminate\Database\Eloquent\Model         $model
      * @return void
      */
-    public function __construct(MessageProvider $provider, Model $model)
+    public function __construct(Validator $validator, Model $model)
     {
-        $this->provider = $provider;
+        parent::__construct($validator);
+
         $this->model = $model;
     }
 
@@ -62,7 +57,7 @@ class ValidationException extends RuntimeException implements MessageProvider
      */
     public function errors()
     {
-        return $this->provider->getMessageBag();
+        return $this->validator->errors();
     }
 
     /**
