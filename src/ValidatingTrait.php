@@ -402,7 +402,7 @@ trait ValidatingTrait
      *
      * @throws \Watson\Validating\ValidationException
      */
-    protected function throwValidationException()
+    public function throwValidationException()
     {
         $validator = $this->makeValidator($this->getRules());
 

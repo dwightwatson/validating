@@ -166,6 +166,13 @@ interface ValidatingInterface
     public function setValidator(Factory $validator);
 
     /**
+     * Throw a validation exception.
+     *
+     * @throws \Watson\Validating\ValidationException
+    */
+    public function throwValidationException();
+
+    /**
      * Update the unique rules of the global rules to
      * include the model identifier.
      *
