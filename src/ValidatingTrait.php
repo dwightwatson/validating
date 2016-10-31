@@ -276,6 +276,7 @@ trait ValidatingTrait
     /**
      * Force the model to be saved without undergoing validation.
      *
+     * @param  array  $options
      * @return bool
      */
     public function forceSave(array $options = [])
@@ -324,11 +325,12 @@ trait ValidatingTrait
      * Perform a one-off save that will return a boolean on
      * validation error instead of raising an exception.
      *
+     * @param  array  $options
      * @return bool
      */
-    public function saveOrReturn()
+    public function saveOrReturn(array $options = [])
     {
-        return $this->getModel()->save();
+        return $this->getModel()->save($options);
     }
 
     /**
