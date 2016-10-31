@@ -278,13 +278,13 @@ trait ValidatingTrait
      *
      * @return bool
      */
-    public function forceSave()
+    public function forceSave(array $options = [])
     {
         $currentValidatingSetting = $this->getValidating();
 
         $this->setValidating(false);
 
-        $result = $this->getModel()->save();
+        $result = $this->getModel()->save($options);
 
         $this->setValidating($currentValidatingSetting);
 
