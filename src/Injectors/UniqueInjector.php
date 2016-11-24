@@ -5,7 +5,7 @@ namespace Watson\Validating\Injectors;
 trait UniqueInjector
 {
     /**
-     * Prepare a unique rule, adding the table name, column and model indetifier
+     * Prepare a unique rule, adding the table name, column and model identifier
      * if required.
      *
      * @param  array  $parameters
