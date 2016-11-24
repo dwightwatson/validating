@@ -421,7 +421,13 @@ trait ValidatingTrait
     {
         $rules = $this->getRules();
 
-        $this->setRules($this->injectUniqueIdentifierToRules($rules));
+        $updatedRules = $this->injectUniqueIdentifierToRules($rules);
+
+        foreach ($updatedRules as &$rule) {
+            $rule = implode('|', $rule);
+        }
+
+        $this->setRules($updatedRules);
     }
 
     /**
