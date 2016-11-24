@@ -9,13 +9,23 @@ use Watson\Validating\ValidationException;
 class ValidatingObserver
 {
     /**
-     * Register the validation event for saving the model. Saving validation
-     * should only occur if creating and updating validation does not.
+     * Register the validation event for creating the model.
      *
      * @param  \Illuminate\Database\Eloquent\Model $model
      * @return boolean
      */
-    public function saving(Model $model)
+    public function creating(Model $model)
+    {
+        return $this->performValidation($model, 'saving');
+    }
+    
+    /**
+     * Register the validation event for updating the model.
+     *
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return boolean
+     */
+    public function updating(Model $model)
     {
         return $this->performValidation($model, 'saving');
     }
