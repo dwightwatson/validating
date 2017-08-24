@@ -39,6 +39,14 @@ trait UniqueInjector
             if (! isset($parameters[3])) {
                 $parameters[3] = $this->getModel()->getKeyName();
             }
+            
+            // If the additional where clause isn't set, infer it.
+            // Example: unique:pages,slug,123,id,uri,NULL
+            foreach ($parameters as $key => $parameter) {
+                if (strtolower((string) $parameter) === 'null') {
+                    $parameters[$key] = $this->getModel()->{$parameters[$key - 1]};
+                }
+            }
         }
 
         return 'unique:' . implode(',', $parameters);
