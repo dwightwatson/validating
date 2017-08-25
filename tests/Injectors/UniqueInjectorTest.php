@@ -40,6 +40,21 @@ class UniqueInjectorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['user_id' => ['unique:sqlite.users,user_id,1,id']], $result);
     }
 
+    public function testUpdateRulesUniquesWithUniquesAndAdditionalWhereClauseInfersAttributes()
+    {
+        $this->trait->exists = true;
+
+        $this->trait->shouldReceive('getTable')->andReturn('users');
+
+        $this->trait->setRules(['user_id' => 'unique:users,user_id,1,id,username,null']);
+
+        $this->trait->updateRulesUniques();
+
+        $result = $this->trait->getRules();
+
+        $this->assertEquals(['user_id' => ['unique:sqlite.users,user_id,1,id,username,test']], $result);
+    }
+
     public function testUpdateRulesUniquesWithNonPersistedModelInfersAttributes()
     {
         $this->trait->shouldReceive('getTable')->andReturn('users');
@@ -87,6 +102,8 @@ class UniqueInjectorTest extends PHPUnit_Framework_TestCase
 class UniqueValidatingStub extends \Illuminate\Database\Eloquent\Model
 {
     use \Watson\Validating\ValidatingTrait;
+
+    protected $username = 'test';
 
     public function getKey()
     {
