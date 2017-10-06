@@ -176,7 +176,7 @@ trait ValidatingTrait
      * Set the validating attribute names.
      *
      * @param  array  $attributeNames
-     * @return mixed
+     * @return void
      */
     public function setValidationAttributeNames(array $attributeNames = null)
     {
