@@ -165,7 +165,7 @@ trait ValidatingTrait
     /**
      * Get the validating attribute names.
      *
-     * @return mixed
+     * @return array
      */
     public function getValidationAttributeNames()
     {
