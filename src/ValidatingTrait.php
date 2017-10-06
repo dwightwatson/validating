@@ -169,7 +169,7 @@ trait ValidatingTrait
      */
     public function getValidationAttributeNames()
     {
-        return isset($this->validationAttributeNames) ? $this->validationAttributeNames : null;
+        return isset($this->validationAttributeNames) ? $this->validationAttributeNames : [];
     }
 
     /**
