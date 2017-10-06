@@ -70,7 +70,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
 
     public function testGetValidationAttributeNames()
     {
-        $this->assertNull($this->trait->getValidationAttributeNames());
+        $this->assertEmpty($this->trait->getValidationAttributeNames());
     }
 
     public function testSetValidationAttributeNames()
