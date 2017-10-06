@@ -165,11 +165,11 @@ trait ValidatingTrait
     /**
      * Get the validating attribute names.
      *
-     * @return mixed
+     * @return array
      */
     public function getValidationAttributeNames()
     {
-        return isset($this->validationAttributeNames) ? $this->validationAttributeNames : null;
+        return isset($this->validationAttributeNames) ? $this->validationAttributeNames : [];
     }
 
     /**
