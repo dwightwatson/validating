@@ -5,6 +5,7 @@ namespace Watson\Validating;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\Factory;
 use Illuminate\Support\Facades\Validator;
+use LogicException;
 use Watson\Validating\Injectors\UniqueInjector;
 
 trait ValidatingTrait
@@ -79,7 +80,7 @@ trait ValidatingTrait
      */
     public function getThrowValidationExceptions()
     {
-        return isset($this->throwValidationExceptions) ? $this->throwValidationExceptions : false;
+        return $this->validationAttributeGetter('throwValidationExceptions', false);
     }
 
     /**
@@ -103,7 +104,7 @@ trait ValidatingTrait
      */
     public function getInjectUniqueIdentifier()
     {
-        return isset($this->injectUniqueIdentifier) ? $this->injectUniqueIdentifier : true;
+        return $this->validationAttributeGetter('injectUniqueIdentifier', true);
     }
 
     /**
@@ -159,7 +160,7 @@ trait ValidatingTrait
      */
     public function getValidationMessages()
     {
-        return isset($this->validationMessages) ? $this->validationMessages : [];
+        return $this->validationAttributeGetter('validationMessages', []);
     }
 
     /**
@@ -169,7 +170,7 @@ trait ValidatingTrait
      */
     public function getValidationAttributeNames()
     {
-        return isset($this->validationAttributeNames) ? $this->validationAttributeNames : [];
+        return $this->validationAttributeGetter('validationAttributeNames', []);
     }
 
     /**
@@ -190,7 +191,7 @@ trait ValidatingTrait
      */
     public function getRules()
     {
-        return isset($this->rules) ? $this->rules : [];
+        return $this->validationAttributeGetter('rules', []);
     }
 
     /**
@@ -470,5 +471,25 @@ trait ValidatingTrait
         $method = 'prepare' . studly_case($validationRule) . 'Rule';
 
         return method_exists($this, $method) ? $method : false;
+    }
+
+    /**
+     * This bypasses a problem with Laravel's overwritten implementation of "isset()" on the Eloquent Model, which fails
+     * when checking for model properties which are not Model attributes nor relationships. If Laravel should ever
+     * fix isset(), this lookup hack should be removed.
+     *
+     * @param string $property
+     * @param mixed $default
+     * @return mixed
+     */
+    private function validationAttributeGetter($property, $default = null)
+    {
+        try {
+            return isset($this->$property) ? $this->$property : $default;
+        } catch(LogicException $e) {
+            // If the property is not set on the model, it will try to look it up as an Eloquent relationship and fail
+            // As of Laravel 5.5.14, last checked 2017-10-06
+            return $default;
+        }
     }
 }
