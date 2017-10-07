@@ -79,14 +79,4 @@ class ValidationException extends BaseValidationException implements MessageProv
     {
         return $this->errors();
     }
-
-    /**
-     * Get the validation error message provider.
-     *
-     * @return \Illuminate\Contracts\Support\MessageProvider
-     */
-    public function getMessageProvider()
-    {
-        return $this->provider;
-    }
 }
