@@ -67,10 +67,20 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['bar' => 'baz'], $this->trait->getValidationMessages());
     }
 
+    public function testValidationMessages()
+    {
+        $this->assertEquals(['bar' => 'baz'], $this->trait->validationMessages());
+    }
+
 
     public function testGetValidationAttributeNames()
     {
         $this->assertEmpty($this->trait->getValidationAttributeNames());
+    }
+
+    public function testValidationAttributeNames()
+    {
+        $this->assertEmpty($this->trait->validationAttributeNames());
     }
 
     public function testSetValidationAttributeNames()
@@ -90,7 +100,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
     {
         $this->trait->shouldReceive('getRules')->once()->andReturn('foo');
 
-        $result = $this->trait->getRules();
+        $result = $this->trait->rules();
 
         $this->assertEquals('foo', $result);
     }
