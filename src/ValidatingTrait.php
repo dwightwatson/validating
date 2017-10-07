@@ -153,13 +153,14 @@ trait ValidatingTrait
     }
 
     /**
-     * Static access to getValidationMessages() global default.
+     * Handy method for using the static call Model::validationMessages(). Protected access
+     * only to allow __callStatic to get to it.
      *
      * @return array
      */
-    protected static function validationMessages()
+    protected function validationMessages()
     {
-        return (new static())->getValidationMessages();
+        return $this->getValidationMessages();
     }
 
     /**
@@ -173,13 +174,14 @@ trait ValidatingTrait
     }
 
     /**
-     * Static access to getValidationAttributeNames() global default.
+     * Handy method for using the static call Model::validationAttributeNames(). Protected access
+     * only to allow __callStatic to get to it.
      *
      * @return array
      */
-    protected static function validationAttributeNames()
+    protected function validationAttributeNames()
     {
-        return (new static())->getValidationAttributeNames();
+        return $this->getValidationAttributeNames();
     }
 
     /**
@@ -214,13 +216,14 @@ trait ValidatingTrait
     }
 
     /**
-     * Static access to getRules() global default.
+     * Handy method for using the static call Model::rules(). Protected access
+     * only to allow __callStatic to get to it.
      *
      * @return array
      */
-    protected static function rules()
+    protected function rules()
     {
-        return (new static())->getRules();
+        return $this->getRules();
     }
 
     /**
