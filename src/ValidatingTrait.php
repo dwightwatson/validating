@@ -179,7 +179,7 @@ trait ValidatingTrait
      * @param  array  $attributeNames
      * @return mixed
      */
-    public function setValidationAttributeNames(array $attributeNames = null)
+    public function setValidationAttributeNames(array $attributeNames = [])
     {
         $this->validationAttributeNames = $attributeNames;
     }
@@ -211,7 +211,7 @@ trait ValidatingTrait
      * @param  array $rules
      * @return void
      */
-    public function setRules(array $rules = null)
+    public function setRules(array $rules = [])
     {
         $this->rules = $rules;
     }
