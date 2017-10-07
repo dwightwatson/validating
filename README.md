@@ -55,9 +55,7 @@ class Post extends Eloquent
 
 You can also add the trait to a `BaseModel` if you're using one and it will work on all models that extend from it, otherwise you can just extend `Watson\Validating\ValidatingModel` instead of `Eloquent`.
 
-*Note: you will need to set the `$rules` property on any models that extend from a `BaseModel` that uses the trait, or otherwise set an empty array as the `$rules` for the `BaseModel`. If you do not, you will inevitably end up with `LogicException with message 'Relationship method must return an object of type Illuminate\Database\Eloquent\Relations\Relation'`.*
-
-Now, you have access to some plesant functionality.
+Now, you have access to some pleasant functionality.
 
 ```php
 // Check whether the model is valid or not.
