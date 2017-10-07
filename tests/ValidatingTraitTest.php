@@ -90,7 +90,7 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
     {
         $this->trait->shouldReceive('getRules')->once()->andReturn('foo');
 
-        $result = $this->trait->rules();
+        $result = $this->trait->getRules();
 
         $this->assertEquals('foo', $result);
     }
