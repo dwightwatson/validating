@@ -67,9 +67,9 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['bar' => 'baz'], $this->trait->getValidationMessages());
     }
 
-    public function testValidationMessages()
+    public function testModelValidationMessages()
     {
-        $this->assertEquals(['bar' => 'baz'], $this->trait->validationMessages());
+        $this->assertEquals(['bar' => 'baz'], DatabaseValidatingTraitStub::modelValidationMessages());
     }
 
 
@@ -78,9 +78,9 @@ class ValidatingTraitTest extends PHPUnit_Framework_TestCase
         $this->assertEmpty($this->trait->getValidationAttributeNames());
     }
 
-    public function testValidationAttributeNames()
+    public function testModelValidationAttributeNames()
     {
-        $this->assertEmpty($this->trait->validationAttributeNames());
+        $this->assertEmpty(DatabaseValidatingTraitStub::modelValidationAttributeNames());
     }
 
     public function testSetValidationAttributeNames()

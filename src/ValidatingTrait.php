@@ -168,9 +168,9 @@ trait ValidatingTrait
      *
      * @return array
      */
-    protected function validationMessages()
+    protected function modelValidationMessages()
     {
-        return $this->getValidationMessages();
+        return (new static)->getValidationMessages();
     }
 
     /**
@@ -189,9 +189,9 @@ trait ValidatingTrait
      *
      * @return array
      */
-    protected function validationAttributeNames()
+    protected function modelValidationAttributeNames()
     {
-        return $this->getValidationAttributeNames();
+        return (new static)->getValidationAttributeNames();
     }
 
     /**
