@@ -44,9 +44,9 @@ trait UniqueInjector
             // Example: unique:users,email,123,id,username,NULL
             foreach ($parameters as $key => $parameter) {
                 if (strtolower((string) $parameter) === 'null') {
-                    $val = $this->getModel()->{$parameters[$key - 1]};
                     // Maintain NULL as string in case the model returns a null value
-                    $parameters[$key] = is_null($val) ? 'NULL' : $val;
+                    $value = $this->getModel()->{$parameters[$key - 1]};
+                    $parameters[$key] = is_null($value) ? 'NULL' : $value;
                 }
             }
         }
