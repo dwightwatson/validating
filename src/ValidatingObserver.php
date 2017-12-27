@@ -74,7 +74,7 @@ class ValidatingObserver
      */
     protected function fireValidatingEvent(Model $model, $event)
     {
-        return Event::until("eloquent.validating: ".get_class($model), [$model, $event]);
+        return app('events')->until('eloquent.validating: '.get_class($model), [$model, $event]);
     }
 
     /**
@@ -86,6 +86,6 @@ class ValidatingObserver
      */
     protected function fireValidatedEvent(Model $model, $status)
     {
-        Event::fire("eloquent.validated: ".get_class($model), [$model, $status]);
+        event('eloquent.validated: '.get_class($model), [$model, $status]);
     }
 }
