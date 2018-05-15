@@ -40,6 +40,19 @@ class UniqueInjectorTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(['user_id' => ['unique:sqlite.users,user_id,1,id']], $result);
     }
 
+    public function testGetPreparedRulesUniques()
+    {
+        $this->trait->exists = true;
+
+        $this->trait->shouldReceive('getTable')->andReturn('users');
+
+        $this->trait->setRules(['user_id' => 'unique']);
+
+        $result = $this->trait->getPreparedRules();
+
+        $this->assertEquals(['user_id' => ['unique:sqlite.users,user_id,1,id']], $result);
+    }
+
     public function testUpdateRulesUniquesWithUniquesAndAdditionalWhereClauseInfersAttributes()
     {
         $this->trait->exists = true;

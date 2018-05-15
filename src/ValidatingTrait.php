@@ -216,6 +216,16 @@ trait ValidatingTrait
     }
 
     /**
+     * Get the validation rules after being prepared by the injectors.
+     *
+     * @return array
+     */
+    public function getPreparedRules()
+    {
+        return $this-> injectUniqueIdentifierToRules($this->getRules());
+    }
+
+    /**
      * Handy method for using the static call Model::rules(). Protected access
      * only to allow __callStatic to get to it.
      *
