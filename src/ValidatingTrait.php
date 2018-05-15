@@ -222,7 +222,7 @@ trait ValidatingTrait
      */
     public function getPreparedRules()
     {
-        return $this-> injectUniqueIdentifierToRules($this->getRules());
+        return $this->injectUniqueIdentifierToRules($this->getRules());
     }
 
     /**
