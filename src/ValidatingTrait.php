@@ -468,15 +468,18 @@ trait ValidatingTrait
             $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
 
             foreach ($ruleset as &$rule) {
-                $parameters = explode(':', $rule);
-                $validationRule = array_shift($parameters);
+            	// Only treat stringy definitions and leave Rule classes and Closures as-is.
+            	if (is_string($rule)) {
+            		$parameters = explode(':', $rule);
+	                $validationRule = array_shift($parameters);
 
-                if ($method = $this->getUniqueIdentifierInjectorMethod($validationRule)) {
-                    $rule = call_user_func_array(
-                        [$this, $method],
-                        [explode(',', head($parameters)), $field]
-                    );
-                }
+	                if ($method = $this->getUniqueIdentifierInjectorMethod($validationRule)) {
+	                    $rule = call_user_func_array(
+	                        [$this, $method],
+	                        [explode(',', head($parameters)), $field]
+	                    );
+	                }
+            	}
             }
         }
 
