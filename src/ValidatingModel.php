@@ -22,13 +22,6 @@ abstract class ValidatingModel extends Eloquent implements MessageProvider, Vali
     protected $rules = [];
 
     /**
-     * The rulesets that the model will validate against.
-     *
-     * @var array
-     */
-    protected $rulesets = [];
-
-    /**
      * Get the messages for the instance.
      *
      * @return \Illuminate\Support\MessageBag
