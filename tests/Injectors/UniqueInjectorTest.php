@@ -1,6 +1,8 @@
 <?php
 
-class UniqueInjectorTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class UniqueInjectorTest extends TestCase
 {
     public $trait;
 

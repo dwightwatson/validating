@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Event;
 use Watson\Validating\ValidatingObserver;
+use PHPUnit\Framework\TestCase;
 
-class ValidatingObserverTest extends PHPUnit_Framework_TestCase
+class ValidatingObserverTest extends TestCase
 {
     public function setUp()
     {

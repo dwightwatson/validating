@@ -1,8 +1,9 @@
 <?php
 
 use Watson\Validating\ValidationException;
+use PHPUnit\Framework\TestCase;
 
-class ValidationExceptionTest extends PHPUnit_Framework_TestCase
+class ValidationExceptionTest extends TestCase
 {
     public $validator;
 

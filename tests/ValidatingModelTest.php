@@ -1,8 +1,9 @@
 <?php
 
 use Watson\Validating\ValidatingModel;
+use PHPUnit\Framework\TestCase;
 
-class ValidatingModelTest extends PHPUnit_Framework_TestCase
+class ValidatingModelTest extends TestCase
 {
     public function tearDown()
     {
