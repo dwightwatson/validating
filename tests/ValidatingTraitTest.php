@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Framework\TestCase;
 
-class ValidatingTraitTest extends PHPUnit_Framework_TestCase
+class ValidatingTraitTest extends TestCase
 {
     public $trait;
 
