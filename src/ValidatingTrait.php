@@ -365,7 +365,7 @@ trait ValidatingTrait
      */
     public function getValidator()
     {
-        return $this->validator ?: Validator::getFacadeRoot();
+        return $this->validator ?: app('validator');
     }
 
     /**
