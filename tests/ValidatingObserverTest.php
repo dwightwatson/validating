@@ -6,13 +6,13 @@ use PHPUnit\Framework\TestCase;
 
 class ValidatingObserverTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
         $this->observer = new ValidatingObserver;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }
@@ -28,7 +28,7 @@ class ValidatingObserverTest extends TestCase
         Event::shouldReceive('until')
             ->once();
 
-        Event::shouldReceive('fire')
+        Event::shouldReceive('dispatch')
             ->once();
 
         $response = $this->observer->saving($this->model);
@@ -92,7 +92,7 @@ class ValidatingObserverTest extends TestCase
         Event::shouldReceive('until')
             ->once();
 
-        Event::shouldReceive('fire')
+        Event::shouldReceive('dispatch')
             ->once();
 
         $this->observer->saving($this->model);
@@ -109,7 +109,7 @@ class ValidatingObserverTest extends TestCase
         Event::shouldReceive('until')
             ->once();
 
-        Event::shouldReceive('fire')
+        Event::shouldReceive('dispatch')
             ->once();
 
         $this->observer->restoring($this->model);
@@ -119,7 +119,7 @@ class ValidatingObserverTest extends TestCase
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(false);
 
-        Event::shouldReceive('fire')
+        Event::shouldReceive('dispatch')
             ->once();
 
         $this->observer->saving($this->model);

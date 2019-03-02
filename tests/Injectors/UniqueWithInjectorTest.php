@@ -6,12 +6,12 @@ class UniqueWithInjectorTest extends TestCase
 {
     public $trait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->trait = Mockery::mock('UniqueWithValidatingStub')->makePartial();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }

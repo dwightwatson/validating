@@ -11,7 +11,7 @@ class ValidationExceptionTest extends TestCase
 
     public $exception;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->validator = Mockery::mock('Illuminate\Contracts\Validation\Validator');
 

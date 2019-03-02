@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 class ValidatingModelTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
 

@@ -9,12 +9,12 @@ class ValidatingTraitTest extends TestCase
 {
     public $trait;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->trait = Mockery::mock('DatabaseValidatingTraitStub')->makePartial();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Mockery::close();
     }
@@ -194,7 +194,7 @@ class ValidatingTraitTest extends TestCase
 
     public function testIsValidOrFailThrowsException()
     {
-        $this->setExpectedException('Watson\Validating\ValidationException');
+        $this->expectException('Watson\Validating\ValidationException');
 
         Validator::shouldReceive('make')->once()->andReturn(
             Mockery::mock('Illuminate\Contracts\Validation\Validator')
@@ -248,7 +248,7 @@ class ValidatingTraitTest extends TestCase
 
     public function testSaveOrFailThrowsExceptionOnInvalidModel()
     {
-        $this->setExpectedException('Watson\Validating\ValidationException');
+        $this->expectException('Watson\Validating\ValidationException');
 
         Validator::shouldReceive('make')->once()->andReturn(
             Mockery::mock('Illuminate\Contracts\Validation\Validator')
@@ -355,7 +355,7 @@ class ValidatingTraitTest extends TestCase
 
     public function testThrowValidationException()
     {
-        $this->setExpectedException('Watson\Validating\ValidationException');
+        $this->expectException('Watson\Validating\ValidationException');
 
         Validator::shouldReceive('make')->once()->andReturn(
             Mockery::mock('Illuminate\Contracts\Validation\Validator')
