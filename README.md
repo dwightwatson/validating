@@ -21,7 +21,7 @@ Looking to use Validating on Laravel 5.0 to 5.2? [Take a look at the 2.x branch 
 
 The Laravel 5.0 - 5.2 version used a since-deprecated `ValidationException` contract from the Laravel framework. For Laravel 5.3 we now extend the core validation `ValidationException` which means the framework will automatically redirect back with errors when a validation error occurs, much like a `FormRequest` would.
 
-## Laravel 5.3
+## Laravel 5.3+
 Just read on - these instructions are for you!
 
 # Installation
