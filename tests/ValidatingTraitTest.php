@@ -9,12 +9,12 @@ class ValidatingTraitTest extends TestCase
 {
     public $trait;
 
-    public function setUp(): void
+    public function setUp()
     {
         $this->trait = Mockery::mock('DatabaseValidatingTraitStub')->makePartial();
     }
 
-    public function tearDown(): void
+    public function tearDown()
     {
         Mockery::close();
     }

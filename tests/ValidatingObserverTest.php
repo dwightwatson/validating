@@ -6,13 +6,13 @@ use PHPUnit\Framework\TestCase;
 
 class ValidatingObserverTest extends TestCase
 {
-    public function setUp(): void
+    public function setUp()
     {
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
         $this->observer = new ValidatingObserver;
     }
 
-    public function tearDown(): void
+    public function tearDown()
     {
         Mockery::close();
     }
