@@ -2,11 +2,11 @@
 
 namespace Watson\Validating;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\MessageBag;
 use Illuminate\Validation\Factory;
 use Illuminate\Support\Facades\Validator;
 use Watson\Validating\Injectors\UniqueInjector;
-use Illuminate\Support\Str;
 
 trait ValidatingTrait
 {
