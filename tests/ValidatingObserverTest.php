@@ -1,20 +1,17 @@
 <?php
 
+namespace Watson\Validating\Tests;
+
+use Mockery;
 use Illuminate\Support\Facades\Event;
 use Watson\Validating\ValidatingObserver;
-use PHPUnit\Framework\TestCase;
 
 class ValidatingObserverTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
         $this->observer = new ValidatingObserver;
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
     }
 
     public function testPerformValidation()

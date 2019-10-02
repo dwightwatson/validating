@@ -1,7 +1,9 @@
 <?php
 
+namespace Watson\Validating\Tests;
+
+use Mockery;
 use Watson\Validating\ValidationException;
-use PHPUnit\Framework\TestCase;
 
 class ValidationExceptionTest extends TestCase
 {
@@ -11,7 +13,7 @@ class ValidationExceptionTest extends TestCase
 
     public $exception;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->validator = Mockery::mock('Illuminate\Contracts\Validation\Validator');
 

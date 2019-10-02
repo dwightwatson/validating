@@ -1,19 +1,17 @@
 <?php
 
-use PHPUnit\Framework\TestCase;
+namespace Watson\Validating\Tests\Injectors;
+
+use Mockery;
+use Watson\Validating\Tests\TestCase;
 
 class UniqueWithInjectorTest extends TestCase
 {
     public $trait;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->trait = Mockery::mock('UniqueWithValidatingStub')->makePartial();
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
+        $this->trait = Mockery::mock(UniqueWithValidatingStub::class)->makePartial();
     }
 
     public function testUpdateRulesUniquesUniqueWithWithUniquesInfersAttributes()
