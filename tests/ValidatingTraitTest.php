@@ -1,22 +1,21 @@
 <?php
 
+namespace Watson\Validating\Tests;
+
+use Mockery;
+use Illuminate\Validation\Factory;
+use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Model;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Support\Facades\Validator;
 
 class ValidatingTraitTest extends TestCase
 {
     public $trait;
 
-    public function setUp()
+    public function setUp(): void
     {
-        $this->trait = Mockery::mock('DatabaseValidatingTraitStub')->makePartial();
-    }
-
-    public function tearDown()
-    {
-        Mockery::close();
+        $this->trait = Mockery::mock(DatabaseValidatingTraitStub::class)->makePartial();
     }
 
     public function testGetValidatingDefaultsToTrue()
@@ -134,7 +133,7 @@ class ValidatingTraitTest extends TestCase
 
     public function testSetErrors()
     {
-        $messageBag = Mockery::mock('Illuminate\Support\MessageBag');
+        $messageBag = Mockery::mock(MessageBag::class);
 
         $this->trait->setErrors($messageBag);
 
@@ -148,7 +147,7 @@ class ValidatingTraitTest extends TestCase
             ->once()
             ->andReturn(Mockery::mock([
                 'passes' => true,
-                'messages' => Mockery::mock('Illuminate\Support\MessageBag')
+                'messages' => Mockery::mock(MessageBag::class),
             ]));
 
         $result = $this->trait->isValid();
@@ -158,7 +157,7 @@ class ValidatingTraitTest extends TestCase
 
     public function testIsValidReturnFalseWhenValidationFails()
     {
-        $messageBag = Mockery::mock('Illuminate\Support\MessageBag');
+        $messageBag = Mockery::mock(MessageBag::class);
 
         Validator::shouldReceive('make')
             ->once()
@@ -175,9 +174,9 @@ class ValidatingTraitTest extends TestCase
 
     public function testIsValidClearsErrors()
     {
-        $this->trait->setErrors(Mockery::mock('Illuminate\Support\MessageBag'));
+        $this->trait->setErrors(Mockery::mock(MessageBag::class));
 
-        $validMessageBag = Mockery::mock('Illuminate\Support\MessageBag');
+        $validMessageBag = Mockery::mock(MessageBag::class);
 
         Validator::shouldReceive('make')
             ->once()
@@ -295,7 +294,7 @@ class ValidatingTraitTest extends TestCase
             ->once()
             ->andReturn(Mockery::mock([
                 'passes'   => false,
-                'messages' => Mockery::mock('Illuminate\Support\MessageBag')
+                'messages' => Mockery::mock(MessageBag::class)
             ]));
 
         $this->trait->setThrowValidationExceptions(false);
@@ -311,7 +310,7 @@ class ValidatingTraitTest extends TestCase
             ->once()
             ->andReturn(Mockery::mock([
                 'passes' => true,
-                'messages' => Mockery::mock('Illuminate\Support\MessageBag')
+                'messages' => Mockery::mock(MessageBag::class)
             ]));
 
         $result = $this->trait->performValidation();
@@ -323,22 +322,24 @@ class ValidatingTraitTest extends TestCase
     {
         Validator::shouldReceive('getFacadeRoot')
             ->once()
-            ->andReturn(Mockery::mock('\Illuminate\Validation\Factory'));
+            ->andReturn(Mockery::mock(Factory::class));
 
         $validator = $this->trait->getValidator();
+
+        $this->assertNotNull($validator);
     }
 
     public function testSetValidator()
     {
-        $this->trait->setValidator(Mockery::mock('ValidatorStub'));
+        $this->trait->setValidator(Mockery::mock(ValidatorStub::class));
 
         $validator = $this->trait->getValidator();
-        $this->assertInstanceOf('ValidatorStub', $validator, get_class($validator));
+        $this->assertInstanceOf(ValidatorStub::class, $validator, get_class($validator));
     }
 
     public function testMakeValidatorSetsValidationAttributeNames()
     {
-        $validatorMock = Mockery::mock('ValidatorStub');
+        $validatorMock = Mockery::mock(ValidatorStub::class);
 
         $validatorMock->shouldReceive('make')
             ->once()

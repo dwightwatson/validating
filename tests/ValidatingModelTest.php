@@ -1,17 +1,12 @@
 <?php
 
+namespace Watson\Validating\Tests;
+
+use Mockery;
 use Watson\Validating\ValidatingModel;
-use PHPUnit\Framework\TestCase;
 
 class ValidatingModelTest extends TestCase
 {
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        Mockery::close();
-    }
-
     public function testGetMessageBagCallsGetErrors()
     {
         $mock = Mockery::mock('Watson\Validating\ValidatingModel[getErrors]');
