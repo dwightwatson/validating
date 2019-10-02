@@ -14,11 +14,6 @@ class UniqueWithInjectorTest extends TestCase
         $this->trait = Mockery::mock(UniqueWithValidatingStub::class)->makePartial();
     }
 
-    public function tearDown(): void
-    {
-        Mockery::close();
-    }
-
     public function testUpdateRulesUniquesUniqueWithWithUniquesInfersAttributes()
     {
         $this->trait->exists = true;
