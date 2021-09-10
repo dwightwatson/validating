@@ -402,7 +402,13 @@ trait ValidatingTrait
             $validator->setAttributeNames($this->getValidationAttributeNames());
         }
 
+        $this->withValidator($validator);
+
         return $validator;
+    }
+
+    protected function withValidator($validator)
+    {
     }
 
     /**
