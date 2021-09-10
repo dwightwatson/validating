@@ -383,7 +383,7 @@ trait ValidatingTrait
      * Make a Validator instance for a given ruleset.
      *
      * @param  array $rules
-     * @return \Illuminate\Validation\Factory
+     * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function makeValidator($rules = [])
     {
@@ -407,8 +407,15 @@ trait ValidatingTrait
         return $validator;
     }
 
+    /**
+     * Provide a hook to interact with the validator before it is used.
+     *
+     * @param \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     */
     protected function withValidator($validator)
     {
+        //
     }
 
     /**
