@@ -196,7 +196,9 @@ class ValidatingTraitTest extends TestCase
         $this->expectException('Watson\Validating\ValidationException');
 
         Validator::shouldReceive('make')->once()->andReturn(
-            Mockery::mock('Illuminate\Contracts\Validation\Validator')
+            Mockery::mock('Illuminate\Contracts\Validation\Validator', [
+                'errors' => new MessageBag,
+            ])
         );
 
         $this->trait->shouldReceive('isValid')->once()->andReturn(false);
@@ -250,7 +252,9 @@ class ValidatingTraitTest extends TestCase
         $this->expectException('Watson\Validating\ValidationException');
 
         Validator::shouldReceive('make')->once()->andReturn(
-            Mockery::mock('Illuminate\Contracts\Validation\Validator')
+            Mockery::mock('Illuminate\Contracts\Validation\Validator', [
+                'errors' => new MessageBag,
+            ])
         );
 
         $this->trait->shouldReceive('isInvalid')->once()->andReturn(true);
@@ -359,7 +363,9 @@ class ValidatingTraitTest extends TestCase
         $this->expectException('Watson\Validating\ValidationException');
 
         Validator::shouldReceive('make')->once()->andReturn(
-            Mockery::mock('Illuminate\Contracts\Validation\Validator')
+            Mockery::mock('Illuminate\Contracts\Validation\Validator', [
+                'errors' => new MessageBag,
+            ])
         );
 
         $this->trait->throwValidationException();
