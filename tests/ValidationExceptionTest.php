@@ -3,6 +3,7 @@
 namespace Watson\Validating\Tests;
 
 use Mockery;
+use Illuminate\Support\MessageBag;
 use Watson\Validating\ValidationException;
 
 class ValidationExceptionTest extends TestCase
@@ -15,14 +16,13 @@ class ValidationExceptionTest extends TestCase
 
     public function setUp(): void
     {
-        $this->validator = Mockery::mock('Illuminate\Contracts\Validation\Validator');
+        $this->validator = Mockery::mock('Illuminate\Contracts\Validation\Validator', [
+            'errors' => new MessageBag,
+        ]);
 
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
 
-        $this->exception = new ValidationException(
-            $this->validator,
-            $this->model
-        );
+        $this->exception = new ValidationException($this->validator,$this->model);
     }
 
     public function testModel()
