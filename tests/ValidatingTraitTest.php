@@ -198,6 +198,9 @@ class ValidatingTraitTest extends TestCase
         Validator::shouldReceive('make')->once()->andReturn(
             Mockery::mock('Illuminate\Contracts\Validation\Validator', [
                 'errors' => new MessageBag,
+                'getTranslator' => Mockery::mock('Illuminate\Contracts\Translation\Translator', [
+                    'get' => null,
+                ]),
             ])
         );
 
@@ -254,6 +257,9 @@ class ValidatingTraitTest extends TestCase
         Validator::shouldReceive('make')->once()->andReturn(
             Mockery::mock('Illuminate\Contracts\Validation\Validator', [
                 'errors' => new MessageBag,
+                'getTranslator' => Mockery::mock('Illuminate\Contracts\Translation\Translator', [
+                    'get' => null,
+                ]),
             ])
         );
 
@@ -365,6 +371,9 @@ class ValidatingTraitTest extends TestCase
         Validator::shouldReceive('make')->once()->andReturn(
             Mockery::mock('Illuminate\Contracts\Validation\Validator', [
                 'errors' => new MessageBag,
+                'getTranslator' => Mockery::mock('Illuminate\Contracts\Translation\Translator', [
+                    'get' => null,
+                ]),
             ])
         );
 

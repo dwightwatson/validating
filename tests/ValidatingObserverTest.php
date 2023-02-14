@@ -8,6 +8,9 @@ use Watson\Validating\ValidatingObserver;
 
 class ValidatingObserverTest extends TestCase
 {
+    protected $model;
+    protected $observer;
+
     public function setUp(): void
     {
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
