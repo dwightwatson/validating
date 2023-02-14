@@ -17,7 +17,7 @@ class ValidationExceptionTest extends TestCase
     public function setUp(): void
     {
         $translator = Mockery::mock('Illuminate\Contracts\Translation\Translator', [
-            'get' => null,
+            'get' => 'The given data was invalid.',
         ]);
 
         $this->validator = Mockery::mock('Illuminate\Contracts\Validation\Validator', [

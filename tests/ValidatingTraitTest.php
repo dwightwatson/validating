@@ -199,7 +199,7 @@ class ValidatingTraitTest extends TestCase
             Mockery::mock('Illuminate\Contracts\Validation\Validator', [
                 'errors' => new MessageBag,
                 'getTranslator' => Mockery::mock('Illuminate\Contracts\Translation\Translator', [
-                    'get' => null,
+                    'get' => 'The given data was invalid.',
                 ]),
             ])
         );
@@ -258,7 +258,7 @@ class ValidatingTraitTest extends TestCase
             Mockery::mock('Illuminate\Contracts\Validation\Validator', [
                 'errors' => new MessageBag,
                 'getTranslator' => Mockery::mock('Illuminate\Contracts\Translation\Translator', [
-                    'get' => null,
+                    'get' => 'The given data was invalid.',
                 ]),
             ])
         );
@@ -372,7 +372,7 @@ class ValidatingTraitTest extends TestCase
             Mockery::mock('Illuminate\Contracts\Validation\Validator', [
                 'errors' => new MessageBag,
                 'getTranslator' => Mockery::mock('Illuminate\Contracts\Translation\Translator', [
-                    'get' => null,
+                    'get' => 'The given data was invalid.',
                 ]),
             ])
         );
