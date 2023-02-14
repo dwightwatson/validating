@@ -16,13 +16,18 @@ class ValidationExceptionTest extends TestCase
 
     public function setUp(): void
     {
+        $translator = Mockery::mock('Illuminate\Contracts\Translation\Translator', [
+            'get' => 'The given data was invalid.',
+        ]);
+
         $this->validator = Mockery::mock('Illuminate\Contracts\Validation\Validator', [
             'errors' => new MessageBag,
+            'getTranslator' => $translator,
         ]);
 
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
 
-        $this->exception = new ValidationException($this->validator,$this->model);
+        $this->exception = new ValidationException($this->validator, $this->model);
     }
 
     public function testModel()
