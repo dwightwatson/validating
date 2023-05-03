@@ -119,7 +119,9 @@ class ValidatingTraitTest extends TestCase
             'abc'        => '123',
             'def'        => ['456'],
             'bar'        => 'rab',
-            'created_at' => '2015-01-01 00:00:00'
+            'created_at' => '2015-01-01 00:00:00', 
+            'regular_datetime' => '2015-01-01 00:00:00',
+            'custom_date' => '2015-01-01',
         ];
 
         $this->assertEquals($expected, $this->trait->getModelAttributes());
@@ -404,7 +406,9 @@ class DatabaseValidatingTraitStub extends ModelStub implements \Watson\Validatin
     ];
 
     protected $casts = [
-        'def' => 'array'
+        'def' => 'array', 
+        'regular_datettime' => 'datetime', 
+        'custom_date' => 'datetime:Y-m-d', 
     ];
 
     protected $validationMessages = [
@@ -415,16 +419,13 @@ class DatabaseValidatingTraitStub extends ModelStub implements \Watson\Validatin
         'abc'        => '123',
         'def'        => '["456"]',
         'bar'        => 'bar',
-        'created_at' => '2015-01-01 00:00:00'
+        'created_at' => '2015-01-01 00:00:00',
+        'regular_datetime' => '2015-01-01 00:00:00',
+        'custom_date' => '2015-01-01',
     ];
 
     public function getBarAttribute($value)
     {
         return strrev($value);
-    }
-
-    protected function isDateCastable($key)
-    {
-        return false;
     }
 }
