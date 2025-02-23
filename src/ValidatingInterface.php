@@ -88,7 +88,7 @@ interface ValidatingInterface
      * @param  array $rules
      * @return void
      */
-    public function setRules(array $rules = null);
+    public function setRules(?array $rules = null);
 
     /**
      * Get the validation error messages from the model.
