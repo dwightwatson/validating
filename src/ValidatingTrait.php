@@ -62,7 +62,7 @@ trait ValidatingTrait
      */
     public function setValidating($value)
     {
-        $this->validating = (boolean) $value;
+        $this->validating = (bool) $value;
     }
 
     /**
@@ -86,7 +86,7 @@ trait ValidatingTrait
      */
     public function setThrowValidationExceptions($value)
     {
-        $this->throwValidationExceptions = (boolean) $value;
+        $this->throwValidationExceptions = (bool) $value;
     }
 
     /**
@@ -110,7 +110,7 @@ trait ValidatingTrait
      */
     public function setInjectUniqueIdentifier($value)
     {
-        $this->injectUniqueIdentifier = (boolean) $value;
+        $this->injectUniqueIdentifier = (bool) $value;
     }
 
     /**
