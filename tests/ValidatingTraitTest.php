@@ -398,7 +398,7 @@ class DatabaseValidatingTraitStub extends ModelStub implements ValidatingInterfa
 
     protected $casts = [
         'def' => 'array',
-        'regular_datettime' => 'datetime',
+        'regular_datetime' => 'datetime',
         'custom_date' => 'datetime:Y-m-d',
     ];
 
