@@ -2,8 +2,8 @@
 
 namespace Watson\Validating\Tests;
 
-use Mockery;
 use Illuminate\Support\MessageBag;
+use Mockery;
 use Watson\Validating\ValidationException;
 
 class ValidationExceptionTest extends TestCase
@@ -14,7 +14,7 @@ class ValidationExceptionTest extends TestCase
 
     public $exception;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $translator = Mockery::mock('Illuminate\Contracts\Translation\Translator', [
             'get' => 'The given data was invalid.',
@@ -30,26 +30,26 @@ class ValidationExceptionTest extends TestCase
         $this->exception = new ValidationException($this->validator, $this->model);
     }
 
-    public function testModel()
+    public function test_model()
     {
         $this->assertEquals($this->model, $this->exception->model());
     }
 
-    public function testGetModel()
+    public function test_get_model()
     {
         $this->assertEquals($this->model, $this->exception->getModel());
     }
 
-    public function testGetErrors()
+    public function test_get_errors()
     {
-       $this->validator->shouldReceive('errors')
-           ->once()
-           ->andReturn('errors');
+        $this->validator->shouldReceive('errors')
+            ->once()
+            ->andReturn('errors');
 
-       $this->assertEquals('errors', $this->exception->getErrors());
+        $this->assertEquals('errors', $this->exception->getErrors());
     }
 
-    public function testGetsMessageBag()
+    public function test_gets_message_bag()
     {
         $this->validator->shouldReceive('errors')
             ->once()

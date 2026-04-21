@@ -2,9 +2,9 @@
 
 namespace Watson\Validating;
 
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use Illuminate\Validation\Factory;
 
 interface ValidatingInterface
@@ -17,10 +17,10 @@ interface ValidatingInterface
      */
     public function getValidating();
 
-     /**
+    /**
      * Set whether the model should attempt validation on saving.
      *
-     * @param  bool $value
+     * @param  bool  $value
      * @return void
      */
     public function setValidating($value);
@@ -37,8 +37,9 @@ interface ValidatingInterface
      * Set whether the model should raise an exception or
      * return a boolean on a failed validation.
      *
-     * @param  bool $value
+     * @param  bool  $value
      * @return void
+     *
      * @throws InvalidArgumentException
      */
     public function setThrowValidationExceptions($value);
@@ -55,8 +56,9 @@ interface ValidatingInterface
      * Set the model to add unique identifier to rules when performing
      * validation.
      *
-     * @param  bool $value
+     * @param  bool  $value
      * @return void
+     *
      * @throws InvalidArgumentException
      */
     public function setInjectUniqueIdentifier($value);
@@ -64,7 +66,7 @@ interface ValidatingInterface
     /**
      * Get the model.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getModel();
 
@@ -85,7 +87,6 @@ interface ValidatingInterface
     /**
      * Set the global validation rules.
      *
-     * @param  array $rules
      * @return void
      */
     public function setRules(?array $rules = null);
@@ -93,14 +94,13 @@ interface ValidatingInterface
     /**
      * Get the validation error messages from the model.
      *
-     * @return \Illuminate\Support\MessageBag
+     * @return MessageBag
      */
     public function getErrors();
 
     /**
      * Set the error messages.
      *
-     * @param  \Illuminate\Support\MessageBag $validationErrors
      * @return void
      */
     public function setErrors(MessageBag $validationErrors);
@@ -116,7 +116,8 @@ interface ValidatingInterface
      * Returns if the model is valid, otherwise throws an exception.
      *
      * @return bool
-     * @throws \Watson\Validating\ValidationException
+     *
+     * @throws ValidationException
      */
     public function isValidOrFail();
 
@@ -139,7 +140,8 @@ interface ValidatingInterface
      * instead of returning a boolean (which is the default behaviour).
      *
      * @return void
-     * @throws \Watson\Validating\ValidatingException
+     *
+     * @throws ValidatingException
      */
     public function saveOrFail();
 
@@ -154,22 +156,20 @@ interface ValidatingInterface
     /**
      * Get the Validator instance
      *
-     * @return \Illuminate\Validation\Factory
+     * @return Factory
      */
     public function getValidator();
 
     /**
      * Set the Validator instance
-     *
-     * @param \Illuminate\Validation\Factory $validator
      */
     public function setValidator(Factory $validator);
 
     /**
      * Throw a validation exception.
      *
-     * @throws \Watson\Validating\ValidationException
-    */
+     * @throws ValidationException
+     */
     public function throwValidationException();
 
     /**

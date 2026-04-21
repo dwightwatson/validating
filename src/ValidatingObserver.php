@@ -4,7 +4,6 @@ namespace Watson\Validating;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
-use Watson\Validating\ValidationException;
 
 class ValidatingObserver
 {
@@ -12,8 +11,7 @@ class ValidatingObserver
      * Register the validation event for saving the model. Saving validation
      * should only occur if creating and updating validation does not.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @return boolean
+     * @return bool
      */
     public function saving(Model $model)
     {
@@ -23,8 +21,7 @@ class ValidatingObserver
     /**
      * Register the validation event for restoring the model.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @return boolean
+     * @return bool
      */
     public function restoring(Model $model)
     {
@@ -34,9 +31,8 @@ class ValidatingObserver
     /**
      * Perform validation with the specified ruleset.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  string $event
-     * @return boolean
+     * @param  string  $event
+     * @return bool
      */
     protected function performValidation(Model $model, $event)
     {
@@ -68,24 +64,22 @@ class ValidatingObserver
     /**
      * Fire the namespaced validating event.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  string $event
+     * @param  string  $event
      * @return mixed
      */
     protected function fireValidatingEvent(Model $model, $event)
     {
-        return Event::until("eloquent.validating: ".get_class($model), [$model, $event]);
+        return Event::until('eloquent.validating: '.get_class($model), [$model, $event]);
     }
 
     /**
      * Fire the namespaced post-validation event.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  string $status
+     * @param  string  $status
      * @return void
      */
     protected function fireValidatedEvent(Model $model, $status)
     {
-        Event::dispatch("eloquent.validated: ".get_class($model), [$model, $status]);
+        Event::dispatch('eloquent.validated: '.get_class($model), [$model, $status]);
     }
 }

@@ -2,15 +2,16 @@
 
 namespace Watson\Validating;
 
-use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Contracts\Support\MessageProvider;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Support\MessageBag;
 
 abstract class ValidatingModel extends Eloquent implements MessageProvider, ValidatingInterface
 {
     /**
      * Make model validate attributes.
      *
-     * @see \Watson\Validating\ValidatingTrait
+     * @see ValidatingTrait
      */
     use ValidatingTrait;
 
@@ -24,7 +25,7 @@ abstract class ValidatingModel extends Eloquent implements MessageProvider, Vali
     /**
      * Get the messages for the instance.
      *
-     * @return \Illuminate\Support\MessageBag
+     * @return MessageBag
      */
     public function getMessageBag()
     {

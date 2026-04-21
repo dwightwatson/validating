@@ -2,9 +2,10 @@
 
 namespace Watson\Validating;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Contracts\Support\Messagebag;
 use Illuminate\Contracts\Support\MessageProvider;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException as BaseValidationException;
 
 class ValidationException extends BaseValidationException implements MessageProvider
@@ -12,15 +13,13 @@ class ValidationException extends BaseValidationException implements MessageProv
     /**
      * The model with validation errors.
      *
-     * @var \Illuminate\Database\Eloquent\Model
+     * @var Model
      */
     protected $model;
 
     /**
      * Create a new validation exception instance.
      *
-     * @param  \Illuminate\Contracts\Validation\Validator  $validator
-     * @param  \Illuminate\Database\Eloquent\Model         $model
      * @return void
      */
     public function __construct(Validator $validator, Model $model)
@@ -33,7 +32,7 @@ class ValidationException extends BaseValidationException implements MessageProv
     /**
      * Get the model with validation errors.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function model()
     {
@@ -43,7 +42,7 @@ class ValidationException extends BaseValidationException implements MessageProv
     /**
      * Get the mdoel with validation errors.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getModel()
     {
@@ -53,7 +52,7 @@ class ValidationException extends BaseValidationException implements MessageProv
     /**
      * Get the validation errors.
      *
-     * @return \Illuminate\Contracts\Support\Messagebag
+     * @return Messagebag
      */
     public function errors()
     {
@@ -63,7 +62,7 @@ class ValidationException extends BaseValidationException implements MessageProv
     /**
      * Get the validation errors.
      *
-     * @return \Illuminate\Contracts\Support\MessageBag
+     * @return Messagebag
      */
     public function getErrors()
     {
@@ -73,7 +72,7 @@ class ValidationException extends BaseValidationException implements MessageProv
     /**
      * Get the messages for the instance.
      *
-     * @return \Illuminate\Contracts\Support\MessageBag
+     * @return Messagebag
      */
     public function getMessageBag()
     {

@@ -2,22 +2,23 @@
 
 namespace Watson\Validating\Tests;
 
-use Mockery;
 use Illuminate\Support\Facades\Event;
+use Mockery;
 use Watson\Validating\ValidatingObserver;
 
 class ValidatingObserverTest extends TestCase
 {
     protected $model;
+
     protected $observer;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->model = Mockery::mock('Illuminate\Database\Eloquent\Model');
         $this->observer = new ValidatingObserver;
     }
 
-    public function testPerformValidation()
+    public function test_perform_validation()
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(true);
 
@@ -35,7 +36,7 @@ class ValidatingObserverTest extends TestCase
         $this->assertNotFalse($response);
     }
 
-    public function testValidationStopsIfValidatingEventReturnsNonNull()
+    public function test_validation_stops_if_validating_event_returns_non_null()
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(true);
 
@@ -46,7 +47,7 @@ class ValidatingObserverTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testPerformValidationReturnsFalse()
+    public function test_perform_validation_returns_false()
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(true);
 
@@ -62,7 +63,7 @@ class ValidatingObserverTest extends TestCase
         $this->assertFalse($response);
     }
 
-    public function testPerformValidationThrowsException()
+    public function test_perform_validation_throws_exception()
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(true);
 
@@ -81,7 +82,7 @@ class ValidatingObserverTest extends TestCase
         $this->assertFalse($response);
     }
 
-    public function testSavingPerformsValidation()
+    public function test_saving_performs_validation()
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(true);
 
@@ -98,7 +99,7 @@ class ValidatingObserverTest extends TestCase
         $this->observer->saving($this->model);
     }
 
-    public function testRestoringPerformsValidation()
+    public function test_restoring_performs_validation()
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(true);
 
@@ -115,7 +116,7 @@ class ValidatingObserverTest extends TestCase
         $this->observer->restoring($this->model);
     }
 
-    public function testDisabledValidationFiresSkippedEvent()
+    public function test_disabled_validation_fires_skipped_event()
     {
         $this->model->shouldReceive('getValidating')->once()->andReturn(false);
 
