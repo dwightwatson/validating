@@ -2,10 +2,10 @@
 
 namespace Watson\Validating\Tests;
 
-use PHPUnit\Framework\TestCase as BaseTestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase as BaseTestCase;
 
-abstract class TestCase extends BaseTestCase
+class TestCase extends BaseTestCase
 {
     use MockeryPHPUnitIntegration;
 }

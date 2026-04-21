@@ -8,7 +8,7 @@ trait UniqueWithInjector
      * Prepare a unique_with rule, adding the model identifier if required.
      *
      * @param  array  $parameters
-     * @param  string $field
+     * @param  string  $field
      * @return string
      */
     protected function prepareUniqueWithRule($parameters, $field)
@@ -22,6 +22,6 @@ trait UniqueWithInjector
             }
         }
 
-        return 'unique_with:' . implode(',', $parameters);
+        return 'unique_with:'.implode(',', $parameters);
     }
 }

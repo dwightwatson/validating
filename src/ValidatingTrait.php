@@ -2,10 +2,11 @@
 
 namespace Watson\Validating;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\MessageBag;
-use Illuminate\Validation\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Factory;
 use Watson\Validating\Injectors\UniqueInjector;
 
 trait ValidatingTrait
@@ -15,7 +16,7 @@ trait ValidatingTrait
     /**
      * Error messages as provided by the validator.
      *
-     * @var \Illuminate\Support\MessageBag
+     * @var MessageBag
      */
     protected $validationErrors;
 
@@ -29,7 +30,7 @@ trait ValidatingTrait
     /**
      * The Validator factory class used for validation.
      *
-     * @var \Illuminate\Validation\Factory
+     * @var Factory
      */
     protected $validator;
 
@@ -59,7 +60,7 @@ trait ValidatingTrait
     /**
      * Set whether the model should attempt validation on saving.
      *
-     * @param  bool $value
+     * @param  bool  $value
      * @return void
      */
     public function setValidating($value)
@@ -82,8 +83,9 @@ trait ValidatingTrait
      * Set whether the model should raise an exception or
      * return a boolean on a failed validation.
      *
-     * @param  bool $value
+     * @param  bool  $value
      * @return void
+     *
      * @throws InvalidArgumentException
      */
     public function setThrowValidationExceptions($value)
@@ -106,8 +108,9 @@ trait ValidatingTrait
      * Set the model to add unique identifier to rules when performing
      * validation.
      *
-     * @param  bool $value
+     * @param  bool  $value
      * @return void
+     *
      * @throws InvalidArgumentException
      */
     public function setInjectUniqueIdentifier($value)
@@ -118,7 +121,7 @@ trait ValidatingTrait
     /**
      * Get the model.
      *
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return Model
      */
     public function getModel()
     {
@@ -139,6 +142,7 @@ trait ValidatingTrait
             // them we'll return their raw value instead.
             if (in_array($key, $this->getDates()) || $this->isDateCastable($key) || $this->isDateCastableWithCustomFormat($key)) {
                 $attributes[$key] = $value;
+
                 continue;
             }
 
@@ -193,7 +197,6 @@ trait ValidatingTrait
     /**
      * Set the validating attribute names.
      *
-     * @param  array  $attributeNames
      * @return void
      */
     public function setValidationAttributeNames(?array $attributeNames = null)
@@ -235,7 +238,6 @@ trait ValidatingTrait
     /**
      * Set the global validation rules.
      *
-     * @param  array $rules
      * @return void
      */
     public function setRules(?array $rules = null)
@@ -246,7 +248,7 @@ trait ValidatingTrait
     /**
      * Get the validation error messages from the model.
      *
-     * @return \Illuminate\Support\MessageBag
+     * @return MessageBag
      */
     public function getErrors()
     {
@@ -256,7 +258,6 @@ trait ValidatingTrait
     /**
      * Set the error messages.
      *
-     * @param  \Illuminate\Support\MessageBag $validationErrors
      * @return void
      */
     public function setErrors(MessageBag $validationErrors)
@@ -280,11 +281,12 @@ trait ValidatingTrait
      * Returns if the model is valid, otherwise throws an exception.
      *
      * @return bool
-     * @throws \Watson\Validating\ValidationException
+     *
+     * @throws ValidationException
      */
     public function isValidOrFail()
     {
-        if (!$this->isValid()) {
+        if (! $this->isValid()) {
             $this->throwValidationException();
         }
 
@@ -298,13 +300,12 @@ trait ValidatingTrait
      */
     public function isInvalid()
     {
-        return !$this->isValid();
+        return ! $this->isValid();
     }
 
     /**
      * Force the model to be saved without undergoing validation.
      *
-     * @param  array  $options
      * @return bool
      */
     public function forceSave(array $options = [])
@@ -324,8 +325,8 @@ trait ValidatingTrait
      * Perform a one-off save that will raise an exception on validation error
      * instead of returning a boolean (which is the default behaviour).
      *
-     * @param  array  $options
      * @return bool
+     *
      * @throws \Throwable
      */
     public function saveOrFail(array $options = [])
@@ -342,6 +343,7 @@ trait ValidatingTrait
      *
      * @param  array  $options
      * @return bool
+     *
      * @throws \Throwable
      */
     public function parentSaveOrFail($options)
@@ -353,7 +355,6 @@ trait ValidatingTrait
      * Perform a one-off save that will return a boolean on
      * validation error instead of raising an exception.
      *
-     * @param  array  $options
      * @return bool
      */
     public function saveOrReturn(array $options = [])
@@ -364,7 +365,7 @@ trait ValidatingTrait
     /**
      * Get the Validator instance.
      *
-     * @return \Illuminate\Validation\Factory
+     * @return Factory
      */
     public function getValidator()
     {
@@ -373,8 +374,6 @@ trait ValidatingTrait
 
     /**
      * Set the Validator instance.
-     *
-     * @param \Illuminate\Validation\Factory $validator
      */
     public function setValidator(Factory $validator)
     {
@@ -384,7 +383,7 @@ trait ValidatingTrait
     /**
      * Make a Validator instance for a given ruleset.
      *
-     * @param  array $rules
+     * @param  array  $rules
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function makeValidator($rules = [])
@@ -412,7 +411,7 @@ trait ValidatingTrait
     /**
      * Provide a hook to interact with the validator before it is used.
      *
-     * @param \Illuminate\Contracts\Validation\Validator  $validator
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
      * @return void
      */
     protected function withValidator($validator)
@@ -425,9 +424,10 @@ trait ValidatingTrait
      * or not it passes and setting the error messages on the
      * model if required.
      *
-     * @param  array $rules
+     * @param  array  $rules
      * @return bool
-     * @throws \Watson\Validating\ValidationException
+     *
+     * @throws ValidationException
      */
     protected function performValidation($rules = [])
     {
@@ -443,7 +443,7 @@ trait ValidatingTrait
     /**
      * Throw a validation exception.
      *
-     * @throws \Watson\Validating\ValidationException
+     * @throws ValidationException
      */
     public function throwValidationException()
     {
@@ -474,7 +474,6 @@ trait ValidatingTrait
      * primary key to the unique rules so that the validation
      * will work as expected.
      *
-     * @param  array $rules
      * @return array
      */
     protected function injectUniqueIdentifierToRules(array $rules)
@@ -506,12 +505,12 @@ trait ValidatingTrait
      * Get the dynamic method name for a unique identifier injector rule if it
      * exists, otherwise return false.
      *
-     * @param  string $validationRule
+     * @param  string  $validationRule
      * @return mixed
      */
     protected function getUniqueIdentifierInjectorMethod($validationRule)
     {
-        $method = 'prepare' . Str::studly($validationRule) . 'Rule';
+        $method = 'prepare'.Str::studly($validationRule).'Rule';
 
         return method_exists($this, $method) ? $method : false;
     }

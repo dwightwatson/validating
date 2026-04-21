@@ -9,7 +9,7 @@ trait UniqueInjector
      * if required.
      *
      * @param  array  $parameters
-     * @param  string $field
+     * @param  string  $field
      * @return string
      */
     protected function prepareUniqueRule($parameters, $field)
@@ -51,6 +51,6 @@ trait UniqueInjector
             }
         }
 
-        return 'unique:' . implode(',', $parameters);
+        return 'unique:'.implode(',', $parameters);
     }
 }

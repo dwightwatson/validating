@@ -3,11 +3,10 @@
 namespace Watson\Validating\Tests;
 
 use Mockery;
-use Watson\Validating\ValidatingModel;
 
 class ValidatingModelTest extends TestCase
 {
-    public function testGetMessageBagCallsGetErrors()
+    public function test_get_message_bag_calls_get_errors()
     {
         $mock = Mockery::mock('Watson\Validating\ValidatingModel[getErrors]');
 
