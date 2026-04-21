@@ -40,7 +40,7 @@ class ValidationException extends BaseValidationException implements MessageProv
     }
 
     /**
-     * Get the mdoel with validation errors.
+     * Get the model with validation errors.
      *
      * @return Model
      */

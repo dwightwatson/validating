@@ -141,7 +141,7 @@ interface ValidatingInterface
      *
      * @return void
      *
-     * @throws ValidatingException
+     * @throws ValidationException
      */
     public function saveOrFail();
 
