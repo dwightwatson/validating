@@ -2,7 +2,7 @@
 
 namespace Watson\Validating;
 
-use Illuminate\Contracts\Support\Messagebag;
+use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Support\MessageProvider;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
