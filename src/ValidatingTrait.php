@@ -40,7 +40,9 @@ trait ValidatingTrait
      */
     public static function bootValidatingTrait()
     {
-        static::observe(new ValidatingObserver);
+        static::whenBooted(function () {
+            static::observe(ValidatingObserver::class);
+        });
     }
 
     /**
@@ -54,7 +56,7 @@ trait ValidatingTrait
         return $this->validating;
     }
 
-     /**
+    /**
      * Set whether the model should attempt validation on saving.
      *
      * @param  bool $value
@@ -282,7 +284,7 @@ trait ValidatingTrait
      */
     public function isValidOrFail()
     {
-        if ( ! $this->isValid()) {
+        if (!$this->isValid()) {
             $this->throwValidationException();
         }
 
@@ -296,7 +298,7 @@ trait ValidatingTrait
      */
     public function isInvalid()
     {
-        return ! $this->isValid();
+        return !$this->isValid();
     }
 
     /**
@@ -482,18 +484,18 @@ trait ValidatingTrait
             $ruleset = is_string($ruleset) ? explode('|', $ruleset) : $ruleset;
 
             foreach ($ruleset as &$rule) {
-            	// Only treat stringy definitions and leave Rule classes and Closures as-is.
-            	if (is_string($rule)) {
-            		$parameters = explode(':', $rule);
-	                $validationRule = array_shift($parameters);
+                // Only treat stringy definitions and leave Rule classes and Closures as-is.
+                if (is_string($rule)) {
+                    $parameters = explode(':', $rule);
+                    $validationRule = array_shift($parameters);
 
-	                if ($method = $this->getUniqueIdentifierInjectorMethod($validationRule)) {
-	                    $rule = call_user_func_array(
-	                        [$this, $method],
-	                        [explode(',', head($parameters)), $field]
-	                    );
-	                }
-            	}
+                    if ($method = $this->getUniqueIdentifierInjectorMethod($validationRule)) {
+                        $rule = call_user_func_array(
+                            [$this, $method],
+                            [explode(',', head($parameters)), $field],
+                        );
+                    }
+                }
             }
         }
 
